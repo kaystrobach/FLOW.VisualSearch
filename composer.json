@@ -1,0 +1,13 @@
+{
+    "name": "kaystrobach/visualsearch",
+    "type": "typo3-flow-package",
+    "description": "package to handle advanced facetted searches",
+    "require": {
+        "typo3/flow": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "KayStrobach\\VisualSearch": "Classes"
+        }
+    }
+}
