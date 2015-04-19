@@ -1,3 +1,4 @@
+<script src="{f:uri.resource(path: 'Contrib/visualsearch/build/dependencies.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
 <script src="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
 <!--[if (!IE)|(gte IE 8)]><!-->
 <link href="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch-datauri.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
@@ -18,11 +19,7 @@
 				search       : function(query, searchCollection) {},
 				facetMatches : function(callback) {
 					callback([
-						'account', 'filter', 'access', 'title',
-						{ label: 'city',    category: 'location' },
-						{ label: 'address', category: 'location' },
-						{ label: 'country', category: 'location' },
-						{ label: 'state',   category: 'location' },
+						'Fach', 'Status', 'Name', 'Fach'
 					]);
 				},
 				valueMatches : function(facet, searchTerm, callback) {
@@ -37,18 +34,18 @@
 								{ value: '6-scott',  label: 'Scott' }
 							]);
 							break;
-						case 'filter':
-							callback(['published', 'unpublished', 'draft']);
+						case 'Status':
+							callback(['Daten nicht kontrolliert', 'Daten kontrolliert', 'zugelassen']);
 							break;
-						case 'access':
-							callback(['public', 'private', 'protected']);
+						case 'name':
+							callback(['Max Maier', 'Petra Müller', 'Sheldon Cooper']);
 							break;
-						case 'title':
+						case 'Fach':
 							callback([
-								'Pentagon Papers',
-								'CoffeeScript Manual',
-								'Laboratory for Object Oriented Thinking',
-								'A Repository Grows in Brooklyn'
+								'Mathematik',
+								'Informatik',
+								'Physik',
+								'Biologie'
 							]);
 							break;
 					}
