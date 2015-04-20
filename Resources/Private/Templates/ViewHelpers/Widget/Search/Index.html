@@ -7,50 +7,77 @@
 <link href="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
 <!--<![endif]-->
 
+<!--
+{f:uri.resource(path: 'Contrib/visualsearch/images/embed/icons/cancel_search.png', package: 'KayStrobach.VisualSearch')}
+{f:uri.resource(path: 'Contrib/visualsearch/images/embed/icons/search_glyph.png', package: 'KayStrobach.VisualSearch')}
+-->
 
-<div class="visual_search"></div>
+<f:if condition="{search}">
+	<f:then>
+		<div class="visual_search"
+		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
+		     data-facets="{facets -> f:format.json() -> f:format.htmlspecialchars()}"
 
-<script type="text/javascript" charset="utf-8">
-	$(document).ready(function() {
-		var visualSearch = VS.init({
-			container : $('.visual_search'),
-			query     : '',
-			callbacks : {
-				search       : function(query, searchCollection) {},
-				facetMatches : function(callback) {
-					callback([
-						'Fach', 'Status', 'Name', 'Fach'
-					]);
-				},
-				valueMatches : function(facet, searchTerm, callback) {
-					switch (facet) {
-						case 'account':
-							callback([
-								{ value: '1-amanda', label: 'Amanda' },
-								{ value: '2-aron',   label: 'Aron' },
-								{ value: '3-eric',   label: 'Eric' },
-								{ value: '4-jeremy', label: 'Jeremy' },
-								{ value: '5-samuel', label: 'Samuel' },
-								{ value: '6-scott',  label: 'Scott' }
-							]);
-							break;
-						case 'Status':
-							callback(['Daten nicht kontrolliert', 'Daten kontrolliert', 'zugelassen']);
-							break;
-						case 'name':
-							callback(['Max Maier', 'Petra Müller', 'Sheldon Cooper']);
-							break;
-						case 'Fach':
-							callback([
-								'Mathematik',
-								'Informatik',
-								'Physik',
-								'Biologie'
-							]);
-							break;
+		     ></div>
+
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				window.visualSearch = VS.init({
+					container : $('.visual_search'),
+					query     : '',
+					callbacks : {
+						search       : function(query, searchCollection) {},
+						facetMatches : function(callback) {
+							callback(
+								$.parseJSON($('.visual_search').first().attr('data-facets'))
+							);
+						},
+						valueMatches : function(facet, searchTerm, callback) {
+							var restServerURL = "http://localhost:7474/db/data";
+							$.ajax({
+								type: "POST",
+								//contentType: "application/json; charset=utf-8",
+								url: $('.visual_search').first().attr('data-valueAction'),
+								dataType: "json",
+								data: {facet: facet, query: searchTerm},
+								success: function(data) {
+									callback(data);
+								}
+							});
+							switch (facet) {
+								case 'account':
+									callback([
+										{ value: '1-amanda', label: 'Amanda' },
+										{ value: '2-aron',   label: 'Aron' },
+										{ value: '3-eric',   label: 'Eric' },
+										{ value: '4-jeremy', label: 'Jeremy' },
+										{ value: '5-samuel', label: 'Samuel' },
+										{ value: '6-scott',  label: 'Scott' }
+									]);
+									break;
+								case 'Status':
+									callback(['Daten nicht kontrolliert', 'Daten kontrolliert', 'zugelassen']);
+									break;
+								case 'Name':
+									callback(['Max Maier', 'Petra Müller', 'Sheldon Cooper']);
+									break;
+								case 'fach':
+									callback([
+										'Mathematik',
+										'Informatik',
+										'Physik',
+										'Biologie'
+									]);
+									break;
+							}
+						}
 					}
-				}
-			}
-		});
-	});
-</script>
+				});
+			});
+		</script>
+	</f:then>
+	<f:else>
+		<p>Parameter search is wrong ...</p>
+	</f:else>
+</f:if>
+

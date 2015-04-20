@@ -12,8 +12,13 @@ namespace KayStrobach\VisualSearch\ViewHelpers\Widget;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper;
 
-class SearchViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class SearchViewHelper extends AbstractWidgetViewHelper {
+	/**
+	 * @var bool
+	 */
+	protected $ajaxWidget = TRUE;
 
 	/**
 	 * @Flow\Inject
