@@ -1,5 +1,19 @@
 #search-input-area .token {
 	display: inline-block;
+
+}
+
+#search-input-area .token-facet {
+	font-weight: bold;
+	margin-right: 4px;
+}
+
+#search-input-area .token-facet:after {
+	content: ':';
+}
+
+#search-input-area .token-value {
+	margin-right: 10px;
 }
 
 #search-input-area .token-input {
