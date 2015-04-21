@@ -1,57 +1,40 @@
-<script src="{f:uri.resource(path: 'Contrib/visualsearch/build/dependencies.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
-<script src="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
-<!--[if (!IE)|(gte IE 8)]><!-->
-<link href="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch-datauri.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
-<!--<![endif]-->
-<!--[if lte IE 7]><!-->
-<link href="{f:uri.resource(path: 'Contrib/visualsearch/build/visualsearch.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
-<!--<![endif]-->
-
-<!--
-{f:uri.resource(path: 'Contrib/visualsearch/images/embed/icons/cancel_search.png', package: 'KayStrobach.VisualSearch')}
-{f:uri.resource(path: 'Contrib/visualsearch/images/embed/icons/search_glyph.png', package: 'KayStrobach.VisualSearch')}
--->
+<script src="{f:uri.resource(path: 'JavaScript/main.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
+<link href="{f:uri.resource(path: 'Stylesheets/main.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
 
 <f:if condition="{search}">
 	<f:then>
-		<div class="visual_search"
-		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
-		     data-facets="{facets -> f:format.json() -> f:format.htmlspecialchars()}"
+		<div class="input-group" role="search">
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div><!-- /btn-group -->
+			<div id="search-input-area"
+			     class="form-control"
+			     data-search="{search}"
+			     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
+			     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
+			     data-query="{query}"
+					>
+			</div>
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</span>
 
-		     ></div>
-
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				window.visualSearch = VS.init({
-					container : $('.visual_search'),
-					query     : '',
-					callbacks : {
-						search       : function(query, searchCollection) {},
-						facetMatches : function(callback) {
-							callback(
-								$.parseJSON($('.visual_search').first().attr('data-facets'))
-							);
-						},
-						valueMatches : function(facet, searchTerm, callback) {
-							var restServerURL = "http://localhost:7474/db/data";
-							$.ajax({
-								type: "POST",
-								//contentType: "application/json; charset=utf-8",
-								url: $('.visual_search').first().attr('data-valueAction'),
-								dataType: "json",
-								data: {facet: facet, query: searchTerm},
-								success: function(data) {
-									callback(data);
-								}
-							});
-						}
-					}
-				});
-			});
-		</script>
+		</div><!-- /input-group -->
 	</f:then>
 	<f:else>
-		<p>Parameter search is wrong ...</p>
+		<div class="alert alert-danger" role="alert">
+			Parameter search is missing
+		</div>
 	</f:else>
 </f:if>
+
 

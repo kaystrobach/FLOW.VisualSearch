@@ -1,0 +1,9 @@
+#search-input-area .token {
+	display: inline-block;
+}
+
+#search-input-area .token-input {
+	display: inline-block;
+	border: none;
+	box-shadow: none;
+}
