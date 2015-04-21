@@ -44,32 +44,6 @@
 									callback(data);
 								}
 							});
-							switch (facet) {
-								case 'account':
-									callback([
-										{ value: '1-amanda', label: 'Amanda' },
-										{ value: '2-aron',   label: 'Aron' },
-										{ value: '3-eric',   label: 'Eric' },
-										{ value: '4-jeremy', label: 'Jeremy' },
-										{ value: '5-samuel', label: 'Samuel' },
-										{ value: '6-scott',  label: 'Scott' }
-									]);
-									break;
-								case 'Status':
-									callback(['Daten nicht kontrolliert', 'Daten kontrolliert', 'zugelassen']);
-									break;
-								case 'Name':
-									callback(['Max Maier', 'Petra Müller', 'Sheldon Cooper']);
-									break;
-								case 'fach':
-									callback([
-										'Mathematik',
-										'Informatik',
-										'Physik',
-										'Biologie'
-									]);
-									break;
-							}
 						}
 					}
 				});

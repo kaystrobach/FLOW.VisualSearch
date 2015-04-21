@@ -98,7 +98,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 			} elseif(array_key_exists('repository', $this->items[$facet])) {
 				/** @var \TYPO3\Flow\Persistence\RepositoryInterface $repository */
 				$repository = $this->objectManager->get($this->items[$facet]['repository']);
-				$entities = $repository->findAll();
+				$entities = $repository->findAll()->getQuery()->setLimit(5)->execute(TRUE);
 				foreach($entities as $key => $entity) {
 					if(method_exists($entity, '__toString')) {
 						$values[] = array('label' => (string)$entity, 'value' => $this->persistenceManager->getIdentifierByObject($entity));
