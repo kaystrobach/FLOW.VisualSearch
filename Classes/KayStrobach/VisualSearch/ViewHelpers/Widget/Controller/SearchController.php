@@ -2,6 +2,7 @@
 
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 
+use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
@@ -89,16 +90,21 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 */
 	public function valuesAction($facet = '', $query = '') {
 		$values = array();
-		if (array_key_exists($facet, $this->items)) {
-			if(array_key_exists('values', $this->items[$facet])) {
+		if (isset($this->items[$facet])) {
+			if(isset($this->items[$facet]['values'])) {
 				foreach($this->items[$facet]['values'] as $key => $value) {
 					$values[] = array('label' => $value, 'value' => $key);
 				}
 				return json_encode($values);
-			} elseif(array_key_exists('repository', $this->items[$facet])) {
-				/** @var \TYPO3\Flow\Persistence\RepositoryInterface $repository */
+			} elseif(isset($this->items[$facet]['repository'])) {
+				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 				$repository = $this->objectManager->get($this->items[$facet]['repository']);
-				$entities = $repository->findAll()->getQuery()->setLimit(5)->execute(TRUE);
+				if ($repository instanceOf SearchableRepositoryInterface) {
+					$entities = $repository->findBySearchTerm($query)->getQuery()->setLimit(5)->execute(TRUE);
+				} else {
+					$entities = $repository->findAll();
+				}
+				#
 				foreach($entities as $key => $entity) {
 					if(method_exists($entity, '__toString')) {
 						$values[] = array('label' => (string)$entity, 'value' => $this->persistenceManager->getIdentifierByObject($entity));
