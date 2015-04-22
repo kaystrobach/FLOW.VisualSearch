@@ -49,14 +49,19 @@
             });
 
             // react on input and build visual facets
-            $(settings['container']).children('div[contenteditable]').on('keypress', function (event) {
+            $(settings['container']).children('div[contenteditable]').on('keydown', function (event) {
+                var text = $(this).text();
+                // enter
                 if (event.which == 13) {
-                    var text = $(this).text()
                     $(this).text('');
-
                     if ($(this).attr('data-type') === 'facet') {
                         $(this).before('<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-value="">' + text + '</div></div>');
                         $(this).attr('data-type', 'value');
+
+                        $(this).autocomplete({
+                            // @todo add term and facet to url ;)
+                            source: $(settings['container']).attr('data-valueaction')
+                        });
                     } else {
                         $(this).prev().append('<div class="token token-value" data-facet="">' + text + '</div>');
                         $(this).attr('data-type', 'facet');
@@ -64,8 +69,15 @@
 
                     event.preventDefault();
                 }
+                // backspace
+                if ((event.which == 8) && (text == '')) {
+                    $(this).prev().remove();
+                }
             });
 
+            $(settings['container']).on('click', '.token-wrapper .btn', function() {
+               $(this).parent().remove();
+            });
         }
     });
 })(jQuery);
