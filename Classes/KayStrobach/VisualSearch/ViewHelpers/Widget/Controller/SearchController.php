@@ -130,12 +130,13 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 */
 	public function facetsAction($query = '', $term = '') {
 		$facets = array();
+		$lowerCasedTerm = strtolower($term);
 		if ((is_array($this->items)) && (count($this->items) > 0)) {
 			foreach($this->items as $key => $value) {
 				$label = isset($value['label']) ? $value['label'] : $key;
 				if(($term === '')
-					|| (substr($label, 0, strlen($term)) === $term)
-					|| (substr($key, 0, strlen($term)) === $term)
+					|| (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
+					|| (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
 				) {
 					$facets[] = array(
 						'value' => $key,

@@ -8,9 +8,10 @@
 }
 
 #search-input-area .token-facet {
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: bold;
 	margin-right: 4px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 #search-input-area .token-value {
