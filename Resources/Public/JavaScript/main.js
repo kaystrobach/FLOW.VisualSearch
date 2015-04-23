@@ -24,17 +24,109 @@
             });
         },
 
+        advancedSearchTerm: function() {
+            var query = [];
+            $.each($(this).children('.token'), function(key, value) {
+                query.push(
+                    {
+                        facetLabel: $(value).children('.token-facet').text(),
+                        facet: $(value).children('.token-facet').attr('data-facet'),
+                        valueLabel: $(value).children('.token-value').text(),
+                        value: $(value).children('.token-value').attr('data-value')
+                    }
+                )
+            });
+            return query;
+        },
+
         advancedSearch: function (settings) {
+            function addFacetAutocomplete(element) {
+                $(element).attr('data-type', 'facet');
+                $(element).autocomplete(
+                    'option',
+                    {
+                        source: $(settings['container']).attr('data-facetsAction')
+                    }
+                );
+                $(element).autocomplete(
+                    'option',
+                    {
+                        select: function( event, ui ) {
+                            $(this).before('<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-value=""></div></div>');
+                            $(this).prev().find('.token-facet').text(ui.item.label);
+                            $(this).prev().find('.token-facet').attr('data-facet', ui.item.value)
+                            $(element).text('');
+                            addValueAutocomplete(element);
+                            window.setTimeout(function() {
+                                $(element).focus();
+                            }, 50);
+
+                            return false;
+                        }
+                    }
+                );
+            }
+
+            function addValueAutocomplete(element) {
+                $(element).attr('data-type', 'value');
+
+                var query =  $.param(
+                    {
+                        facet: $(element).prev().children('.token-facet').attr('data-facet')
+                    }
+                );
+
+                var url = $(settings['container']).attr('data-valueAction') + '&' + decodeURI(query);
+                $(element).autocomplete(
+                    'option',
+                    {
+                        source: url
+                    }
+                );
+                $(element).autocomplete(
+                    'option',
+                    {
+                        select: function (event, ui) {
+                            $(this).prev().append('<div class="token token-value" data-value="' + ui.item.value + '">' + ui.item.label + '</div>');
+                            $(element).text('');
+                            addFacetAutocomplete(element);
+                            window.setTimeout(function() {
+                                $(element).focus();
+                            }, 100);
+                            return false;
+                        }
+                    }
+                );
+            }
+
             var defaults = {
                 container: '#search-input-area'
             };
             var settings = $.extend({}, defaults, settings);
 
             // create needed elements
-            $(settings['container']).html('<div contenteditable="true" class="token-input" data-type="facet"></div>');
+            $(settings['container']).html('<div contenteditable="true" class="token-input"></div>');
+
+            $(settings['container']).children('div[contenteditable]').autocomplete(
+                {
+                    source:'',
+                    minLength: 0,
+                    __renderItem: function( ul, item ) {
+                        return $( "<li>" )
+                            .attr( "data-value", item.value )
+                            .append( item.label )
+                            .appendTo( ul );
+                    }
+                }
+            ).focus(function () {
+                    $(this).autocomplete('search', $(this).text());
+                }
+            );
+            addFacetAutocomplete($(settings['container']).children('div[contenteditable]'));
 
             // focus on click
             $(settings['container']).on('click', function () {
+                addFacetAutocomplete($(settings['container']).children('div[contenteditable]'));
                 $(this).children('div[contenteditable]').last().focus();
             });
 
@@ -53,25 +145,17 @@
                 var text = $(this).text();
                 // enter
                 if (event.which == 13) {
-                    $(this).text('');
-                    if ($(this).attr('data-type') === 'facet') {
-                        $(this).before('<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-value="">' + text + '</div></div>');
-                        $(this).attr('data-type', 'value');
-
-                        $(this).autocomplete({
-                            // @todo add term and facet to url ;)
-                            source: $(settings['container']).attr('data-valueaction')
-                        });
-                    } else {
-                        $(this).prev().append('<div class="token token-value" data-facet="">' + text + '</div>');
-                        $(this).attr('data-type', 'facet');
+                    if(text == '') {
+                        $(this).closest('form').submit();
                     }
-
+                    $(this).text('');
                     event.preventDefault();
                 }
                 // backspace
                 if ((event.which == 8) && (text == '')) {
+                    addFacetAutocomplete(this);
                     $(this).prev().remove();
+
                 }
             });
 

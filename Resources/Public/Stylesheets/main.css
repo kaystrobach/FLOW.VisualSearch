@@ -1,6 +1,5 @@
 #search-input-area [contenteditable] {
 	outline: 0;
-	background-color: yellow;
 	min-width: 10px;
 }
 #search-input-area .token {
@@ -9,7 +8,12 @@
 }
 
 #search-input-area .token-facet {
+	font-size: 12px;
 	font-weight: bold;
+	margin-right: 4px;
+}
+
+#search-input-area .token-value {
 	margin-right: 4px;
 }
 

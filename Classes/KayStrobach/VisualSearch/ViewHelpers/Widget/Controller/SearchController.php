@@ -5,6 +5,7 @@ namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
+use TYPO3\Flow\Persistence\QueryInterface;
 
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
@@ -60,23 +61,6 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	public function indexAction() {
 		$searchConfigurationName = $this->widgetConfiguration['search'];
 		$this->view->assign('search', $searchConfigurationName);
-		if ((is_array($this->items)) && (count($this->items) > 0)) {
-			$facets = array();
-			foreach($this->items as $key => $value) {
-				if(array_key_exists('label', $value)) {
-					$facets[] = array(
-						'value' => $key,
-						'label' => $value['label']
-					);
-				} else {
-					$facets[] = array(
-						'value' => $key,
-						'label' => $key
-					);
-				}
-			}
-			$this->view->assign('facets', $facets);
-		}
 		$this->view->assign('settings', $this->items);
 		#$this->view->assign('query', 'defaultquery');
 	}
@@ -89,6 +73,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @return string
 	 */
 	public function valuesAction($facet = '', $query = '') {
+		$stringLength = isset($this->items[$facet]['labelLength']) ? $this->items[$facet]['labelLength'] : 30;
 		$values = array();
 		if (isset($this->items[$facet])) {
 			if(isset($this->items[$facet]['values'])) {
@@ -102,19 +87,59 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 				if ($repository instanceOf SearchableRepositoryInterface) {
 					$entities = $repository->findBySearchTerm($query)->getQuery()->setLimit(5)->execute(TRUE);
 				} else {
-					$entities = $repository->findAll();
+					$entities = $repository->findAll()->getQuery()->setOrderings(array($this->items[$facet]['labelProperty']  => QueryInterface::ORDER_ASCENDING))->execute(TRUE);
 				}
 				#
 				foreach($entities as $key => $entity) {
 					if(method_exists($entity, '__toString')) {
-						$values[] = array('label' => (string)$entity, 'value' => $this->persistenceManager->getIdentifierByObject($entity));
+						$values[] = array(
+							'label' => (string)$entity,
+							'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $stringLength)
+						);
 					} else {
 						$functionName = 'get' . ucfirst($this->items[$facet]['labelProperty']);
-						$values[] = array('label' => $entity->$functionName(), 'value' => $this->persistenceManager->getIdentifierByObject($entity));
+						$values[] = array(
+							'label' => $this->shortenString($entity->$functionName(), $stringLength),
+							'value' => $this->persistenceManager->getIdentifierByObject($entity)
+						);
 					}
 				}
 			}
 		}
 		return json_encode($values);
+	}
+
+	/**
+	 * @Flow\SkipCsrfProtection
+	 *
+	 * @param string $query
+	 * @return string
+	 */
+	public function facetsAction($query = '') {
+		$facets = array();
+		if ((is_array($this->items)) && (count($this->items) > 0)) {
+			foreach($this->items as $key => $value) {
+				if(array_key_exists('label', $value)) {
+					$facets[] = array(
+						'value' => $key,
+						'label' => $value['label']
+					);
+				} else {
+					$facets[] = array(
+						'value' => $key,
+						'label' => $key
+					);
+				}
+			}
+		}
+		return json_encode($facets);
+	}
+
+	protected function shortenString($string, $length = '30', $append = '...') {
+		if(strlen($string) <= $length) {
+			return $string;
+		} else {
+			return substr($string, 0, $length) . $append;
+		}
 	}
 }
