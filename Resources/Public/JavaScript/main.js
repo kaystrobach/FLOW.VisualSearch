@@ -41,6 +41,9 @@
 
         advancedSearch: function (settings) {
             function addFacetAutocomplete(element) {
+                if($(element).autocomplete('instance')) {
+                    $(element).autocomplete('enable');
+                }
                 $(element).attr('data-type', 'facet');
                 $(element).autocomplete(
                     'option',
@@ -52,12 +55,17 @@
                     'option',
                     {
                         select: function( event, ui ) {
+                            console.log(ui);
                             $(this).before('<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-value=""></div></div>');
                             $(this).prev().find('.token-facet').text(ui.item.label);
                             $(this).prev().find('.token-facet').attr('data-facet', ui.item.value)
                             $(element).text('');
                             addValueAutocomplete(element);
                             window.setTimeout(function() {
+                                // @todo add handling for disabled autocomplete
+                                //if(ui.item.configuration.freeInput) {
+                                //    $(element).autofocus('disable');
+                                //}
                                 $(element).focus();
                             }, 50);
 
@@ -68,6 +76,9 @@
             }
 
             function addValueAutocomplete(element) {
+                if($(element).autocomplete('instance')) {
+                    $(element).autocomplete('enable');
+                }
                 $(element).attr('data-type', 'value');
 
                 var query =  $.param(
@@ -110,13 +121,7 @@
             $(settings['container']).children('div[contenteditable]').autocomplete(
                 {
                     source:'',
-                    minLength: 0,
-                    __renderItem: function( ul, item ) {
-                        return $( "<li>" )
-                            .attr( "data-value", item.value )
-                            .append( item.label )
-                            .appendTo( ul );
-                    }
+                    minLength: 0
                 }
             ).focus(function () {
                     $(this).autocomplete('search', $(this).text());
