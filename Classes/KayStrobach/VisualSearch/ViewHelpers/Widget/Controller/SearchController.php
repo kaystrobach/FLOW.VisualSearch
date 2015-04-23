@@ -109,7 +109,6 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 					}
 
 				}
-				#
 				foreach($entities as $key => $entity) {
 					if(method_exists($entity, '__toString')) {
 						$values[] = array(
