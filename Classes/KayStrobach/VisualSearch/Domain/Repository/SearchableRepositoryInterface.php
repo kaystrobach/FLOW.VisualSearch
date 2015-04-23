@@ -12,10 +12,11 @@ use TYPO3\Flow\Persistence\QueryResultInterface;
 
 interface SearchableRepositoryInterface {
 	/**
-	 * @param $term
+	 * @param array $query
+	 * @param string $term
 	 * @return QueryResultInterface
 	 */
-	public function findBySearchTerm($term);
+	public function findBySearchTerm($query, $term = '');
 
 	/**
 	 * Finds an object matching the given identifier.
