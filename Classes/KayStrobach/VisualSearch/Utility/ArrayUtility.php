@@ -26,4 +26,13 @@ class ArrayUtility {
 		}
 		return false;
 	}
+
+	public static function hasAllSubentries($array, $key, $values) {
+		foreach($values as $value) {
+			if(!self::hasSubEntryWith($array, $key, $value)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

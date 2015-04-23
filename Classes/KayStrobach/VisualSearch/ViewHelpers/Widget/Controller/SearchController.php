@@ -148,17 +148,27 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		if ((is_array($this->facetConfiguration)) && (count($this->facetConfiguration) > 0)) {
 			foreach($this->facetConfiguration as $key => $value) {
 				$label = isset($value['label']) ? $value['label'] : $key;
+
+				// restrict to items filtered by term
 				if(($term === '')
 					|| (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
 					|| (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
 				) {
+
+					// should item be displayed just once?
 					if((!isset($value['selector']['conditions']['once']))
 						|| (($value['selector']['conditions']['once']) && (!ArrayUtility::hasSubEntryWith($query, 'facet', $key)))) {
-						$facets[] = array(
-							'value' => $key,
-							'label' => $label,
-							'configuration' => $value['selector']
-						);
+
+						// are all required fields given?
+						if((!isset($value['selector']['conditions']['requires']))
+							|| ((is_array($value['selector']['conditions']['requires'])) && (ArrayUtility::hasAllSubentries($query, 'facet', $value['selector']['conditions']['requires'])))) {
+							$facets[] = array(
+								'value' => $key,
+								'label' => $label,
+								'configuration' => $value['selector']
+							);
+						}
+
 					}
 
 				}
