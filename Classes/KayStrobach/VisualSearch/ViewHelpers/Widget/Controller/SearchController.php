@@ -6,6 +6,7 @@ use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Flow\Persistence\QueryInterface;
+use TYPO3\Flow\Reflection\Exception\InvalidValueObjectException;
 
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
@@ -71,23 +72,29 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @param string $facet
 	 * @param string $query
 	 * @return string
+	 *
+	 * @throws InvalidValueObjectException
+	 * @throws \TYPO3\Flow\Object\Exception\UnknownObjectException
 	 */
 	public function valuesAction($facet = '', $query = '') {
 		$stringLength = isset($this->items[$facet]['labelLength']) ? $this->items[$facet]['labelLength'] : 30;
 		$values = array();
 		if (isset($this->items[$facet])) {
-			if(isset($this->items[$facet]['values'])) {
-				foreach($this->items[$facet]['values'] as $key => $value) {
+			if(isset($this->items[$facet]['selector']['values'])) {
+				foreach($this->items[$facet]['selector']['values'] as $key => $value) {
 					$values[] = array('label' => $value, 'value' => $key);
 				}
 				return json_encode($values);
-			} elseif(isset($this->items[$facet]['repository'])) {
+			} elseif(isset($this->items[$facet]['selector']['repository'])) {
 				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
-				$repository = $this->objectManager->get($this->items[$facet]['repository']);
+				$repository = $this->objectManager->get($this->items[$facet]['selector']['repository']);
 				if ($repository instanceOf SearchableRepositoryInterface) {
 					$entities = $repository->findBySearchTerm($query)->getQuery()->setLimit(5)->execute(TRUE);
 				} else {
-					$entities = $repository->findAll()->getQuery()->setOrderings(array($this->items[$facet]['labelProperty']  => QueryInterface::ORDER_ASCENDING))->execute(TRUE);
+					if(!isset($this->items[$facet]['selector']['labelProperty'])) {
+						throw new InvalidValueObjectException('Missing labelProperty for search ' . $this->widgetConfiguration['search'] . '.' . $facet . '.selector');
+					}
+					$entities = $repository->findAll()->getQuery()->setOrderings(array($this->items[$facet]['selector']['labelProperty']  => QueryInterface::ORDER_ASCENDING))->execute(TRUE);
 				}
 				#
 				foreach($entities as $key => $entity) {
@@ -97,9 +104,14 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 							'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $stringLength)
 						);
 					} else {
-						$functionName = 'get' . ucfirst($this->items[$facet]['labelProperty']);
+						$label = $this->shortenString(
+							\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath(
+								$entity,
+								$this->items[$facet]['selector']['labelProperty']
+							)
+						);
 						$values[] = array(
-							'label' => $this->shortenString($entity->$functionName(), $stringLength),
+							'label' => $label,
 							'value' => $this->persistenceManager->getIdentifierByObject($entity)
 						);
 					}
@@ -113,21 +125,21 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @Flow\SkipCsrfProtection
 	 *
 	 * @param string $query
+	 * @param string $term
 	 * @return string
 	 */
-	public function facetsAction($query = '') {
+	public function facetsAction($query = '', $term = '') {
 		$facets = array();
 		if ((is_array($this->items)) && (count($this->items) > 0)) {
 			foreach($this->items as $key => $value) {
-				if(array_key_exists('label', $value)) {
+				$label = isset($value['label']) ? $value['label'] : $key;
+				if(($term === '')
+					|| (substr($label, 0, strlen($term)) === $term)
+					|| (substr($key, 0, strlen($term)) === $term)
+				) {
 					$facets[] = array(
 						'value' => $key,
-						'label' => $value['label']
-					);
-				} else {
-					$facets[] = array(
-						'value' => $key,
-						'label' => $key
+						'label' => $label
 					);
 				}
 			}
