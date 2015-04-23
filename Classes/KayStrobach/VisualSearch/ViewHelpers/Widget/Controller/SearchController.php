@@ -178,6 +178,19 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		return json_encode($facets);
 	}
 
+	/**
+	 * @param array $query
+	 * @return string
+	 */
+	public function countAction($query = array()) {
+		$searchConfigurationName = $this->widgetConfiguration['search'];
+		$repositoryName = $this->facetConfiguration[$searchConfigurationName];
+		/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
+		$repository = $this->objectManager->get($repositoryName);
+
+		return json_encode($repository->findBySearchTerm($query)->getQuery()->count());
+	}
+
 	protected function shortenString($string, $length = '30', $append = '...') {
 		if(strlen($string) <= $length) {
 			return $string;
