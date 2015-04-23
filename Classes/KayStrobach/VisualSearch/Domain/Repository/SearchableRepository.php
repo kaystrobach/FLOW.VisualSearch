@@ -11,7 +11,9 @@ use TYPO3\Flow\Persistence\QueryResultInterface;
 use TYPO3\Flow\Persistence\Repository;
 use TYPO3\Flow\Annotations as Flow;
 
-
+/**
+ * @Flow\Scope("singleton")
+ */
 class SearchableRepository extends Repository implements SearchableRepositoryInterface {
 
 	/**
