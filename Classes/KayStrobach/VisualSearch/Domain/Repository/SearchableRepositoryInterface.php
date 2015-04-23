@@ -25,4 +25,15 @@ interface SearchableRepositoryInterface {
 	 * @api
 	 */
 	public function findByIdentifier($identifier);
+
+	/**
+	 * Returns the classname of the entities this repository is managing.
+	 *
+	 * Note that anything that is an "instanceof" this class is accepted
+	 * by the repository.
+	 *
+	 * @return string
+	 * @api
+	 */
+	public function getEntityClassName();
 }
