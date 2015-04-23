@@ -48,7 +48,20 @@
                 $(element).autocomplete(
                     'option',
                     {
-                        source: $(settings['container']).attr('data-facetsAction')
+                        source: function(request, response) {
+                            //
+                            $.ajax({
+                                dataType: "json",
+                                url: $(settings['container']).attr('data-facetsAction'),
+                                data: {
+                                    term: request.term,
+                                    query: $(settings['container']).advancedSearchTerm()
+                                },
+                                success: function(data) {
+                                    response(data);
+                                }
+                            });
+                        }
                     }
                 );
                 $(element).autocomplete(

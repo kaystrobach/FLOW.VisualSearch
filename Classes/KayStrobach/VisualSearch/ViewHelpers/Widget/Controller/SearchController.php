@@ -3,10 +3,12 @@
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
+use KayStrobach\VisualSearch\Utility\ArrayUtility;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Flow\Persistence\QueryInterface;
 use TYPO3\Flow\Reflection\Exception\InvalidValueObjectException;
+use Zend\Stdlib\ArrayUtils;
 
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
@@ -136,11 +138,11 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	/**
 	 * @Flow\SkipCsrfProtection
 	 *
-	 * @param string $query
+	 * @param array $query
 	 * @param string $term
 	 * @return string
 	 */
-	public function facetsAction($query = '', $term = '') {
+	public function facetsAction($query = array(), $term = '') {
 		$facets = array();
 		$lowerCasedTerm = strtolower($term);
 		if ((is_array($this->facetConfiguration)) && (count($this->facetConfiguration) > 0)) {
@@ -150,14 +152,19 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 					|| (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
 					|| (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
 				) {
-					$facets[] = array(
-						'value' => $key,
-						'label' => $label,
-						'configuration' => $value['selector']
-					);
+					if((!isset($value['selector']['conditions']['once']))
+						|| (($value['selector']['conditions']['once']) && (!ArrayUtility::hasSubEntryWith($query, 'facet', $key)))) {
+						$facets[] = array(
+							'value' => $key,
+							'label' => $label,
+							'configuration' => $value['selector']
+						);
+					}
+
 				}
 			}
 		}
+
 		return json_encode($facets);
 	}
 
