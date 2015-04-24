@@ -8,7 +8,6 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Flow\Persistence\QueryInterface;
 use TYPO3\Flow\Reflection\Exception\InvalidValueObjectException;
-use Zend\Stdlib\ArrayUtils;
 
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
@@ -84,12 +83,13 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 *
 	 * @param string $facet
 	 * @param string $query
+	 * @param string $term
 	 * @return string
 	 *
 	 * @throws InvalidValueObjectException
 	 * @throws \TYPO3\Flow\Object\Exception\UnknownObjectException
 	 */
-	public function valuesAction($facet = '', $query = '') {
+	public function valuesAction($facet = '', $query = '', $term = '') {
 		$stringLength = isset($this->facetConfiguration[$facet]['labelLength']) ? $this->facetConfiguration[$facet]['labelLength'] : 30;
 		$values = array();
 		if (isset($this->facetConfiguration[$facet])) {
@@ -102,10 +102,18 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 				$repository = $this->objectManager->get($this->facetConfiguration[$facet]['selector']['repository']);
 				if ($repository instanceOf SearchableRepositoryInterface) {
-					$entities = $repository->findBySearchTerm($query)->getQuery()->setLimit(5)->execute(TRUE);
+					// find by search term, labelProperty, etc
+					// @todo think about replacing the labelProperty with the whole config array
+					$entities = $repository->findBySearchTerm(
+						$query,
+						$this->facetConfiguration[$facet]['selector'],
+						$term
+					)->getQuery()->setLimit(5)->execute(TRUE);
 				} else {
 					if(isset($this->facetConfiguration[$facet]['selector']['orderBy'])) {
-						$entities = $repository->findAll()->getQuery()->setOrderings(array($this->facetConfiguration[$facet]['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING))->execute(TRUE);
+						$entities = $repository->findAll()->getQuery()->setOrderings(
+							array($this->facetConfiguration[$facet]['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING)
+						)->execute(TRUE);
 					} else {
 						$entities = $repository->findAll();
 					}

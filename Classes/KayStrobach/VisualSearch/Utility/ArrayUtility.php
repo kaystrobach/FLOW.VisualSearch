@@ -27,6 +27,15 @@ class ArrayUtility {
 		return false;
 	}
 
+	/**
+	 * checks if each value of the given key exists in atleast one children
+	 * of the array
+	 *
+	 * @param $array
+	 * @param $key
+	 * @param $values
+	 * @return bool
+	 */
 	public static function hasAllSubentries($array, $key, $values) {
 		foreach($values as $value) {
 			if(!self::hasSubEntryWith($array, $key, $value)) {
@@ -34,5 +43,23 @@ class ArrayUtility {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * lets you filter the array by key and value and than returns
+	 * the whole entry
+	 *
+	 * @param $array
+	 * @param $key
+	 * @param $value
+	 * @return array|null
+	 */
+	public static function getOneSubEntryWith($array, $key, $value) {
+		foreach($array as $entry) {
+			if((isset($entry[$key])) && ($entry[$key] === $value)) {
+				return $entry;
+			}
+		}
+		return NULL;
 	}
 }
