@@ -82,14 +82,14 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @Flow\SkipCsrfProtection
 	 *
 	 * @param string $facet
-	 * @param string $query
+	 * @param array $query
 	 * @param string $term
 	 * @return string
 	 *
 	 * @throws InvalidValueObjectException
 	 * @throws \TYPO3\Flow\Object\Exception\UnknownObjectException
 	 */
-	public function valuesAction($facet = '', $query = '', $term = '') {
+	public function valuesAction($facet = '', $query = array(), $term = '') {
 		$stringLength = isset($this->facetConfiguration[$facet]['labelLength']) ? $this->facetConfiguration[$facet]['labelLength'] : 30;
 		$values = array();
 		if (isset($this->facetConfiguration[$facet])) {
@@ -104,11 +104,17 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 				if ($repository instanceOf SearchableRepositoryInterface) {
 					// find by search term, labelProperty, etc
 					// @todo think about replacing the labelProperty with the whole config array
-					$entities = $repository->findBySearchTerm(
+					$result = $repository->findBySearchTerm(
 						$query,
 						$term,
-						$this->facetConfiguration[$facet]['selector']
-					)->getQuery()->setLimit(10)->execute(TRUE);
+						$this->facetConfiguration[$facet]['selector'],
+						$this->facetConfiguration
+					);
+					if(method_exists($result, 'getQuery')) {
+						$entities = $result->getQuery()->setLimit(10)->execute(TRUE);
+					} else {
+						$entities = $result;
+					}
 				} else {
 					if(isset($this->facetConfiguration[$facet]['selector']['orderBy'])) {
 						$entities = $repository->findAll()->getQuery()->setOrderings(
@@ -182,6 +188,8 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 				}
 			}
 		}
+
+		// @todo sort by label
 
 		return json_encode($facets);
 	}

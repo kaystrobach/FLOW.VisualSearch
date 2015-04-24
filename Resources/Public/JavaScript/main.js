@@ -94,17 +94,27 @@
                 }
                 $(element).attr('data-type', 'value');
 
-                var query =  $.param(
-                    {
-                        facet: $(element).prev().children('.token-facet').attr('data-facet')
-                    }
-                );
-
-                var url = $(settings['container']).attr('data-valueAction') + '&' + decodeURI(query);
                 $(element).autocomplete(
                     'option',
                     {
-                        source: url
+                        source: function(request, response) {
+                            var query =  $.param(
+                                {
+                                    facet: $(element).prev().children('.token-facet').attr('data-facet')
+                                }
+                            );
+                            $.ajax({
+                                dataType: "json",
+                                url: $(settings['container']).attr('data-valueAction') + '&' + decodeURI(query),
+                                data: {
+                                    term: request.term,
+                                    query: $(settings['container']).advancedSearchTerm()
+                                },
+                                success: function(data) {
+                                    response(data);
+                                }
+                            });
+                        }
                     }
                 );
                 $(element).autocomplete(

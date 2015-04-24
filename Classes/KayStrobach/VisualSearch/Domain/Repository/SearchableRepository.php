@@ -8,7 +8,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 use TYPO3\Flow\Persistence\QueryResultInterface;
-use TYPO3\Flow\Persistence\Repository;
+use TYPO3\Flow\Persistence\Doctrine\Repository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\QueryInterface;
 
@@ -22,9 +22,10 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	 * @param array $query
 	 * @param string $term
 	 * @param array $facetConfiguration
+	 * @param array $searchConfiguration
 	 * @return QueryResultInterface
 	 */
-	public function findBySearchTerm($query, $term = '', $facetConfiguration = array()) {
+	public function findBySearchTerm($query, $term = '', $facetConfiguration = array(), $searchConfiguration = array()) {
 		$query = $this->createQuery();
 
 		// restrict by number of records by term

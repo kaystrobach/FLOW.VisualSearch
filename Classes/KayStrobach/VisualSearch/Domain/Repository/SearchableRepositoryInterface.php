@@ -15,9 +15,10 @@ interface SearchableRepositoryInterface {
 	 * @param array $query
 	 * @param string $term
 	 * @param array $facetConfiguration
+	 * @param array $searchConfiguration
 	 * @return QueryResultInterface
 	 */
-	public function findBySearchTerm($query, $term = '', $facetConfiguration = array());
+	public function findBySearchTerm($query, $term = '', $facetConfiguration = array(), $searchConfiguration = array());
 
 	/**
 	 * Finds an object matching the given identifier.

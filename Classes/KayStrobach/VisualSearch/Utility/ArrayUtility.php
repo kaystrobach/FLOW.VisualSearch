@@ -49,9 +49,9 @@ class ArrayUtility {
 	 * lets you filter the array by key and value and than returns
 	 * the whole entry
 	 *
-	 * @param $array
-	 * @param $key
-	 * @param $value
+	 * @param array $array
+	 * @param string $key
+	 * @param string $value
 	 * @return array|null
 	 */
 	public static function getOneSubEntryWith($array, $key, $value) {
