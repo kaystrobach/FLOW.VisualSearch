@@ -77,9 +77,6 @@ class MapperUtility {
 				}
 			}
 		}
-
-		$demands[] = $queryObject->equals('registraturSba', '');
-
 		return $demands;
 	}
 }
