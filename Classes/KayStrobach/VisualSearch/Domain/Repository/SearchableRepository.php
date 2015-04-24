@@ -19,6 +19,8 @@ use TYPO3\Flow\Persistence\QueryInterface;
 class SearchableRepository extends Repository implements SearchableRepositoryInterface {
 
 	/**
+	 * Function to aid KayStrobach.VisualSearch to find entries
+	 *
 	 * @param array $query
 	 * @param string $term
 	 * @param array $facetConfiguration
