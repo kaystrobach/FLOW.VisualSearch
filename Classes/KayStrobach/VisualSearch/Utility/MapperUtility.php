@@ -19,12 +19,6 @@ class MapperUtility {
 	protected $objectManager;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
-	 */
-	protected $systemLogger;
-
-	/**
 	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
@@ -53,9 +47,9 @@ class MapperUtility {
 	 * @param string $searchName
 	 * @param array $query
 	 * @param \TYPO3\Flow\Persistence\Doctrine\Query $queryObject
-	 * @return object
+	 * @return array
 	 */
-	public function buildQuery($searchName, $query, &$queryObject) {
+	public function buildQuery($searchName, $query, $queryObject) {
 
 		$searchConfiguration = $this->configurationManager->getConfiguration(
 			'VisualSearch',
@@ -77,13 +71,15 @@ class MapperUtility {
 				if (isset($searchConfiguration[$facet]['matches']['equals']) && (is_array($searchConfiguration[$facet]['matches']['equals']))) {
 					$subDemands = array();
 					foreach ($searchConfiguration[$facet]['matches']['equals'] as $matchField) {
-						$queryObject->equals($matchField, $value);
-						$this->systemLogger->log('SEARCH: ' . $searchName . ' - ' . $facet . ' - ' . $matchField . ' - ' . $queryEntry['value']);
+						$subDemands[] = $queryObject->equals($matchField, $value);
 					}
 					$demands[] = $queryObject->logicalOr($subDemands);
 				}
 			}
 		}
+
+		$demands[] = $queryObject->equals('registraturSba', '');
+
 		return $demands;
 	}
 }
