@@ -108,7 +108,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 						$query,
 						$term,
 						$this->facetConfiguration[$facet]['selector']
-					)->getQuery()->setLimit(5)->execute(TRUE);
+					)->getQuery()->setLimit(10)->execute(TRUE);
 				} else {
 					if(isset($this->facetConfiguration[$facet]['selector']['orderBy'])) {
 						$entities = $repository->findAll()->getQuery()->setOrderings(
