@@ -128,18 +128,21 @@
                                 $(element).focus();
                             }, 100);
 
-                            // store query in the session
-                            $.ajax({
-                                dataType: "json",
-                                url: $(settings['container']).attr('data-storeQueryAction'),
-                                data: {
-                                    query: $(settings['container']).advancedSearchTerm()
-                                }
-                            });
+                            storeQueryInSession();
                             return false;
                         }
                     }
                 );
+            }
+
+            function storeQueryInSession() {
+                $.ajax({
+                    dataType: "json",
+                    url: $(settings['container']).attr('data-storeQueryAction'),
+                    data: {
+                        query: $(settings['container']).advancedSearchTerm()
+                    }
+                });
             }
 
             function initQuery() {
@@ -176,6 +179,9 @@
             $(settings['container']).on('click', function () {
                 addFacetAutocomplete($(settings['container']).children('div[contenteditable]'));
                 $(this).children('div[contenteditable]').last().focus();
+                window.setTimeout(function() {
+                    storeQueryInSession();
+                }, 50)
             });
 
             // strip tags on enter
