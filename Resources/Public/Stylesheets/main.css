@@ -4,14 +4,18 @@
 }
 #search-input-area .token {
 	display: inline-block;
-
 }
 
 #search-input-area .token-facet {
 	font-size: 10px;
 	font-weight: bold;
 	margin-right: 4px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;;
+}
+
+#search-input-area .token-value {
+	font-size: 10px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 #search-input-area .token-value {

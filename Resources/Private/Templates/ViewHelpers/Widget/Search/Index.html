@@ -5,6 +5,9 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <f:if condition="{search}">
 	<f:then>
+
+		<pre><small>{query -> f:format.json()}</small></pre>
+
 		<div class="input-group" role="search">
 			<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search"></span></span>
 
@@ -13,11 +16,12 @@
 			     data-search="{search}"
 			     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
 			     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
-			     data-query="{query}"
+			     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
+			     data-query="{query -> f:format.json()}"
 					>
 			</div>
 			<span class="input-group-btn">
-				<button class="btn btn-default" type="button">
+				<button class="btn btn-default" type="button" onclick="document.location.reload();">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
 			</span>

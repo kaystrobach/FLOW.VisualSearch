@@ -127,6 +127,15 @@
                             window.setTimeout(function() {
                                 $(element).focus();
                             }, 100);
+
+                            // store query in the session
+                            $.ajax({
+                                dataType: "json",
+                                url: $(settings['container']).attr('data-storeQueryAction'),
+                                data: {
+                                    query: $(settings['container']).advancedSearchTerm()
+                                }
+                            });
                             return false;
                         }
                     }

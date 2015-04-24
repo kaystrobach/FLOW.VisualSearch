@@ -12,12 +12,6 @@ use TYPO3\Flow\Reflection\Exception\InvalidValueObjectException;
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 	/**
-	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
-	 * @Flow\Inject
-	 */
-	protected $logger;
-
-	/**
 	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
@@ -51,6 +45,12 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	protected $objectManager;
 
 	/**
+	 * @var \KayStrobach\VisualSearch\Domain\Session\QueryStorage
+	 * @Flow\Inject
+	 */
+	protected $queryStorage;
+
+	/**
 	 *
 	 */
 	public function initializeAction() {
@@ -75,7 +75,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		$searchConfigurationName = $this->widgetConfiguration['search'];
 		$this->view->assign('search', $searchConfigurationName);
 		$this->view->assign('settings', $this->searchConfiguration);
-		#$this->view->assign('query', 'defaultquery');
+		$this->view->assign('query', $this->queryStorage->getQuery($this->widgetConfiguration['search']));
 	}
 
 	/**
@@ -192,6 +192,20 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		// @todo sort by label
 
 		return json_encode($facets);
+	}
+
+	/**
+	 * Stores a search query in the session
+	 *
+	 * @param array $query
+	 * @return string
+	 */
+	public function storeQueryAction($query = array()) {
+		$this->queryStorage->setQuery(
+			$this->widgetConfiguration['search'],
+			$query
+		);
+		return 'OK';
 	}
 
 	/**
