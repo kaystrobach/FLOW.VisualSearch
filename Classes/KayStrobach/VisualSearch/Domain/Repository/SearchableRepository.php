@@ -17,6 +17,13 @@ use TYPO3\Flow\Persistence\QueryInterface;
  * @Flow\Scope("singleton")
  */
 class SearchableRepository extends Repository implements SearchableRepositoryInterface {
+	/**
+	 * helps to use the data objects of the search
+	 *
+	 * @Flow\Inject
+	 * @var \KayStrobach\VisualSearch\Utility\MapperUtility
+	 */
+	protected $mapperUtility;
 
 	/**
 	 * Function to aid KayStrobach.VisualSearch to find entries
