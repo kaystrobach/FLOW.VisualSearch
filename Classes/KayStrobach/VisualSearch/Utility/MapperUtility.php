@@ -64,24 +64,26 @@ class MapperUtility {
 
 		$demands = array();
 		foreach($query as $queryEntry) {
-			$facet = $queryEntry['facet'];
-			if(isset($searchConfiguration[$facet]['selector']['repository'])) {
-				$repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];
-				/** @var \TYPO3\Flow\Persistence\Doctrine\Repository $repository */
-				$repository = $this->objectManager->get($repositoryClassName);
-				$value = $repository->findByIdentifier($queryEntry['value']);
-			} else {
-				$value = $queryEntry['value'];
-			}
-			if(isset($searchConfiguration[$facet]['matches']['equals']) && (is_array($searchConfiguration[$facet]['matches']['equals'])) ) {
-				$subDemands = array();
-				foreach($searchConfiguration[$facet]['matches']['equals'] as $matchField) {
-					$queryObject->equals($matchField, $value);
-					$this->systemLogger->log('SEARCH: ' . $searchName . ' - ' . $facet . ' - ' . $matchField . ' - ' . $queryEntry['value']);
+			if(isset($queryEntry['facet'])) {
+				$facet = $queryEntry['facet'];
+				if (isset($searchConfiguration[$facet]['selector']['repository'])) {
+					$repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];
+					/** @var \TYPO3\Flow\Persistence\Doctrine\Repository $repository */
+					$repository = $this->objectManager->get($repositoryClassName);
+					$value = $repository->findByIdentifier($queryEntry['value']);
+				} else {
+					$value = $queryEntry['value'];
 				}
-				$demands[] = $queryObject->logicalOr($subDemands);
+				if (isset($searchConfiguration[$facet]['matches']['equals']) && (is_array($searchConfiguration[$facet]['matches']['equals']))) {
+					$subDemands = array();
+					foreach ($searchConfiguration[$facet]['matches']['equals'] as $matchField) {
+						$queryObject->equals($matchField, $value);
+						$this->systemLogger->log('SEARCH: ' . $searchName . ' - ' . $facet . ' - ' . $matchField . ' - ' . $queryEntry['value']);
+					}
+					$demands[] = $queryObject->logicalOr($subDemands);
+				}
 			}
 		}
-		return $queryObject->logicalAnd($demands);
+		return $demands;
 	}
 }

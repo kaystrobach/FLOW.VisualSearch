@@ -17,7 +17,7 @@
 			     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
 			     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
 			     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
-			     data-query="{query -> f:format.json()}"
+			     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
 					>
 			</div>
 			<span class="input-group-btn">

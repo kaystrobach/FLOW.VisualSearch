@@ -142,6 +142,15 @@
                 );
             }
 
+            function initQuery() {
+                var query = $.parseJSON($(settings['container']).attr('data-query'));
+                $.each(query, function(key, value) {
+                    var html = '<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-facet="' + value.facet + '">' + value.facetLabel + '</div><div class="token token-value" data-value="' + value.value + '">' + value.valueLabel + '</div></div>';
+                    $(settings['container']).children('.token-input').before(html);
+                });
+
+            }
+
             var defaults = {
                 container: '#search-input-area'
             };
@@ -149,6 +158,8 @@
 
             // create needed elements
             $(settings['container']).html('<div contenteditable="true" class="token-input"></div>');
+
+            initQuery();
 
             $(settings['container']).children('div[contenteditable]').autocomplete(
                 {
