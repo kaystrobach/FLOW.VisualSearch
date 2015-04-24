@@ -28,10 +28,10 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 		$query = $this->createQuery();
 
 		// restrict by number of records by term
-		if(isset($facetConfiguration['facetConfiguration'])) {
+		if(isset($facetConfiguration['labelProperty'])) {
 			$query->matching(
 				$query->like(
-					$facetConfiguration['facetConfiguration'], '%' . $term . '%'
+					$facetConfiguration['labelProperty'], '%' . $term . '%'
 				)
 			);
 		}

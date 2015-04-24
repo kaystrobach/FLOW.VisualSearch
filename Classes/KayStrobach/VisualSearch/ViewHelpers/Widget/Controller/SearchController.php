@@ -106,8 +106,8 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 					// @todo think about replacing the labelProperty with the whole config array
 					$entities = $repository->findBySearchTerm(
 						$query,
-						$this->facetConfiguration[$facet]['selector'],
-						$term
+						$term,
+						$this->facetConfiguration[$facet]['selector']
 					)->getQuery()->setLimit(5)->execute(TRUE);
 				} else {
 					if(isset($this->facetConfiguration[$facet]['selector']['orderBy'])) {
