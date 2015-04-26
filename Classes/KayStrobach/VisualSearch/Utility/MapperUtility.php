@@ -75,6 +75,13 @@ class MapperUtility {
 					}
 					$demands[] = $queryObject->logicalOr($subDemands);
 				}
+				if (isset($searchConfiguration[$facet]['matches']['like']) && (is_array($searchConfiguration[$facet]['matches']['like']))) {
+					$subDemands = array();
+					foreach ($searchConfiguration[$facet]['matches']['like'] as $matchField) {
+						$subDemands[] = $queryObject->like($matchField, '%' . $value . '%');
+					}
+					$demands[] = $queryObject->logicalOr($subDemands);
+				}
 			}
 		}
 		return $demands;
