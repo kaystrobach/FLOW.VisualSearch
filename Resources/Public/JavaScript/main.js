@@ -40,6 +40,10 @@
         },
 
         advancedSearch: function (settings) {
+            /**
+             * gets an element and adds a facet there
+             * @param element
+             */
             function addFacetAutocomplete(element) {
                 if($(element).autocomplete('instance')) {
                     $(element).autocomplete('enable');
@@ -68,12 +72,16 @@
                     'option',
                     {
                         select: function( event, ui ) {
-                            console.log(ui);
                             $(this).before('<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-value=""></div></div>');
                             $(this).prev().find('.token-facet').text(ui.item.label);
                             $(this).prev().find('.token-facet').attr('data-facet', ui.item.value)
                             $(element).text('');
-                            addValueAutocomplete(element);
+                            if(ui.item.configuration.freeInput) {
+                                addValueFreeText(element);
+                                console.log('just once please');
+                            } else {
+                                addValueAutocomplete(element);
+                            }
                             window.setTimeout(function() {
                                 // @todo add handling for disabled autocomplete
                                 //if(ui.item.configuration.freeInput) {
@@ -88,6 +96,10 @@
                 );
             }
 
+            /**
+             * gets an element and add a value to a given facet
+             * @param element
+             */
             function addValueAutocomplete(element) {
                 if($(element).autocomplete('instance')) {
                     $(element).autocomplete('enable');
@@ -133,6 +145,14 @@
                         }
                     }
                 );
+            }
+
+            function addValueFreeText(element) {
+                if($(element).autocomplete('instance')) {
+                    $(element).autocomplete('disable');
+                }
+
+                $(element).attr('data-type', 'value');
             }
 
             function storeQueryInSession() {
@@ -199,7 +219,14 @@
                 var text = $(this).text();
                 // enter
                 if (event.which == 13) {
-                    if(text == '') {
+                    console.log($(this).autocomplete('option', 'disabled'));
+                    if($(this).autocomplete('option', 'disabled')) {
+                        $(this).prev().append('<div class="token token-value" data-value="' + text + '">' + text + '</div>');
+                        storeQueryInSession();
+                        window.setTimeout(function() {
+                            addFacetAutocomplete($(this));
+                        }, 50);
+                    } else if(text == '') {
                         $(this).closest('form').submit();
                     }
                     $(this).text('');
