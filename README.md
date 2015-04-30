@@ -1,9 +1,6 @@
 # FLOW.VisualSearch
 
-uses the visualsearch JS by documentcloud to do an advanced search in your model objects
-
-* http://documentcloud.github.io/visualsearch/ 
-* https://github.com/documentcloud/visualsearch
+![Filter](Documentation/filter.gif)
 
 Basicly it ships a FLUID ViewHelper and the ability to configure that viewHelper heavily, this way we can do advanced searches
 
@@ -12,6 +9,7 @@ You can define:
 * and configure multiple Searches
 * search multiple attributes of a model (uses dynamic query building)
 * Repositories have to implement an interface to be searchable
+* Searches are instantly stored in the user session if the user changes it
 
 ## Inclusion in a FLUID Template
 
@@ -86,9 +84,3 @@ In a controller you can then use these lines to filter the resultset:
 ```
 
 Additionally you need to define how the search should do the autocompletition, this is done in ```Configuration/VisualSearch.yaml``` please take a look into the example file to get an idea.
-
-## Example
-
-The result may then look like:
-
-![Filter](Documentation/filter.gif)
