@@ -38,7 +38,9 @@ To include the viewHelper you include a line like:
 <search:widget.search search="students"/>
 ```
 
-This way you define, that ```students``` is the key for storing the filter query in the session for later usage.
+This way you define, that ```students``` is the key for storing the filter query in the session for later usage and it is the key for configuring the search in the ```VisualSearch.yaml```.
+
+## Searching in the Repository by query
 
 In the studentsRepository you can use the following function to get the filtered students:
 
@@ -87,6 +89,8 @@ class StudentRepository extends SearchableRepository {
 ```
 
 The buildQuery function is currently in a state, where is maybe moved to the SearchableRepository lateron.
+
+## Usage in the controller
 
 In a controller you can then use these lines to filter the resultset:
 
