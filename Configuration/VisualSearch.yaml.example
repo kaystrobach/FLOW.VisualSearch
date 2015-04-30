@@ -1,0 +1,226 @@
+Searches:
+  # ===========================================================================
+  # Suche nach Studenten
+  # Diese Suche ist der Hauptfilter zum Filtern von Studenten
+  # ===========================================================================
+  students:
+    search:
+      repository: SBS\LaPo\Domain\Repository\StudentRepository
+    autocomplete:
+      #
+      # freitext eingabe
+      #
+      searchtext:
+        label: "Suchtext"
+        selector:
+          conditions:
+            once: true
+          freeInput: true
+        matches:
+          like:
+             - kontakt.nachname
+             - kontakt.vorname
+             - aktenzeichen
+             - registraturSba
+      #
+      # gibt and, ob die Daten des Studenten kontrolliert wurden
+      #
+      datenkontrolliert:
+        label: kontrolliert
+        selector:
+          conditions:
+            once: true
+          values:
+            1: ja
+            0: nein
+        matches:
+          equals: datenkontrolliert
+      #
+      # gibt an, ober der student zugelassen ist oder nicht
+      #
+      zugelassen:
+        label: "zugelassen"
+        selector:
+          conditions:
+            once: true
+          values:
+            1: ja
+            0: nein
+        matches:
+          equals:
+            - zugelassen
+      #
+      # gibt das studienjahr an
+      #
+      studienjahr:
+        label: "Studienjahr"
+        selector:
+          conditions:
+            once: true
+          values:
+            2015: 2015
+            2016: 2016
+            2017: 2017
+        matches:
+          equals:
+            - studium.pruefungsjahr
+      #
+      # gibt an, ob der prüfungszeitraum im Frühjahr oder Herbst ist
+      #
+      pruefungssemester:
+        label: "Prüfungssemester"
+        selector:
+          conditions:
+            once: true
+          values:
+            0: Frühjahr
+            1: Herbst
+        matches:
+          equals:
+            - studium.pruefungssemester
+      #
+      # sucht nach einer SBA
+      #
+      sba:
+        label: "SBA"
+        selector:
+          conditions:
+            once: true
+          labelProperty: kontakt.ort
+          orderBy: kontakt.ort
+          repository: SBS\LaPo\Domain\Repository\SbaRepository
+        matches:
+          equals:
+            - sba
+      #
+      # wählt die Einrichtung
+      #
+      einrichtung:
+        label: "Einrichtung"
+        selector:
+          conditions:
+            once: true
+          labelProperty: kurzbezeichnung
+          orderBy: kurzbezeichnung
+          repository: SBS\LaPo\Domain\Repository\EinrichtungRepository
+        matches:
+          equals:
+            - studium.studienEinrichtung1
+            - studium.studienEinrichtung2
+      #
+      # wählt die prüfungsmerkmale
+      #
+      pruefungsmerkmal:
+        label: Prüfungsmerkmal
+        selector:
+          conditions:
+            once: true
+          labelProperty: title
+          orderBy: erklaerung
+          repository: SBS\LaPo\Domain\Repository\PruefungsmerkmalRepository
+        matches:
+          euqals:
+            - pruefungsmerkmal
+      #
+      # sucht nach dem geburtsland
+      #
+      geburtsland:
+        label: Geburtsland
+        selector:
+          conditions:
+            once: true
+          labelProperty: staatsnamekurz
+          orderBy: staatsnamekurz
+          repository: SBS\LaPo\Domain\Repository\StaatRepository
+        matches:
+          euqals:
+            - geburtsland
+      #
+      # sucht nach der staatsangehörigkeit
+      #
+      staatsangehoerigkeit:
+        label: Staatsangehörigkeit
+        selector:
+          conditions:
+            once: true
+          labelProperty: staatsangehoerigkeitsbezeichnung
+          orderBy: staatsnamekurz
+          repository: SBS\LaPo\Domain\Repository\StaatRepository
+        matches:
+          euqals:
+            - staatsangehoerigkeit
+      #
+      # wählt die schulart
+      #
+      schulart:
+        label: "Schulart"
+        selector:
+          conditions:
+            once: true
+          labelProperty: schulartbezeichnung
+          orderBy: schulartbezeichnung
+          repository: SBS\LaPo\Domain\Repository\SchulartRepository
+        matches:
+          equals:
+            - studium.schulart
+      #
+      # wählt das fach
+      #
+      fach:
+        label: "Fach"
+        selector:
+          conditions:
+            once: true
+            requires:
+              - schulart
+          labelProperty: fachbezeichnung
+          orderBy: fachbezeichnung
+          repository: SBS\LaPo\Domain\Repository\FachRepository
+        matches:
+          equals:
+            - studium.fach1
+            - studium.fach2
+            - studium.fach3
+      #
+      # wählt den fachbereich
+      #
+      fachbereich:
+        label: "Fachbereich"
+        selector:
+          conditions:
+            once: true
+            requires:
+              - schulart
+              - fach
+          labelProperty: fachbereichsbezeichnung
+          orderBy: fachbereichsbezeichnung
+          repository: SBS\LaPo\Domain\Repository\FachbereichRepository
+        matches:
+          #equals:
+          #  - wunschFachpruefungen.0.schwerpunkt1.fachbereich
+          #  - wunschFachpruefungen.0.schwerpunkt2.fachbereich
+          #  - wunschFachpruefungen.0.schwerpunkt3.fachbereich
+          #  - wunschFachpruefungen.1.schwerpunkt1.fachbereich
+          #  - wunschFachpruefungen.1.schwerpunkt2.fachbereich
+          #  - wunschFachpruefungen.1.schwerpunkt3.fachbereich
+      #
+      # wählt die schwerpunkte zu den fächern
+      #
+      schwerpunkt:
+        label: "Schwerpunkt"
+        selector:
+          conditions:
+            once: true
+            requires:
+              - fachbereich
+          labelProperty: pruefungsschwerpunkt
+          orderBy: pruefungsschwerpunkt
+          repository: SBS\LaPo\Domain\Repository\Pruefung\SchwerpunktRepository
+        matches:
+          #equals:
+          #  - wunschFachpruefungen.0.schwerpunkt1
+          #  - wunschFachpruefungen.0.schwerpunkt2
+          #  - wunschFachpruefungen.0.schwerpunkt3
+          #  - wunschFachpruefungen.1.schwerpunkt1
+          #  - wunschFachpruefungen.1.schwerpunkt2
+          #  - wunschFachpruefungen.1.schwerpunkt3
