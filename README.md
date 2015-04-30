@@ -11,6 +11,25 @@ You can define:
 * Repositories have to implement an interface to be searchable
 * Searches are instantly stored in the user session if the user changes it
 
+## Installation
+
+This package can be installed via composer.
+
+Please execute:
+
+```
+composer require kaystrobach/visualsearch @dev
+```
+
+
+Alternativly you can add the following line to your ```composer.json``` and execute ```composer update```
+
+```
+	"kaystrobach/visualsearch": "@dev"
+```
+
+
+
 ## Inclusion in a FLUID Template
 
 To include the viewHelper you include a line like:
