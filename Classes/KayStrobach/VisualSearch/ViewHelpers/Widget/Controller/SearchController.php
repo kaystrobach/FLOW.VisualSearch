@@ -17,17 +17,6 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	public $configurationManager;
 
 	/**
-	 * @Flow\Inject
-	 * @var PersistenceManagerInterface
-	 */
-	protected $persistenceManager;
-
-	/**
-	 * stores the settings
-	 */
-	protected $settings = array();
-
-	/**
 	 * @var array
 	 */
 	protected $searchConfiguration = array();
@@ -56,6 +45,12 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	protected $facetRepository;
 
 	/**
+	 * @var \KayStrobach\VisualSearch\Domain\Service\ValueService
+	 * @Flow\Inject
+	 */
+	protected $valueService;
+
+	/**
 	 *
 	 */
 	public function initializeAction() {
@@ -68,11 +63,6 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		$this->facetConfiguration = $this->configurationManager->getConfiguration(
 			'VisualSearch',
 			'Searches.' . $this->widgetConfiguration['search'] . '.autocomplete'
-		);
-
-		$this->settings = $this->configurationManager->getConfiguration(
-			\TYPO3\FLOW\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
-			'KayStrobach.VisualSearch' . $this->widgetConfiguration['search'] . '.Configuration'
 		);
 	}
 
@@ -95,62 +85,12 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @throws \TYPO3\Flow\Object\Exception\UnknownObjectException
 	 */
 	public function valuesAction($facet = '', $query = array(), $term = '') {
-		$stringLength = isset($this->facetConfiguration[$facet]['labelLength']) ? $this->facetConfiguration[$facet]['labelLength'] : 30;
-		$values = array();
-		if (isset($this->facetConfiguration[$facet])) {
-			if(isset($this->facetConfiguration[$facet]['selector']['values'])) {
-				foreach($this->facetConfiguration[$facet]['selector']['values'] as $key => $value) {
-					$values[] = array('label' => $value, 'value' => $key);
-				}
-				return json_encode($values);
-			} elseif(isset($this->facetConfiguration[$facet]['selector']['repository'])) {
-				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
-				$repository = $this->objectManager->get($this->facetConfiguration[$facet]['selector']['repository']);
-				if ($repository instanceOf SearchableRepositoryInterface) {
-					// find by search term, labelProperty, etc
-					// @todo think about replacing the labelProperty with the whole config array
-					$result = $repository->findBySearchTerm(
-						$query,
-						$term,
-						$this->facetConfiguration[$facet]['selector'],
-						$this->facetConfiguration
-					);
-					if(method_exists($result, 'getQuery')) {
-						$entities = $result->getQuery()->setLimit(10)->execute(TRUE);
-					} else {
-						$entities = $result;
-					}
-				} else {
-					if(isset($this->facetConfiguration[$facet]['selector']['orderBy'])) {
-						$entities = $repository->findAll()->getQuery()->setOrderings(
-							array($this->facetConfiguration[$facet]['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING)
-						)->execute(TRUE);
-					} else {
-						$entities = $repository->findAll();
-					}
-
-				}
-				foreach($entities as $key => $entity) {
-					if(method_exists($entity, '__toString')) {
-						$values[] = array(
-							'label' => (string)$entity,
-							'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $stringLength)
-						);
-					} else {
-						$label = $this->shortenString(
-							\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath(
-								$entity,
-								$this->facetConfiguration[$facet]['selector']['labelProperty']
-							)
-						);
-						$values[] = array(
-							'label' => $label,
-							'value' => $this->persistenceManager->getIdentifierByObject($entity)
-						);
-					}
-				}
-			}
-		}
+		$values = $this->valueService->getValuesByFacetQueryAndTerm(
+			$this->widgetConfiguration['search'],
+			$facet,
+			$query,
+			$term
+		);
 		return json_encode($values);
 	}
 
@@ -193,15 +133,6 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 		$repositoryName = $this->facetConfiguration[$searchConfigurationName];
 		/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 		$repository = $this->objectManager->get($repositoryName);
-
 		return json_encode($repository->findBySearchTerm($query)->getQuery()->count());
-	}
-
-	protected function shortenString($string, $length = '30', $append = '...') {
-		if(strlen($string) <= $length) {
-			return $string;
-		} else {
-			return substr($string, 0, $length) . $append;
-		}
 	}
 }

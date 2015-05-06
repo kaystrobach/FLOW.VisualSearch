@@ -72,4 +72,18 @@ class FacetRepository {
 		}
 		return $facets;
 	}
+
+	/**
+	 * return a facet by search and facet
+	 *
+	 * @param $searchName
+	 * @param $facet
+	 * @return array
+	 */
+	public function findBySearchNameAndFacetName($searchName, $facet) {
+		return $this->configurationManager->getConfiguration(
+			'VisualSearch',
+			'Searches.' . $searchName . '.autocomplete.' . $facet
+		);
+	}
 }
