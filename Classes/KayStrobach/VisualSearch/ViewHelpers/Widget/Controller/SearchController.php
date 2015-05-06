@@ -3,7 +3,6 @@
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
-use KayStrobach\VisualSearch\Utility\ArrayUtility;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Flow\Persistence\QueryInterface;
@@ -49,6 +48,12 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @Flow\Inject
 	 */
 	protected $queryStorage;
+
+	/**
+	 * @var \KayStrobach\VisualSearch\Domain\Repository\FacetRepository
+	 * @Flow\Inject
+	 */
+	protected $facetRepository;
 
 	/**
 	 *
@@ -157,45 +162,11 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @return string
 	 */
 	public function facetsAction($query = array(), $term = '') {
-		$facets = array();
-		$lowerCasedTerm = strtolower($term);
-		if ((is_array($this->facetConfiguration)) && (count($this->facetConfiguration) > 0)) {
-			foreach($this->facetConfiguration as $key => $value) {
-				$label = isset($value['label']) ? $value['label'] : $key;
-
-				// restrict to items filtered by term
-				if(($term === '')
-					|| (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
-					|| (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
-				) {
-
-					// should item be displayed just once?
-					if((!isset($value['selector']['conditions']['once']))
-						|| (($value['selector']['conditions']['once']) && (!ArrayUtility::hasSubEntryWith($query, 'facet', $key)))) {
-
-						// are all required fields given?
-						if((!isset($value['selector']['conditions']['requires']))
-							|| ((is_array($value['selector']['conditions']['requires'])) && (ArrayUtility::hasAllSubentries($query, 'facet', $value['selector']['conditions']['requires'])))) {
-							$facets[] = array(
-								'value' => $key,
-								'label' => $label,
-								'configuration' => $value['selector']
-							);
-						}
-
-					}
-
-				}
-			}
-			usort($facets, function($a, $b) {
-				$labelA = mb_strtolower($a['label']);
-				$labelB = mb_strtolower($b['label']);
-				return strnatcmp($labelA, $labelB);
-			});
-		}
-
-		// @todo sort by label
-
+		$facets = $this->facetRepository->findFacetsByQueryAndTerm(
+			$this->widgetConfiguration['search'],
+			$query,
+			$term
+		);
 		return json_encode($facets);
 	}
 
