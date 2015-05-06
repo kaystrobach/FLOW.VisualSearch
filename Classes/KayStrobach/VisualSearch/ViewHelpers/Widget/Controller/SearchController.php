@@ -187,6 +187,11 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 
 				}
 			}
+			usort($facets, function($a, $b) {
+				$labelA = mb_strtolower($a['label']);
+				$labelB = mb_strtolower($b['label']);
+				return strnatcmp($labelA, $labelB);
+			});
 		}
 
 		// @todo sort by label
