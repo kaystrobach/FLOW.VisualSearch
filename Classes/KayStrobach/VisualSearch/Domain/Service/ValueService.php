@@ -81,25 +81,7 @@ class ValueService {
 					}
 
 				}
-				foreach($entities as $key => $entity) {
-					if(method_exists($entity, '__toString')) {
-						$values[] = array(
-							'label' => (string)$entity,
-							'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $stringLength)
-						);
-					} else {
-						$label = $this->shortenString(
-							\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath(
-								$entity,
-								$facetConfiguration['selector']['labelProperty']
-							)
-						);
-						$values[] = array(
-							'label' => $label,
-							'value' => $this->persistenceManager->getIdentifierByObject($entity)
-						);
-					}
-				}
+				return $this->convertEntitiesForSearch($entities, $facetConfiguration, $stringLength);
 			}
 		}
 		return $values;
@@ -116,6 +98,37 @@ class ValueService {
 		}
 		return $values;
 
+	}
+
+	/**
+	 * @param array $entities
+	 * @param array $facetConfiguration
+	 * @param integer $labelLength
+	 *
+	 * @return array
+	 */
+	protected function convertEntitiesForSearch($entities, $facetConfiguration, $labelLength) {
+		$values = array();
+		foreach($entities as $key => $entity) {
+			if(method_exists($entity, '__toString')) {
+				$values[] = array(
+					'label' => (string)$entity,
+					'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $labelLength)
+				);
+			} else {
+				$label = $this->shortenString(
+					\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath(
+						$entity,
+						$facetConfiguration['selector']['labelProperty']
+					)
+				);
+				$values[] = array(
+					'label' => $label,
+					'value' => $this->persistenceManager->getIdentifierByObject($entity)
+				);
+			}
+		}
+		return $values;
 	}
 
 	/**
