@@ -74,9 +74,9 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	public function findByQuery($query, $searchName = NULL) {
 		if ($searchName === NULL) {
 			if (isset($this->defaultSearchName)) {
-				$searchName = $this->getEntityClassName();
-			} else {
 				$searchName = $this->defaultSearchName;
+			} else {
+				$searchName = $this->getEntityClassName();
 			}
 		}
 
