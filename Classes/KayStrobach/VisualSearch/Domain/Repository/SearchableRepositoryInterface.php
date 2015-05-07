@@ -41,4 +41,11 @@ interface SearchableRepositoryInterface {
 	 * @api
 	 */
 	public function getEntityClassName();
+
+	/**
+	 * @param array $query
+	 * @param string $searchName
+	 * @return \TYPO3\Flow\Persistence\QueryResultInterface
+	 */
+	public function findByQuery($query, $searchName = NULL);
 }

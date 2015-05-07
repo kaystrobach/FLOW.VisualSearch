@@ -18,6 +18,13 @@ use TYPO3\Flow\Persistence\QueryInterface;
  */
 class SearchableRepository extends Repository implements SearchableRepositoryInterface {
 	/**
+	 * spezifies the default search used in visualsearch with that repository
+	 *
+	 * @var string
+	 */
+	protected $defaultSearchName = NULL;
+
+	/**
 	 * helps to use the data objects of the search
 	 *
 	 * @Flow\Inject
@@ -53,5 +60,53 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 			);
 		}
 		return $query->execute();
+	}
+
+	/**
+	 * function to filter the repository result by a given query
+	 * this function should be used to display the filtered result list
+	 *
+	 * @param array $query
+	 * @param null $searchName
+	 * @return QueryResultInterface
+	 */
+	public function findByQuery($query, $searchName = NULL) {
+		if ($searchName === NULL) {
+			if (isset($this->defaultSearchName)) {
+				$searchName = $this->getEntityClassName();
+			} else {
+				$searchName = $this->defaultSearchName;
+			}
+		}
+
+		$demands = array();
+		$queryObject = $this->createQuery();
+
+		// get all the other filters
+		if (method_exists($this, 'initializeFindByQuery')) {
+			$demands = $this->initializeFindByQuery($queryObject, $searchName);
+		}
+
+		// merge demands from VisualSearch.yaml and the
+		$demands = array_merge($demands, $this->mapperUtility->buildQuery($searchName, $query, $queryObject));
+
+		$queryObject->matching(
+			$queryObject->logicalAnd(
+				$demands
+			)
+		);
+		return $queryObject->execute();
+	}
+
+	/**
+	 * add demands into the query
+	 *
+	 * @param \TYPO3\Flow\Persistence\Doctrine\Query $queryObject
+	 * @param string $searchName
+	 *
+	 * @return array
+	 */
+	protected function initializeFindByQuery($queryObject, $searchName) {
+		return array();
 	}
 }
