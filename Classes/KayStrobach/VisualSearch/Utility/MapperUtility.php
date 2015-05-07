@@ -38,7 +38,7 @@ class MapperUtility {
 		return $objectRepository->findByIdentifier($objectIdentifier);
 	}
 
-	//-------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	/**
 	 * iterates over all
 	 *
@@ -57,8 +57,8 @@ class MapperUtility {
 		);
 
 		$demands = array();
-		foreach($query as $queryEntry) {
-			if(isset($queryEntry['facet'])) {
+		foreach ($query as $queryEntry) {
+			if (isset($queryEntry['facet'])) {
 				$facet = $queryEntry['facet'];
 				if (isset($searchConfiguration[$facet]['selector']['repository'])) {
 					$repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];

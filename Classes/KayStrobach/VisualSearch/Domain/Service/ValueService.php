@@ -52,9 +52,9 @@ class ValueService {
 		if (isset($facetConfiguration)) {
 			$stringLength = isset($facetConfiguration['labelLength']) ? $facetConfiguration['labelLength'] : 30;
 
-			if(isset($facetConfiguration['selector']['values'])) {
+			if (isset($facetConfiguration['selector']['values'])) {
 				return $this->convertArrayForSearch($facetConfiguration['selector']['values']);
-			} elseif(isset($facetConfiguration['selector']['repository'])) {
+			} elseif (isset($facetConfiguration['selector']['repository'])) {
 				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 				$repository = $this->objectManager->get($facetConfiguration['selector']['repository']);
 				if ($repository instanceOf SearchableRepositoryInterface) {
@@ -66,13 +66,13 @@ class ValueService {
 						$facetConfiguration['selector'],
 						$facetConfiguration
 					);
-					if(method_exists($result, 'getQuery')) {
+					if (method_exists($result, 'getQuery')) {
 						$entities = $result->getQuery()->setLimit(10)->execute(TRUE);
 					} else {
 						$entities = $result;
 					}
 				} else {
-					if(isset($facetConfiguration['selector']['orderBy'])) {
+					if (isset($facetConfiguration['selector']['orderBy'])) {
 						$entities = $repository->findAll()->getQuery()->setOrderings(
 							array($facetConfiguration['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING)
 						)->execute(TRUE);
@@ -93,7 +93,7 @@ class ValueService {
 	 */
 	protected function convertArrayForSearch($array) {
 		$values = array();
-		foreach($array as $key => $value) {
+		foreach ($array as $key => $value) {
 			$values[] = array('label' => $value, 'value' => $key);
 		}
 		return $values;
@@ -109,8 +109,8 @@ class ValueService {
 	 */
 	protected function convertEntitiesForSearch($entities, $facetConfiguration, $labelLength) {
 		$values = array();
-		foreach($entities as $key => $entity) {
-			if(method_exists($entity, '__toString')) {
+		foreach ($entities as $key => $entity) {
+			if (method_exists($entity, '__toString')) {
 				$values[] = array(
 					'label' => (string)$entity,
 					'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $labelLength)
@@ -138,7 +138,7 @@ class ValueService {
 	 * @return string
 	 */
 	protected function shortenString($string, $length = '30', $append = '...') {
-		if(strlen($string) <= $length) {
+		if (strlen($string) <= $length) {
 			return $string;
 		} else {
 			return substr($string, 0, $length) . $append;

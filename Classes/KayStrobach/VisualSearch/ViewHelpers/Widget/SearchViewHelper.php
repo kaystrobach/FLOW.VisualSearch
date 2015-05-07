@@ -38,4 +38,3 @@ class SearchViewHelper extends AbstractWidgetViewHelper {
 	}
 }
 
-?>

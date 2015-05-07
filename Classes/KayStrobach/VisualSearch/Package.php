@@ -31,7 +31,7 @@ class Package extends BasePackage {
 	 * @return void
 	 */
 	public function boot(\TYPO3\Flow\Core\Bootstrap $bootstrap) {
-		//register Configuration Type Menu
+		// register Configuration Type Menu
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 		$dispatcher->connect('TYPO3\Flow\Configuration\ConfigurationManager', 'configurationManagerReady',
 			function ($configurationManager) {
@@ -41,4 +41,3 @@ class Package extends BasePackage {
 	}
 }
 
-?>

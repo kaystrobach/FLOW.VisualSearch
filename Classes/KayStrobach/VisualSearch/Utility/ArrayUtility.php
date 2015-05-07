@@ -19,12 +19,12 @@ class ArrayUtility {
 	 * @return bool
 	 */
 	public static function hasSubEntryWith($array, $key, $value) {
-		foreach($array as $entry) {
-			if((isset($entry[$key])) && ($entry[$key] === $value)) {
-				return true;
+		foreach ($array as $entry) {
+			if ((isset($entry[$key])) && ($entry[$key] === $value)) {
+				return TRUE;
 			}
 		}
-		return false;
+		return FALSE;
 	}
 
 	/**
@@ -37,12 +37,12 @@ class ArrayUtility {
 	 * @return bool
 	 */
 	public static function hasAllSubentries($array, $key, $values) {
-		foreach($values as $value) {
-			if(!self::hasSubEntryWith($array, $key, $value)) {
-				return false;
+		foreach ($values as $value) {
+			if (!self::hasSubEntryWith($array, $key, $value)) {
+				return FALSE;
 			}
 		}
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -55,8 +55,8 @@ class ArrayUtility {
 	 * @return array|null
 	 */
 	public static function getOneSubEntryWith($array, $key, $value) {
-		foreach($array as $entry) {
-			if((isset($entry[$key])) && ($entry[$key] === $value)) {
+		foreach ($array as $entry) {
+			if ((isset($entry[$key])) && ($entry[$key] === $value)) {
 				return $entry;
 			}
 		}

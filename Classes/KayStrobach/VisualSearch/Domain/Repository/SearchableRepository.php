@@ -38,7 +38,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 		$query = $this->createQuery();
 
 		// restrict by number of records by term
-		if(isset($facetConfiguration['labelProperty'])) {
+		if (isset($facetConfiguration['labelProperty'])) {
 			$query->matching(
 				$query->like(
 					$facetConfiguration['labelProperty'], '%' . $term . '%'
@@ -47,7 +47,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 		}
 
 		// set orderings
-		if(isset($facetConfiguration['orderBy'])) {
+		if (isset($facetConfiguration['orderBy'])) {
 			$query->setOrderings(
 				array($facetConfiguration['orderBy']  => QueryInterface::ORDER_ASCENDING)
 			);

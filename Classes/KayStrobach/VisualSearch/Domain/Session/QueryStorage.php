@@ -27,7 +27,7 @@ class QueryStorage {
 	 * @return array
 	 */
 	public function getQuery($name) {
-		if(isset($this->queries[$name])) {
+		if (isset($this->queries[$name])) {
 			return $this->queries[$name];
 		}
 		return array();
