@@ -22,7 +22,7 @@ class MapperUtility {
 	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
-	public $configurationManager;
+	protected $configurationManager;
 
 	/**
 	 * @param array $searchConfiguration

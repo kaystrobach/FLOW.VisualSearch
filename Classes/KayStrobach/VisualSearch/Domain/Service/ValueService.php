@@ -23,7 +23,13 @@ class ValueService {
 	 * @var \KayStrobach\VisualSearch\Domain\Repository\FacetRepository
 	 * @Flow\Inject
 	 */
-	public $facetRepository;
+	protected $facetRepository;
+
+	/**
+	 * @var \KayStrobach\VisualSearch\Domain\Repository\SearchRepository
+	 * @Flow\Inject
+	 */
+	protected $searchRepository;
 
 	/**
 	 * @var \TYPO3\Flow\Object\ObjectManager
@@ -64,7 +70,7 @@ class ValueService {
 						$query,
 						$term,
 						$facetConfiguration['selector'],
-						$facetConfiguration
+						$this->searchRepository->findByName($searchName)['autocomplete']
 					);
 					if (method_exists($result, 'getQuery')) {
 						$entities = $result->getQuery()->setLimit(10)->execute(TRUE);

@@ -11,6 +11,7 @@ use TYPO3\Flow\Persistence\QueryResultInterface;
 use TYPO3\Flow\Persistence\Doctrine\Repository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\QueryInterface;
+use TYPO3\Flow\Reflection\ObjectAccess;
 
 
 /**
@@ -90,11 +91,14 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 		// merge demands from VisualSearch.yaml and the
 		$demands = array_merge($demands, $this->mapperUtility->buildQuery($searchName, $query, $queryObject));
 
-		$queryObject->matching(
-			$queryObject->logicalAnd(
-				$demands
-			)
-		);
+		if(count($demands) > 0) {
+			$queryObject->matching(
+				$queryObject->logicalAnd(
+					$demands
+				)
+			);
+		}
+
 		return $queryObject->execute();
 	}
 
