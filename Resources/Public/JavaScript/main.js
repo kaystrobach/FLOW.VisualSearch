@@ -241,7 +241,10 @@
             });
 
             $(settings['container']).on('click', '.token-wrapper .btn', function() {
-               $(this).parent().remove();
+                $(this).parent().remove();
+                window.setTimeout(function() {
+                    storeQueryInSession();
+                }, 50)
             });
         }
     });
