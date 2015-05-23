@@ -115,17 +115,19 @@
                                     facet: $(element).prev().children('.token-facet').attr('data-facet')
                                 }
                             );
-                            $.ajax({
-                                dataType: "json",
-                                url: $(settings['container']).attr('data-valueAction') + '&' + decodeURI(query),
-                                data: {
-                                    term: request.term,
-                                    query: $(settings['container']).advancedSearchTerm()
-                                },
-                                success: function(data) {
-                                    response(data);
+                            $.ajax(
+                                {
+                                    dataType: "json",
+                                    url: $(settings['container']).attr('data-valueAction') + '&' + decodeURI(query),
+                                    data: {
+                                        term: request.term,
+                                        query: $(settings['container']).advancedSearchTerm()
+                                    },
+                                    success: function(data) {
+                                        response(data);
+                                    }
                                 }
-                            });
+                            );
                         }
                     }
                 );
@@ -136,9 +138,12 @@
                             $(this).prev().append('<div class="token token-value" data-value="' + ui.item.value + '">' + ui.item.label + '</div>');
                             $(element).text('');
                             addFacetAutocomplete(element);
-                            window.setTimeout(function() {
-                                $(element).focus();
-                            }, 100);
+                            window.setTimeout(
+                                function() {
+                                    $(element).focus();
+                                },
+                                100
+                            );
 
                             storeQueryInSession();
                             return false;
@@ -156,26 +161,37 @@
             }
 
             function storeQueryInSession() {
-                $.ajax({
-                    dataType: "json",
-                    url: $(settings['container']).attr('data-storeQueryAction'),
-                    data: {
-                        query: $(settings['container']).advancedSearchTerm()
+                $.ajax(
+                    {
+                        dataType: "json",
+                        url: $(settings['container']).attr('data-storeQueryAction'),
+                        data: {
+                            query: $(settings['container']).advancedSearchTerm()
+                        },
+                        complete: function(data) {
+                            if($(settings['ajaxArea']).length) {
+                                $(settings['ajaxArea']).load(window.location.href + ' ' + settings['ajaxArea'] + ' > *');
+                            }
+                        }
                     }
-                });
+                );
             }
 
             function initQuery() {
                 var query = $.parseJSON($(settings['container']).attr('data-query'));
-                $.each(query, function(key, value) {
-                    var html = '<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-facet="' + value.facet + '">' + value.facetLabel + '</div><div class="token token-value" data-value="' + value.value + '">' + value.valueLabel + '</div></div>';
-                    $(settings['container']).children('.token-input').before(html);
-                });
+                $.each(
+                    query,
+                    function(key, value) {
+                        var html = '<div class="token token-wrapper"><span class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></span><div class="token token-facet" data-facet="' + value.facet + '">' + value.facetLabel + '</div><div class="token token-value" data-value="' + value.value + '">' + value.valueLabel + '</div></div>';
+                        $(settings['container']).children('.token-input').before(html);
+                    }
+                );
 
             }
 
             var defaults = {
-                container: '#search-input-area'
+                container: '#search-input-area',
+                ajaxArea:  '#search-result-area'
             };
             var settings = $.extend({}, defaults, settings);
 
