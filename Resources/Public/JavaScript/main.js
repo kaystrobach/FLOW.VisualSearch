@@ -141,7 +141,7 @@
                                 function() {
                                     $(element).focus();
                                 },
-                                100
+                                50
                             );
 
                             storeQueryInSession();
@@ -181,7 +181,7 @@
                             }
                         );
                     },
-                    100
+                    50
                 );
             }
 
