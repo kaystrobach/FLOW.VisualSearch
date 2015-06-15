@@ -78,7 +78,6 @@
                             $(element).text('');
                             if(ui.item.configuration.freeInput) {
                                 addValueFreeText(element);
-                                console.log('just once please');
                             } else {
                                 addValueAutocomplete(element);
                             }
@@ -161,19 +160,28 @@
             }
 
             function storeQueryInSession() {
-                $.ajax(
-                    {
-                        dataType: "json",
-                        url: $(settings['container']).attr('data-storeQueryAction'),
-                        data: {
-                            query: $(settings['container']).advancedSearchTerm()
-                        },
-                        complete: function(data) {
-                            if($(settings['ajaxArea']).length) {
-                                $(settings['ajaxArea']).load(window.location.href + ' ' + settings['ajaxArea'] + ' > *');
+                clearTimeout(ajaxTimeout);
+                if($(settings['ajaxArea']).length) {
+                    $(settings['ajaxArea']).html(settings['loadingContent']);
+                }
+                ajaxTimeout = window.setTimeout(
+                    function() {
+                        $.ajax(
+                            {
+                                dataType: "json",
+                                url: $(settings['container']).attr('data-storeQueryAction'),
+                                data: {
+                                    query: $(settings['container']).advancedSearchTerm()
+                                },
+                                complete: function(data) {
+                                    if($(settings['ajaxArea']).length) {
+                                        $(settings['ajaxArea']).load(window.location.href + ' ' + settings['ajaxArea'] + ' > *');
+                                    }
+                                }
                             }
-                        }
-                    }
+                        );
+                    },
+                    100
                 );
             }
 
@@ -191,9 +199,12 @@
 
             var defaults = {
                 container: '#search-input-area',
-                ajaxArea:  '#search-result-area'
+                ajaxArea:  '#search-result-area',
+                loadingContent: '<span class="visual-search-loading-spinner">Loading</span>'
             };
             var settings = $.extend({}, defaults, settings);
+
+            var ajaxTimeout = null;
 
             // create needed elements
             $(settings['container']).html('<div contenteditable="true" class="token-input"></div>');
@@ -215,9 +226,6 @@
             $(settings['container']).on('click', function () {
                 addFacetAutocomplete($(settings['container']).children('div[contenteditable]'));
                 $(this).children('div[contenteditable]').last().focus();
-                window.setTimeout(function() {
-                    storeQueryInSession();
-                }, 50)
             });
 
             // strip tags on enter
@@ -235,7 +243,6 @@
                 var text = $(this).text();
                 // enter
                 if (event.which == 13) {
-                    console.log($(this).autocomplete('option', 'disabled'));
                     if($(this).autocomplete('option', 'disabled')) {
                         $(this).prev().append('<div class="token token-value" data-value="' + text + '">' + text + '</div>');
                         storeQueryInSession();
@@ -252,6 +259,11 @@
                 if ((event.which == 8) && (text == '')) {
                     addFacetAutocomplete(this);
                     $(this).prev().remove();
+                    $(this).blur();
+                    $(this).focus();
+                    window.setTimeout(function() {
+                        storeQueryInSession();
+                    }, 100)
 
                 }
             });
@@ -260,7 +272,7 @@
                 $(this).parent().remove();
                 window.setTimeout(function() {
                     storeQueryInSession();
-                }, 50)
+                }, 100);
             });
         }
     });
