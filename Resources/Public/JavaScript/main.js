@@ -183,6 +183,7 @@
                     },
                     50
                 );
+                console.log('send ' + $(settings['container']).advancedSearchTerm());
             }
 
             function initQuery() {

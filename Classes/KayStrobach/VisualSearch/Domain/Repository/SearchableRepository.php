@@ -7,6 +7,7 @@
  */
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
+use TYPO3\Flow\Error\Debugger;
 use TYPO3\Flow\Persistence\QueryResultInterface;
 use TYPO3\Flow\Persistence\Doctrine\Repository;
 use TYPO3\Flow\Annotations as Flow;
@@ -32,6 +33,12 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	 * @var \KayStrobach\VisualSearch\Utility\MapperUtility
 	 */
 	protected $mapperUtility;
+
+	/**
+	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
+	 * @Flow\Inject
+	 */
+	protected $systemLogger;
 
 	/**
 	 * Function to aid KayStrobach.VisualSearch to find entries
@@ -60,6 +67,9 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 				array($facetConfiguration['orderBy']  => QueryInterface::ORDER_ASCENDING)
 			);
 		}
+
+		$this->systemLogger->log('findBySearchTerm:' . Debugger::renderDump($query->getConstraint(), 2 ,TRUE), LOG_ALERT);
+
 		return $query->execute();
 	}
 
@@ -98,6 +108,8 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 				)
 			);
 		}
+
+		$this->systemLogger->log('findByQuery:' . Debugger::renderDump($queryObject->getConstraint(), 2 ,TRUE), LOG_ALERT);
 
 		return $queryObject->execute();
 	}

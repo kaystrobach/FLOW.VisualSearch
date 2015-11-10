@@ -1,4 +1,5 @@
 <script src="{f:uri.resource(path: 'JavaScript/main.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
+<script src="{f:uri.resource(path: 'JavaScript/main2.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
 <link href="{f:uri.resource(path: 'Stylesheets/main.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -25,6 +26,27 @@
 			</span>
 
 		</div><!-- /input-group -->
+
+		<div class="input-group visualsearch" role="search"
+		     data-search="{search}"
+		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
+		     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
+		     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
+		     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
+		>
+			<span class="input-group-addon">
+				<span class="visual-search-facets"></span>
+			</span>
+			<input type="text" class="form-control">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" onclick="document.location.reload();">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
+				<button class="btn btn-default" type="button" onclick="document.location.reload();">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</span>
+		</div>
 	</f:then>
 	<f:else>
 		<div class="alert alert-danger" role="alert">
