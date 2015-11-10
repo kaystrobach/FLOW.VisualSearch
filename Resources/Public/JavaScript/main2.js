@@ -19,7 +19,7 @@
      * initialize all the stuff
      */
     function initialize(element) {
-        settings.container = this;
+        settings.container = element;
 
         $(element).on('click', '.label .glyphicon', function() {
             $(this).parent().remove();
@@ -28,13 +28,25 @@
             }, 100);
         });
 
+        // bind basic autocomplete
         $(element).find('.form-control').autocomplete(
             {
-                source:'',
-                minLength: 0
+                source:['a', 'b', 'c'],
+                minLength: 0,
+                select: function(event, ui) {
+                    // todo call save method
+                }
             }
-        ).focus(function () {
-                $(element).autocomplete('search', $(element).text());
+        ).focus(function(){
+            $(this).trigger('keydown');
+        });
+
+        $(element).find('.form-control').on(
+            'keydown',
+            function(event) {
+                if(event.which === $.ui.keyCode.ENTER) {
+                    // todo call save method
+                }
             }
         );
     }
@@ -66,7 +78,7 @@
             },
             50
         );
-        console.log('send ' + getTerm(settings.container));
+        console.log('send ' + settings.container + getTerm(settings.container));
     }
 
     /**
@@ -96,7 +108,7 @@
 
     function getTerm(element) {
         var query = [];
-        $.each($(this).children('.label'), function(key, value) {
+        $.each($(element).find('.label'), function(key, value) {
             query.push(
                 {
                     facetLabel: $(value).children('.token-facet').text(),
