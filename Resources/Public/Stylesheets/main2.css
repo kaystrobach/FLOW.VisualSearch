@@ -1,0 +1,42 @@
+.visualsearch-input-group-addon {
+	background-color: transparent;
+}
+
+@-webkit-keyframes fadeIn {
+	0% {opacity: 0;}
+	50% {opacity: 1;}
+	100% {opacity: 0;}
+}
+@keyframes fadeIn {
+	0% {opacity: 0;}
+	50% {opacity: 1;}
+	100% {opacity: 0;}
+}
+.fadeIn {
+	-webkit-animation-name: fadeIn;
+	animation-name: fadeIn;
+}
+
+
+.visual-search-loading-spinner {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	width: 200px;
+	text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: bold;
+
+	-webkit-animation-name: fadeIn;
+	animation-name: fadeIn;
+
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count:infinite;
+	-webkit-animation-iteration-count:infinite;
+}

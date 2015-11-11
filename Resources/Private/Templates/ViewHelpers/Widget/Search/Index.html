@@ -1,32 +1,10 @@
-<script src="{f:uri.resource(path: 'JavaScript/main.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
 <script src="{f:uri.resource(path: 'JavaScript/main2.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
-<link href="{f:uri.resource(path: 'Stylesheets/main.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
+<link href="{f:uri.resource(path: 'Stylesheets/main2.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/flick/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <f:if condition="{search}">
 	<f:then>
-
-		<div class="input-group" role="search">
-			<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search"></span></span>
-
-			<div id="search-input-area"
-			     class="form-control"
-			     data-search="{search}"
-			     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
-			     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
-			     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
-			     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
-					>
-			</div>
-			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" onclick="document.location.reload();">
-					<span class="glyphicon glyphicon-search"></span>
-				</button>
-			</span>
-
-		</div><!-- /input-group -->
-
 		<div class="input-group visualsearch" role="search"
 		     data-search="{search}"
 		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
@@ -34,7 +12,7 @@
 		     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
 		     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
 		>
-			<span class="input-group-addon">
+			<span class="input-group-addon visualsearch-input-group-addon">
 				<span class="visual-search-facets"></span>
 			</span>
 			<input type="text" class="form-control" id="test">
