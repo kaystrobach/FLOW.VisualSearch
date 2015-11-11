@@ -13,6 +13,12 @@ use TYPO3\Flow\Annotations as Flow;
 
 class MapperUtility {
 	/**
+	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
+	 * @Flow\Inject
+	 */
+	protected $systemLogger;
+
+	/**
 	 * @var \TYPO3\Flow\Object\ObjectManager
 	 * @Flow\Inject
 	 */
@@ -65,10 +71,13 @@ class MapperUtility {
 					/** @var \TYPO3\Flow\Persistence\Doctrine\Repository $repository */
 					$repository = $this->objectManager->get($repositoryClassName);
 					$value = $repository->findByIdentifier($queryEntry['value']);
+					$this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value), LOG_DEBUG);
 				} else {
 					$value = $queryEntry['value'];
+					$this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as string', LOG_DEBUG);
 				}
 				if (isset($searchConfiguration[$facet]['matches']['equals']) && (is_array($searchConfiguration[$facet]['matches']['equals']))) {
+					$this->systemLogger->log('add equals demand for ' . $facet, LOG_DEBUG);
 					$subDemands = array();
 					foreach ($searchConfiguration[$facet]['matches']['equals'] as $matchField) {
 						$subDemands[] = $queryObject->equals($matchField, $value);
@@ -76,6 +85,7 @@ class MapperUtility {
 					$demands[] = $queryObject->logicalOr($subDemands);
 				}
 				if (isset($searchConfiguration[$facet]['matches']['like']) && (is_array($searchConfiguration[$facet]['matches']['like']))) {
+					$this->systemLogger->log('add like demand for ' . $facet, LOG_DEBUG);
 					$subDemands = array();
 					foreach ($searchConfiguration[$facet]['matches']['like'] as $matchField) {
 						$subDemands[] = $queryObject->like($matchField, '%' . $value . '%');

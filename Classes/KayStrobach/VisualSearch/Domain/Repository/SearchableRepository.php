@@ -68,7 +68,12 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 			);
 		}
 
-		$this->systemLogger->log('findBySearchTerm:' . Debugger::renderDump($query->getConstraint(), 2 ,TRUE), LOG_ALERT);
+		/** @var $doctrineQueryBuilder \Doctrine\ORM\QueryBuilder */
+		$doctrineQueryBuilder = ObjectAccess::getProperty($query, 'queryBuilder', TRUE);
+		/** @var $doctrineQuery \Doctrine\ORM\Query */
+		$doctrineQuery = $doctrineQueryBuilder->getQuery();
+
+		$this->systemLogger->log('findBySearchTerm:' . $doctrineQuery->getSQL(), LOG_ALERT);
 
 		return $query->execute();
 	}
@@ -101,6 +106,8 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 		// merge demands from VisualSearch.yaml and the
 		$demands = array_merge($demands, $this->mapperUtility->buildQuery($searchName, $query, $queryObject));
 
+		$this->systemLogger->log('demands: ' . Debugger::renderDump($demands, 2, TRUE));
+
 		if(count($demands) > 0) {
 			$queryObject->matching(
 				$queryObject->logicalAnd(
@@ -109,7 +116,15 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 			);
 		}
 
-		$this->systemLogger->log('findByQuery:' . Debugger::renderDump($queryObject->getConstraint(), 2 ,TRUE), LOG_ALERT);
+		/** @var $doctrineQueryBuilder \Doctrine\ORM\QueryBuilder */
+		$doctrineQueryBuilder = ObjectAccess::getProperty($queryObject, 'queryBuilder', TRUE);
+		/** @var $doctrineQuery \Doctrine\ORM\Query */
+		$doctrineQuery = $doctrineQueryBuilder->getQuery();
+		$this->systemLogger->log(
+			'findByQuery:' . $doctrineQuery->getSQL() . PHP_EOL
+			. Debugger::renderDump($doctrineQuery->getParameters(), 2, TRUE),
+			LOG_DEBUG
+		);
 
 		return $queryObject->execute();
 	}
