@@ -50,11 +50,13 @@
                     if($(settings.formfield).autocomplete('option', 'disabled')) {
                         setValue(text, text);
                         storeQueryInSession();
+                        $(this).val('');
+                        event.preventDefault();
                     } else if(text == '') {
                         $(this).closest('form').submit();
+                        $(this).val('');
+                        event.preventDefault();
                     }
-                    $(this).val('');
-                    event.preventDefault();
                 }
                 // backspace
                 if ((event.which == 8) && (text == '')) {
@@ -75,6 +77,12 @@
             function() {
                 $(settings.facetarea).children().remove();
                 storeQueryInSession();
+                window.setTimeout(
+                    function() {
+                        addFacetAutocomplete($(element).find('.form-control'));
+                    },
+                    300
+                );
             }
         );
 
@@ -214,6 +222,7 @@
                         //if(ui.item.configuration.freeInput) {
                         //    $(element).autofocus('disable');
                         //}
+                        $(element).val('');
                         $(element).focus();
                     }, 50);
 
