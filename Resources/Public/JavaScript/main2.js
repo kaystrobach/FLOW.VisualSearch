@@ -76,6 +76,7 @@
             'click',
             function() {
                 $(settings.facetarea).children().remove();
+                $(settings.formfield).val('');
                 storeQueryInSession();
                 window.setTimeout(
                     function() {
@@ -116,6 +117,7 @@
                             if($(settings['ajaxArea']).length) {
                                 $(settings['ajaxArea']).load(window.location.href + ' ' + settings['ajaxArea'] + ' > *');
                             }
+                            addFacetAutocomplete($(settings.formfield));
                         }
                     }
                 );
