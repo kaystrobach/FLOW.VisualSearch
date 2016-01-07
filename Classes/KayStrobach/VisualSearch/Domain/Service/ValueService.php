@@ -56,7 +56,7 @@ class ValueService {
 		$values = array();
 
 		if (isset($facetConfiguration)) {
-			$stringLength = isset($facetConfiguration['labelLength']) ? $facetConfiguration['labelLength'] : 30;
+			$stringLength = isset($facetConfiguration['display']['maxLength']) ? $facetConfiguration['display']['maxLength'] : 30;
 
 			if (isset($facetConfiguration['selector']['values'])) {
 				return $this->convertArrayForSearch($facetConfiguration['selector']['values']);
@@ -116,23 +116,26 @@ class ValueService {
 	protected function convertEntitiesForSearch($entities, $facetConfiguration, $labelLength) {
 		$values = array();
 		foreach ($entities as $key => $entity) {
-			if (method_exists($entity, '__toString')) {
-				$values[] = array(
-					'label' => (string)$entity,
-					'value' => $this->shortenString($this->persistenceManager->getIdentifierByObject($entity), $labelLength)
+			if(isset($facetConfiguration['display']['labelProperty'])) {
+				$label = \TYPO3\Flow\Reflection\ObjectAccess::getProperty(
+					$entity,
+					$facetConfiguration['display']['labelProperty']
 				);
-			} else {
-				$label = $this->shortenString(
-					\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath(
+			} elseif (isset($facetConfiguration['selector']['labelProperty'])) {
+				$label = \TYPO3\Flow\Reflection\ObjectAccess::getProperty(
 						$entity,
 						$facetConfiguration['selector']['labelProperty']
-					)
 				);
-				$values[] = array(
-					'label' => $label,
-					'value' => $this->persistenceManager->getIdentifierByObject($entity)
-				);
+			} elseif(method_exists($entity, '__toString')) {
+				$label = (string)$entity;
+			} else {
+				$label = $this->persistenceManager->getIdentifierByObject($entity);
 			}
+
+			$values[] = array(
+				'label' => $this->shortenString($label, $labelLength),
+				'value' => $this->persistenceManager->getIdentifierByObject($entity)
+			);
 		}
 		return $values;
 	}
