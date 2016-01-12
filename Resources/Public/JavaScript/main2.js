@@ -43,7 +43,7 @@
         });
 
         $(settings.formfield).on(
-            'keydown',
+            'keyup',
             function(event) {
                 var text = $(settings.formfield).val();
                 if(event.which === 13) {
@@ -219,16 +219,19 @@
                     } else {
                         addValueAutocomplete(element);
                     }
+                    $(element).val('');
                     window.setTimeout(function() {
                         // @todo add handling for disabled autocomplete
                         //if(ui.item.configuration.freeInput) {
                         //    $(element).autofocus('disable');
                         //}
-                        $(element).val('');
                         $(element).focus();
                     }, 50);
-
                     return false;
+                },
+                focus: function (event, ui) {
+                    event.preventDefault();
+                    $(this).val(ui.item.label);
                 }
             }
         );
