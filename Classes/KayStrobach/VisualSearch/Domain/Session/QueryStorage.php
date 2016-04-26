@@ -7,6 +7,7 @@
  */
 
 namespace KayStrobach\VisualSearch\Domain\Session;
+use KayStrobach\VisualSearch\Utility\ArrayUtility;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
@@ -38,6 +39,32 @@ class QueryStorage {
 			return $this->queries[$name];
 		}
 		return array();
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $facet
+	 * @return bool
+	 */
+	public function isFacetInQuery($name, $facet) {
+		return ArrayUtility::hasSubEntryWith(
+			$this->getQuery($name),
+			'facet',
+			$facet
+		);
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $facet
+	 * @return array|null
+	 */
+	public function getOneFacetInQuery($name, $facet) {
+		return ArrayUtility::getOneSubEntryWith(
+			$this->getQuery($name),
+			'facet',
+			$facet
+		);
 	}
 
 	/**

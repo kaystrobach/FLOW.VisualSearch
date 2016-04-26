@@ -49,13 +49,16 @@ class FacetRepository {
 					if ((!isset($value['selector']['conditions']['once']))
 						|| (($value['selector']['conditions']['once']) && (!ArrayUtility::hasSubEntryWith($query, 'facet', $key)))) {
 						// are all required fields given?
-						if ((!isset($value['selector']['conditions']['requires']))
-							|| ((is_array($value['selector']['conditions']['requires'])) && (ArrayUtility::hasAllSubentries($query, 'facet', $value['selector']['conditions']['requires'])))) {
-							$facets[] = new Facet(
-								$label,
-								$key,
-								$value['selector']
-							);
+						if ((!isset($value['selector']['conditions']['conflicts']))
+							|| ((is_array($value['selector']['conditions']['conflicts'])) && (!ArrayUtility::hasAllSubentries($query, 'facet', $value['selector']['conditions']['conflicts'])))) {
+							if ((!isset($value['selector']['conditions']['requires']))
+								|| ((is_array($value['selector']['conditions']['requires'])) && (ArrayUtility::hasAllSubentries($query, 'facet', $value['selector']['conditions']['requires'])))) {
+								$facets[] = new Facet(
+									$label,
+									$key,
+									$value['selector']
+								);
+							}
 						}
 
 					}
