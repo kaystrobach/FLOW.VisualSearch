@@ -126,6 +126,9 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 			LOG_DEBUG
 		);
 
+		$doctrineQueryBuilder->distinct(true);
+		ObjectAccess::setProperty($queryObject, 'queryBuilder', $doctrineQueryBuilder);
+
 		return $queryObject->execute();
 	}
 
