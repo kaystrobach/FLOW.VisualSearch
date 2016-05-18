@@ -159,7 +159,7 @@
      */
     function setValue(value, label) {
         $(settings.facetarea).children().last().children('[data-value]').attr('data-value', value);
-        $(settings.facetarea).children().last().children('[data-value]').html(label)
+        $(settings.facetarea).children().last().children('[data-value]').html(label);
         $(settings.formfield).val('');
 
     }
@@ -233,6 +233,9 @@
                 focus: function (event, ui) {
                     event.preventDefault();
                     $(this).val(ui.item.label);
+                },
+                close: function( event, ui ) {
+                    $(element).val('');
                 }
             }
         );
@@ -279,6 +282,9 @@
 
                     storeQueryInSession();
                     return false;
+                },
+                close: function( event, ui ) {
+                    $(element).val('');
                 }
             }
         );
