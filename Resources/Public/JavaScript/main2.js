@@ -79,7 +79,7 @@
                         }
                         break;
                     default:
-                        $(settings.facetarea).children().last().removeClass('label-danger').addClass('label-default')
+                        $(settings.facetarea).children().removeClass('label-danger').addClass('label-default')
                 }
             }
         );
