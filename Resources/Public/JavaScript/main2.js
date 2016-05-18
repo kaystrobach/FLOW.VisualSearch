@@ -47,28 +47,39 @@
             'keyup',
             function(event) {
                 var text = $(settings.formfield).val();
-                if(event.which === 13) {
-                    if($(settings.formfield).autocomplete('option', 'disabled')) {
-                        setValue(text, text);
-                        storeQueryInSession();
-                        $(this).val('');
-                        event.preventDefault();
-                    } else if(text == '') {
-                        $(this).closest('form').submit();
-                        $(this).val('');
-                        event.preventDefault();
-                    }
-                }
-                // backspace
-                if ((event.which == 8) && (text == '')) {
-                    addFacetAutocomplete(this);
-                    $(settings.facetarea).children().last().remove();
-                    $(settings.formfield).blur();
-                    $(settings.formfield).focus();
-                    window.setTimeout(function() {
-                        storeQueryInSession();
-                    }, 100)
 
+                switch(event.which) {
+                    case 13:
+                        // Enter
+                        if($(settings.formfield).autocomplete('option', 'disabled')) {
+                            setValue(text, text);
+                            storeQueryInSession();
+                            $(this).val('');
+                            event.preventDefault();
+                        } else if(text == '') {
+                            $(this).closest('form').submit();
+                            $(this).val('');
+                            event.preventDefault();
+                        }
+                        break;
+                    case 8:
+                        // backspace
+                        if (text == '') {
+                            addFacetAutocomplete(this);
+                            if($(settings.facetarea).children().last().hasClass('label-danger')) {
+                                $(settings.facetarea).children().last().remove();
+                            } else {
+                                $(settings.facetarea).children().last().removeClass('label-default').addClass('label-danger')
+                            }
+                            $(settings.formfield).blur();
+                            $(settings.formfield).focus();
+                            window.setTimeout(function() {
+                                storeQueryInSession();
+                            }, 100)
+                        }
+                        break;
+                    default:
+                        $(settings.facetarea).children().last().removeClass('label-danger').addClass('label-default')
                 }
             }
         );
