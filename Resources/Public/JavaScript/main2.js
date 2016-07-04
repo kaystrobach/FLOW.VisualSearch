@@ -52,9 +52,11 @@
                     case 13:
                         // Enter
                         if($(settings.formfield).autocomplete('option', 'disabled')) {
-                            setValue(text, text);
-                            storeQueryInSession();
-                            $(this).val('');
+                            if(text !== '') {
+                                setValue(text, text);
+                                storeQueryInSession();
+                                $(this).val('');
+                            }
                             event.preventDefault();
                         } else if(text == '') {
                             $(this).closest('form').submit();
