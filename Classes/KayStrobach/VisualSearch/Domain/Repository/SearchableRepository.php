@@ -40,22 +40,23 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	 */
 	protected $systemLogger;
 
-	/**
-	 * Function to aid KayStrobach.VisualSearch to find entries
-	 *
-	 * @param array $query
-	 * @param string $term
-	 * @param array $facetConfiguration
-	 * @param array $searchConfiguration
-	 * @return QueryResultInterface
-	 */
+    /**
+     * Function to aid KayStrobach.VisualSearch to find entries
+     *
+     * @param array $query
+     * @param string $term
+     * @param array $facetConfiguration
+     * @param array $searchConfiguration
+     * @return QueryResultInterface
+     * @throws \TYPO3\Flow\Persistence\Exception\InvalidQueryException
+     */
 	public function findBySearchTerm($query, $term = '', $facetConfiguration = array(), $searchConfiguration = array()) {
-		$query = $this->createQuery();
+		$queryObject = $this->createQuery();
 
 		// restrict by number of records by term
 		if (isset($facetConfiguration['labelProperty'])) {
-			$query->matching(
-				$query->like(
+			$queryObject->matching(
+				$queryObject->like(
 					$facetConfiguration['labelProperty'], '%' . $term . '%'
 				)
 			);
@@ -63,19 +64,25 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 
 		// set orderings
 		if (isset($facetConfiguration['orderBy'])) {
-			$query->setOrderings(
-				array($facetConfiguration['orderBy']  => QueryInterface::ORDER_ASCENDING)
-			);
+		    if (is_array($facetConfiguration['orderBy'])) {
+                $queryObject->setOrderings(
+                    $facetConfiguration['orderBy']
+                );
+            } else {
+                $queryObject->setOrderings(
+                    array($facetConfiguration['orderBy']  => QueryInterface::ORDER_ASCENDING)
+                );
+            }
 		}
 
 		/** @var $doctrineQueryBuilder \Doctrine\ORM\QueryBuilder */
-		$doctrineQueryBuilder = ObjectAccess::getProperty($query, 'queryBuilder', TRUE);
+		$doctrineQueryBuilder = ObjectAccess::getProperty($queryObject, 'queryBuilder', TRUE);
 		/** @var $doctrineQuery \Doctrine\ORM\Query */
 		$doctrineQuery = $doctrineQueryBuilder->getQuery();
 
 		$this->systemLogger->log('findBySearchTerm:' . $doctrineQuery->getSQL(), LOG_ALERT);
 
-		return $query->execute();
+		return $queryObject->execute();
 	}
 
 	/**
