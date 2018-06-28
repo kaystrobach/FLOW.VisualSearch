@@ -11,7 +11,8 @@ namespace KayStrobach\VisualSearch;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Package\Package as BasePackage;
+use Neos\Flow\Configuration\ConfigurationManager;
+use Neos\Flow\Package\Package as BasePackage;
 
 /**
  * The Fluid Package
@@ -27,14 +28,16 @@ class Package extends BasePackage {
 	/**
 	 * Invokes custom PHP code directly after the package manager has been initialized.
 	 *
-	 * @param \TYPO3\Flow\Core\Bootstrap $bootstrap The current bootstrap
+	 * @param \Neos\Flow\Core\Bootstrap $bootstrap The current bootstrap
 	 * @return void
 	 */
-	public function boot(\TYPO3\Flow\Core\Bootstrap $bootstrap) {
+	public function boot(\Neos\Flow\Core\Bootstrap $bootstrap) {
 		// register Configuration Type Menu
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
-		$dispatcher->connect('TYPO3\Flow\Configuration\ConfigurationManager', 'configurationManagerReady',
-			function ($configurationManager) {
+		$dispatcher->connect(
+		    'TYPO3\Flow\Configuration\ConfigurationManager',
+            'configurationManagerReady',
+			function (ConfigurationManager $configurationManager) {
 				$configurationManager->registerConfigurationType('VisualSearch');
 			}
 		);
