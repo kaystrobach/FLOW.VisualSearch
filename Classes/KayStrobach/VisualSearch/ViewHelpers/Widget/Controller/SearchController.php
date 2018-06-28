@@ -9,7 +9,7 @@ use Neos\Flow\Persistence\QueryInterface;
 use Neos\Flow\Reflection\Exception\InvalidValueObjectException;
 
 
-class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
+class SearchController extends \Neos\FluidAdaptor\Core\Widget\AbstractWidgetController {
 	/**
 	 * @var \Neos\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject

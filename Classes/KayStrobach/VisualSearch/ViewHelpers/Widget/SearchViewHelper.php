@@ -12,7 +12,7 @@ namespace KayStrobach\VisualSearch\ViewHelpers\Widget;
  *                                                                        */
 
 use Neos\Flow\Annotations as Flow;
-use TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper;
+use Neos\FluidAdaptor\Core\Widget\AbstractWidgetViewHelper;
 
 class SearchViewHelper extends AbstractWidgetViewHelper {
 	/**
