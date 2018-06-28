@@ -8,8 +8,8 @@
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 use KayStrobach\VisualSearch\Utility\ArrayUtility;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Persistence\PersistenceManagerInterface;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
 
 /**
  * the goal of this class is to store all filters and restore them on load, this way we can store the queries in the

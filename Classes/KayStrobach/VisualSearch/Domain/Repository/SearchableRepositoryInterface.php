@@ -8,7 +8,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
-use TYPO3\Flow\Persistence\QueryResultInterface;
+use Neos\Flow\Persistence\QueryResultInterface;
 
 interface SearchableRepositoryInterface {
 	/**
@@ -45,7 +45,7 @@ interface SearchableRepositoryInterface {
 	/**
 	 * @param array $query
 	 * @param string $searchName
-	 * @return \TYPO3\Flow\Persistence\QueryResultInterface
+	 * @return \Neos\Flow\Persistence\QueryResultInterface
 	 */
 	public function findByQuery($query, $searchName = NULL);
 }

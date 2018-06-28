@@ -3,7 +3,7 @@
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
 use KayStrobach\VisualSearch\Domain\Model\Facet;
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Annotations as Flow;
 use KayStrobach\VisualSearch\Utility\ArrayUtility;
 
 
@@ -15,7 +15,7 @@ use KayStrobach\VisualSearch\Utility\ArrayUtility;
  */
 class FacetRepository {
 	/**
-	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
+	 * @var \Neos\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
 	public $configurationManager;

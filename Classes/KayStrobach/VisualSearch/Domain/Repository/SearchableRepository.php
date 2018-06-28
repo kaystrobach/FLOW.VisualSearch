@@ -7,12 +7,12 @@
  */
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
-use TYPO3\Flow\Error\Debugger;
-use TYPO3\Flow\Persistence\QueryResultInterface;
-use TYPO3\Flow\Persistence\Doctrine\Repository;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Persistence\QueryInterface;
-use TYPO3\Flow\Reflection\ObjectAccess;
+use Neos\Flow\Error\Debugger;
+use Neos\Flow\Persistence\QueryResultInterface;
+use Neos\Flow\Persistence\Doctrine\Repository;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\QueryInterface;
+use Neos\Flow\Reflection\ObjectAccess;
 
 
 /**
@@ -35,7 +35,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	protected $mapperUtility;
 
 	/**
-	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
+	 * @var \Neos\Flow\Log\SystemLoggerInterface
 	 * @Flow\Inject
 	 */
 	protected $systemLogger;
@@ -48,7 +48,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
      * @param array $facetConfiguration
      * @param array $searchConfiguration
      * @return QueryResultInterface
-     * @throws \TYPO3\Flow\Persistence\Exception\InvalidQueryException
+     * @throws \Neos\Flow\Persistence\Exception\InvalidQueryException
      */
 	public function findBySearchTerm($query, $term = '', $facetConfiguration = array(), $searchConfiguration = array()) {
 		$queryObject = $this->createQuery();
@@ -142,7 +142,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	/**
 	 * add demands into the query
 	 *
-	 * @param \TYPO3\Flow\Persistence\Doctrine\Query $queryObject
+	 * @param \Neos\Flow\Persistence\Doctrine\Query $queryObject
 	 * @param string $searchName
 	 *
 	 * @return array

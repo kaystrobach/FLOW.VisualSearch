@@ -8,9 +8,9 @@
 
 namespace KayStrobach\VisualSearch\Domain\Service;
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
-use TYPO3\Flow\Persistence\QueryInterface;
-use TYPO3\Flow\Persistence\PersistenceManagerInterface;
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\QueryInterface;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
+use Neos\Flow\Annotations as Flow;
 
 
 /**
@@ -32,7 +32,7 @@ class ValueService {
 	protected $searchRepository;
 
 	/**
-	 * @var \TYPO3\Flow\ObjectManagement\ObjectManager
+	 * @var \Neos\Flow\ObjectManagement\ObjectManager
 	 * @Flow\Inject
 	 */
 	protected $objectManager;
@@ -61,7 +61,7 @@ class ValueService {
 			if (isset($facetConfiguration['selector']['values'])) {
 				return $this->convertArrayForSearch($facetConfiguration['selector']['values']);
 			} elseif (isset($facetConfiguration['selector']['repository'])) {
-				/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
+				/** @var \Neos\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 				$repository = $this->objectManager->get($facetConfiguration['selector']['repository']);
 				if ($repository instanceOf SearchableRepositoryInterface) {
 					// find by search term, labelProperty, etc
@@ -118,12 +118,12 @@ class ValueService {
 		$values = array();
 		foreach ($entities as $key => $entity) {
 			if(isset($facetConfiguration['display']['labelProperty'])) {
-				$label = \TYPO3\Flow\Reflection\ObjectAccess::getProperty(
+				$label = \Neos\Flow\Reflection\ObjectAccess::getProperty(
 					$entity,
 					$facetConfiguration['display']['labelProperty']
 				);
 			} elseif (isset($facetConfiguration['selector']['labelProperty'])) {
-				$label = \TYPO3\Flow\Reflection\ObjectAccess::getProperty(
+				$label = \Neos\Flow\Reflection\ObjectAccess::getProperty(
 						$entity,
 						$facetConfiguration['selector']['labelProperty']
 				);

@@ -35,7 +35,7 @@ class Package extends BasePackage {
 		// register Configuration Type Menu
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 		$dispatcher->connect(
-		    'TYPO3\Flow\Configuration\ConfigurationManager',
+		    'Neos\Flow\Configuration\ConfigurationManager',
             'configurationManagerReady',
 			function (ConfigurationManager $configurationManager) {
 				$configurationManager->registerConfigurationType('VisualSearch');

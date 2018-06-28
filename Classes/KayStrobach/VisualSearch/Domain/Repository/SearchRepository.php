@@ -1,14 +1,14 @@
 <?php
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Annotations as Flow;
 
 /**
  * @Flow\Scope("singleton")
  */
 class SearchRepository {
 	/**
-	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
+	 * @var \Neos\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
 	public $configurationManager;

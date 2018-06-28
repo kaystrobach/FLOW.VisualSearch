@@ -3,15 +3,15 @@
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Persistence\PersistenceManagerInterface;
-use TYPO3\Flow\Persistence\QueryInterface;
-use TYPO3\Flow\Reflection\Exception\InvalidValueObjectException;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\PersistenceManagerInterface;
+use Neos\Flow\Persistence\QueryInterface;
+use Neos\Flow\Reflection\Exception\InvalidValueObjectException;
 
 
 class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 	/**
-	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
+	 * @var \Neos\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
 	public $configurationManager;
@@ -27,7 +27,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	protected $facetConfiguration = array();
 
 	/**
-	 * @var \TYPO3\Flow\ObjectManagement\ObjectManager
+	 * @var \Neos\Flow\ObjectManagement\ObjectManager
 	 * @Flow\Inject
 	 */
 	protected $objectManager;
@@ -82,7 +82,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @return string
 	 *
 	 * @throws InvalidValueObjectException
-	 * @throws \TYPO3\Flow\ObjectManagement\Exception\UnknownObjectException
+	 * @throws \Neos\Flow\ObjectManagement\Exception\UnknownObjectException
 	 */
 	public function valuesAction($facet = '', $query = array(), $term = '') {
 		$values = $this->valueService->getValuesByFacetQueryAndTerm(
@@ -131,7 +131,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	public function countAction($query = array()) {
 		$searchConfigurationName = $this->widgetConfiguration['search'];
 		$repositoryName = $this->facetConfiguration[$searchConfigurationName];
-		/** @var \TYPO3\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
+		/** @var \Neos\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
 		$repository = $this->objectManager->get($repositoryName);
 		return json_encode($repository->findBySearchTerm($query)->getQuery()->count());
 	}

@@ -8,24 +8,24 @@
 
 namespace KayStrobach\VisualSearch\Utility;
 use KayStrobach\VisualSearch\Utility\ArrayUtility;
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Annotations as Flow;
 
 
 class MapperUtility {
 	/**
-	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
+	 * @var \Neos\Flow\Log\SystemLoggerInterface
 	 * @Flow\Inject
 	 */
 	protected $systemLogger;
 
 	/**
-	 * @var \TYPO3\Flow\ObjectManagement\ObjectManager
+	 * @var \Neos\Flow\ObjectManagement\ObjectManager
 	 * @Flow\Inject
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
+	 * @var \Neos\Flow\Configuration\ConfigurationManager
 	 * @Flow\Inject
 	 */
 	protected $configurationManager;
@@ -39,7 +39,7 @@ class MapperUtility {
 	public function getSingleObject($searchConfiguration, $query, $facet) {
 		$facetEntry = ArrayUtility::getOneSubEntryWith($query, 'facet', $facet);
 		$objectIdentifier = $facetEntry['value'];
-		/** @var \TYPO3\Flow\Persistence\Repository $objectRepository */
+		/** @var \Neos\Flow\Persistence\Repository $objectRepository */
 		$objectRepository = $this->objectManager->get($searchConfiguration[$facet]['selector']['repository']);
 		return $objectRepository->findByIdentifier($objectIdentifier);
 	}
@@ -52,7 +52,7 @@ class MapperUtility {
 	 *
 	 * @param string $searchName
 	 * @param array $query
-	 * @param \TYPO3\Flow\Persistence\Doctrine\Query $queryObject
+	 * @param \Neos\Flow\Persistence\Doctrine\Query $queryObject
 	 * @return array
 	 */
 	public function buildQuery($searchName, $query, $queryObject) {
@@ -68,7 +68,7 @@ class MapperUtility {
 				$facet = $queryEntry['facet'];
 				if (isset($searchConfiguration[$facet]['selector']['repository'])) {
 					$repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];
-					/** @var \TYPO3\Flow\Persistence\Doctrine\Repository $repository */
+					/** @var \Neos\Flow\Persistence\Doctrine\Repository $repository */
 					$repository = $this->objectManager->get($repositoryClassName);
 					$value = $repository->findByIdentifier($queryEntry['value']);
 					$this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value), LOG_DEBUG);
