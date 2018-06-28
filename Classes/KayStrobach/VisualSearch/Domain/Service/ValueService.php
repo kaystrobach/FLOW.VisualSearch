@@ -118,12 +118,12 @@ class ValueService {
 		$values = array();
 		foreach ($entities as $key => $entity) {
 			if(isset($facetConfiguration['display']['labelProperty'])) {
-				$label = \Neos\Flow\Reflection\ObjectAccess::getProperty(
+				$label = \Neos\Utility\ObjectAccess::getProperty(
 					$entity,
 					$facetConfiguration['display']['labelProperty']
 				);
 			} elseif (isset($facetConfiguration['selector']['labelProperty'])) {
-				$label = \Neos\Flow\Reflection\ObjectAccess::getProperty(
+				$label = \Neos\Utility\ObjectAccess::getProperty(
 						$entity,
 						$facetConfiguration['selector']['labelProperty']
 				);

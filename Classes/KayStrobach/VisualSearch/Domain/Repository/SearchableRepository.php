@@ -12,7 +12,7 @@ use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Flow\Persistence\Doctrine\Repository;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\QueryInterface;
-use Neos\Flow\Reflection\ObjectAccess;
+use Neos\Utility\ObjectAccess;
 
 
 /**
