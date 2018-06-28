@@ -32,7 +32,7 @@ class ValueService {
 	protected $searchRepository;
 
 	/**
-	 * @var \TYPO3\Flow\Object\ObjectManager
+	 * @var \TYPO3\Flow\ObjectManagement\ObjectManager
 	 * @Flow\Inject
 	 */
 	protected $objectManager;

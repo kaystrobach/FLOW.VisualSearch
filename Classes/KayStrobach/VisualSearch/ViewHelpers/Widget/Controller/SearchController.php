@@ -27,7 +27,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	protected $facetConfiguration = array();
 
 	/**
-	 * @var \TYPO3\Flow\Object\ObjectManager
+	 * @var \TYPO3\Flow\ObjectManagement\ObjectManager
 	 * @Flow\Inject
 	 */
 	protected $objectManager;
@@ -82,7 +82,7 @@ class SearchController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @return string
 	 *
 	 * @throws InvalidValueObjectException
-	 * @throws \TYPO3\Flow\Object\Exception\UnknownObjectException
+	 * @throws \TYPO3\Flow\ObjectManagement\Exception\UnknownObjectException
 	 */
 	public function valuesAction($facet = '', $query = array(), $term = '') {
 		$values = $this->valueService->getValuesByFacetQueryAndTerm(
