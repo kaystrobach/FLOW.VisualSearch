@@ -1,6 +1,6 @@
 {
     "name": "kaystrobach/visualsearch",
-    "type": "typo3-flow-package",
+    "type": "neos-package",
     "description": "package to handle advanced facetted searches",
     "require": {
         "neos/flow": "~4.0"
