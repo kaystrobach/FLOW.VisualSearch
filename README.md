@@ -28,17 +28,67 @@ Alternativly you can add the following line to your ```composer.json``` and exec
 	"kaystrobach/visualsearch": "@dev"
 ```
 
+## Basic Usage
 
-
-## Inclusion in a FLUID Template
+### Inclusion in a FLUID Template
 
 To include the viewHelper you include a line like:
 
 ```
-<search:widget.search search="students"/>
+<search:widget.search search="KayStrobach_Contact_Institution"/>
 ```
 
 This way you define, that ```students``` is the key for storing the filter query in the session for later usage and it is the key for configuring the search in the ```VisualSearch.yaml```.
+
+To make it even easier, you can use the partial provided by the package:
+
+```
+<f:render partial="Visualsearch/Search" arguments="{searchName:'KayStrobach_Contact_Institution', institutions:institutions}" contentAs="value">
+	...
+</f:render>
+```
+
+### Make it possible to query your repository
+
+```php
+<?php
+namespace Acme\Project\Domain\Repository;
+
+use KayStrobach\VisualSearch\Domain\Repository\SearchableRepository;
+use TYPO3\Flow\Annotations as Flow;
+
+/**
+ * @Flow\Scope("singleton")
+ */
+class StudentRepository extends SearchableRepository {
+
+    /**
+     * @var string
+     */
+    protected $defaultSearchName = 'KayStrobach_Contact_Institution';
+```
+
+### query the repository in your controller
+
+```php
+    public function indexAction() {
+        $this->view->assign(
+            'institutions',
+            $this->institutionRepository->findByDefaultQuery()
+        );
+    }
+
+```
+
+### VisualSearch.yaml
+
+to define the search please checkout the visualSearch.yaml file, please use the package `kaystrobach/contact` as reference.
+
+
+## Advanced Usage
+
+
+
 
 ## Searching in the Repository by query
 
@@ -46,7 +96,7 @@ In the studentsRepository you can use the following function to get the filtered
 
 ```
 <?php
-namespace SBS\LaPo\Domain\Repository;
+namespace Acme\Project\Domain\Repository;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "SBS.LaPo".              *
