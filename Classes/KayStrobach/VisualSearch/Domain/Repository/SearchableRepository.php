@@ -29,16 +29,22 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 	/**
 	 * helps to use the data objects of the search
 	 *
-	 * @Flow\Inject
+	 * @Flow\Inject()
 	 * @var \KayStrobach\VisualSearch\Utility\MapperUtility
 	 */
 	protected $mapperUtility;
 
 	/**
 	 * @var \Neos\Flow\Log\SystemLoggerInterface
-	 * @Flow\Inject
+	 * @Flow\Inject()
 	 */
 	protected $systemLogger;
+
+    /**
+     * @var \KayStrobach\VisualSearch\Domain\Session\QueryStorage
+     * @Flow\Inject()
+     */
+    protected $queryStorage;
 
     /**
      * Function to aid KayStrobach.VisualSearch to find entries
@@ -49,6 +55,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
      * @param array $searchConfiguration
      * @return QueryResultInterface
      * @throws \Neos\Flow\Persistence\Exception\InvalidQueryException
+     * @throws \Neos\Utility\Exception\PropertyNotAccessibleException
      */
 	public function findBySearchTerm($query, $term = '', $facetConfiguration = array(), $searchConfiguration = array()) {
 		$queryObject = $this->createQuery();
@@ -84,6 +91,13 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 
 		return $queryObject->execute();
 	}
+
+	public function findByDefaultQuery()
+    {
+        return $this->findByQuery(
+            $this->queryStorage->getQuery($this->defaultSearchName)
+        );
+    }
 
 	/**
 	 * function to filter the repository result by a given query
