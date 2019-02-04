@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kay
- * Date: 23.04.15
- * Time: 16:49
- */
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 use Neos\Flow\Error\Debugger;
@@ -13,7 +7,6 @@ use Neos\Flow\Persistence\Doctrine\Repository;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\QueryInterface;
 use Neos\Utility\ObjectAccess;
-
 
 /**
  * @Flow\Scope("singleton")
@@ -62,11 +55,35 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 
 		// restrict by number of records by term
 		if (isset($facetConfiguration['labelProperty'])) {
-			$queryObject->matching(
-				$queryObject->like(
-					$facetConfiguration['labelProperty'], '%' . $term . '%'
-				)
-			);
+            $labelMatcher = 'before';
+		    if (isset($facetConfiguration['labelMatcher'])) {
+		        $labelMatcher = $facetConfiguration['labelMatcher'];
+            }
+            switch($labelMatcher) {
+                case 'beginsWith':
+                    $queryObject->matching(
+                        $queryObject->like(
+                            $facetConfiguration['labelProperty'], $term . '%'
+                        )
+                    );
+                    break;
+                case 'endsWith':
+                    $queryObject->matching(
+                        $queryObject->like(
+                            $facetConfiguration['labelProperty'], '%' . $term . '%'
+                        )
+                    );
+                    break;
+		        case 'contains':
+		        default:
+                    $queryObject->matching(
+                        $queryObject->like(
+                            $facetConfiguration['labelProperty'], '%' . $term . '%'
+                        )
+                    );
+            }
+
+
 		}
 
 		// set orderings
