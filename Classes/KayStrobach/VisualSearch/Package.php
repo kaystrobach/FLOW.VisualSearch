@@ -38,9 +38,12 @@ class Package extends BasePackage {
 		    'Neos\Flow\Configuration\ConfigurationManager',
             'configurationManagerReady',
 			function (ConfigurationManager $configurationManager) {
-				$configurationManager->registerConfigurationType('VisualSearch');
+				$configurationManager->registerConfigurationType(
+				    'VisualSearch',
+                    ConfigurationManager::CONFIGURATION_PROCESSING_TYPE_DEFAULT,
+                    true
+                );
 			}
 		);
 	}
 }
-
