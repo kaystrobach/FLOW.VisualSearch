@@ -1,4 +1,5 @@
 <?php
+
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget;
 
 /*                                                                        *
@@ -14,27 +15,31 @@ namespace KayStrobach\VisualSearch\ViewHelpers\Widget;
 use Neos\Flow\Annotations as Flow;
 use Neos\FluidAdaptor\Core\Widget\AbstractWidgetViewHelper;
 
-class SearchViewHelper extends AbstractWidgetViewHelper {
-	/**
-	 * @var bool
-	 */
-	protected $ajaxWidget = TRUE;
+class SearchViewHelper extends AbstractWidgetViewHelper
+{
+    /**
+     * @var bool
+     */
+    protected $ajaxWidget = true;
 
-	/**
-	 * @Flow\Inject
-	 * @var \KayStrobach\VisualSearch\ViewHelpers\Widget\Controller\SearchController
-	 */
-	protected $controller;
+    /**
+     * @Flow\Inject
+     *
+     * @var \KayStrobach\VisualSearch\ViewHelpers\Widget\Controller\SearchController
+     */
+    protected $controller;
 
-	/**
-	 * Render this view helper
-	 *
-	 * @param string $search
-	 * @return string
-	 */
-	public function render($search = '') {
-		$response = $this->initiateSubRequest();
-		return $response->getContent();
-	}
+    /**
+     * Render this view helper.
+     *
+     * @param string $search
+     *
+     * @return string
+     */
+    public function render($search = '')
+    {
+        $response = $this->initiateSubRequest();
+
+        return $response->getContent();
+    }
 }
-
