@@ -40,3 +40,41 @@
 	animation-iteration-count:infinite;
 	-webkit-animation-iteration-count:infinite;
 }
+
+.search-icons {
+	position: relative;
+	top: 1px;
+	display: inline-block;
+	height: 0.9rem;
+	width: 0.9rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	background-size: contain;
+}
+
+.search-icons.search-icons-delete {
+	background-image: url("../Icons/material-design-icons/baseline-delete-24px.svg");
+}
+
+.search-icons.search-icons-remove {
+	top: 3px;
+	background-image: url("../Icons/material-design-icons/baseline-remove_circle_outline-24px.svg");
+}
+
+.search-icons.search-icons-send {
+	background-image: url("../Icons/material-design-icons/baseline-send-24px.svg");
+}
+
+.search-icons.search-icons-hourglass {
+	background-image: url("../Icons/material-design-icons/baseline-hourglass_empty-24px.svg");
+}
+
+.search-icons.search-icons-search {
+	background-image: url("../Icons/material-design-icons/baseline-search-24px.svg");
+}
+
+span.label.label-default {
+	margin-left: 10px;
+}

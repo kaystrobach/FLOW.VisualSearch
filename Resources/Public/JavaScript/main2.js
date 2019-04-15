@@ -23,9 +23,9 @@
         settings.formfield = $(element).find('.form-control');
         settings.facetarea = $(element).find('.visual-search-facets');
         settings.ajaxArea = '#search-result-area';
-        settings.loadingContent = '<span class="visual-search-loading-spinner"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="sr-only">Waiting</span></div></div></span>';
+        settings.loadingContent = '<span class="visual-search-loading-spinner"><div class="progress"><span class="search-icons search-icons-hourglass"></span><span class="sr-only"> ... </span></div></div></span>';
 
-        $(element).on('click', '.label .glyphicon', function() {
+        $(element).on('click', '.label .search-icons', function() {
             $(settings.formfield).val('');
             $(this).parent().remove();
             window.setTimeout(function() {
@@ -162,7 +162,7 @@
      * @returns {string}
      */
     function getFacet(value) {
-        return '<span class="label label-default"><span class="token token-facet" data-facet="' + value.facet + '">' + value.facetLabel + '</span>: <span class="token token-value" data-value="' + value.value + '">' + value.valueLabel + '</span> <span class="glyphicon glyphicon-remove"></span></span> ';
+        return '<span class="label label-default"><span class="token token-facet" data-facet="' + value.facet + '">' + value.facetLabel + '</span>: <span class="token token-value" data-value="' + value.value + '">' + value.valueLabel + '</span> <span class="search-icons search-icons-remove"></span></span> ';
     }
 
     /**
