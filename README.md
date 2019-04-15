@@ -1,3 +1,5 @@
+[![StyleCI](https://github.styleci.io/repos/34098471/shield?branch=master)](https://github.styleci.io/repos/34098471)
+
 # FLOW.VisualSearch
 
 ![Filter](Documentation/filter.gif)
