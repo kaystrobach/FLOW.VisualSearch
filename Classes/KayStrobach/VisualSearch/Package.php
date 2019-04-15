@@ -1,4 +1,5 @@
 <?php
+
 namespace KayStrobach\VisualSearch;
 
 /*                                                                        *
@@ -15,35 +16,36 @@ use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Package\Package as BasePackage;
 
 /**
- * The Fluid Package
- *
+ * The Fluid Package.
  */
-class Package extends BasePackage {
+class Package extends BasePackage
+{
+    /**
+     * @var bool
+     */
+    protected $protected = true;
 
-	/**
-	 * @var boolean
-	 */
-	protected $protected = TRUE;
-
-	/**
-	 * Invokes custom PHP code directly after the package manager has been initialized.
-	 *
-	 * @param \Neos\Flow\Core\Bootstrap $bootstrap The current bootstrap
-	 * @return void
-	 */
-	public function boot(\Neos\Flow\Core\Bootstrap $bootstrap) {
-		// register Configuration Type Menu
-		$dispatcher = $bootstrap->getSignalSlotDispatcher();
-		$dispatcher->connect(
-		    'Neos\Flow\Configuration\ConfigurationManager',
+    /**
+     * Invokes custom PHP code directly after the package manager has been initialized.
+     *
+     * @param \Neos\Flow\Core\Bootstrap $bootstrap The current bootstrap
+     *
+     * @return void
+     */
+    public function boot(\Neos\Flow\Core\Bootstrap $bootstrap)
+    {
+        // register Configuration Type Menu
+        $dispatcher = $bootstrap->getSignalSlotDispatcher();
+        $dispatcher->connect(
+            'Neos\Flow\Configuration\ConfigurationManager',
             'configurationManagerReady',
-			function (ConfigurationManager $configurationManager) {
-				$configurationManager->registerConfigurationType(
-				    'VisualSearch',
+            function (ConfigurationManager $configurationManager) {
+                $configurationManager->registerConfigurationType(
+                    'VisualSearch',
                     ConfigurationManager::CONFIGURATION_PROCESSING_TYPE_DEFAULT,
                     true
                 );
-			}
-		);
-	}
+            }
+        );
+    }
 }
