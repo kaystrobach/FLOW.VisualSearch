@@ -76,7 +76,11 @@ class MapperUtility
                     /** @var \Neos\Flow\Persistence\Doctrine\Repository $repository */
                     $repository = $this->objectManager->get($repositoryClassName);
                     $value = $repository->findByIdentifier($queryEntry['value']);
-                    $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as Object '.get_class($value), LOG_DEBUG);
+                    if (is_object($value)) {
+                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value), LOG_DEBUG);
+                    } else {
+                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as literal', LOG_DEBUG);
+                    }
                 } else {
                     $value = $queryEntry['value'];
                     $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as string', LOG_DEBUG);
