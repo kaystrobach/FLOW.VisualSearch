@@ -115,7 +115,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
 
     public function findByDefaultQuery()
     {
-        $this->findByNamedQuery($this->defaultSearchName);
+        return $this->findByNamedQuery($this->defaultSearchName);
     }
 
     public function findByNamedQuery($name)
