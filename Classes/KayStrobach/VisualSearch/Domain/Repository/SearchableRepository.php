@@ -171,9 +171,12 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
         /** @var $doctrineQuery \Doctrine\ORM\Query */
         $doctrineQuery = $doctrineQueryBuilder->getQuery();
         $this->systemLogger->log(
-            'findByQuery:'.$doctrineQuery->getSQL().PHP_EOL
-            .Debugger::renderDump($doctrineQuery->getParameters(), 2, true),
-            LOG_DEBUG
+            'findByQuery:',
+            LOG_DEBUG,
+            [
+                'sql' => $doctrineQuery->getSQL(),
+                'parameters' => Debugger::renderDump($doctrineQuery->getParameters(), 2),
+            ]
         );
 
         $doctrineQueryBuilder->distinct(true);
