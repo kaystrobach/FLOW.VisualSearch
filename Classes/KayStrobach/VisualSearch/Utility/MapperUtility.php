@@ -117,6 +117,30 @@ class MapperUtility
                     }
                     $demands[] = $queryObject->logicalOr($subDemands);
                 }
+                if (isset($searchConfiguration[$facet]['matches']['sameday']) && (is_array($searchConfiguration[$facet]['matches']['sameday']))) {
+                    $this->systemLogger->log('add sameday demand for '.$facet, LOG_DEBUG);
+                    $subDemands = [];
+                    $dateStartObject = \DateTime::createFromFormat(
+                        $searchConfiguration[$facet]['selector']['dateFormat'] ?? 'd.m.Y',
+                        $value
+                    );
+                    if ($dateStartObject instanceof \DateTime) {
+                        $dateStartObject->setTime(0,0);
+                        $dateEndObject = clone $dateStartObject;
+                        $dateEndObject->setTime(23,59,59);
+
+                        foreach ($searchConfiguration[$facet]['matches']['sameday'] as $matchField) {
+                            $subDemands[] = $queryObject->logicalAnd(
+                                [
+                                    $queryObject->greaterThanOrEqual($matchField, $dateStartObject),
+                                    $queryObject->lessThanOrEqual($matchField, $dateEndObject),
+                                ]
+                            );
+                        }
+                        $demands[] = $queryObject->logicalOr($subDemands);
+                    }
+
+                }
             }
         }
 
