@@ -82,6 +82,7 @@ class ValueService
                     } else {
                         $entities = $result;
                     }
+
                     return $this->convertEntitiesForSearch($entities, $facetConfiguration, $stringLength);
                 }
                 if (isset($facetConfiguration['selector']['orderBy'])) {
@@ -116,21 +117,22 @@ class ValueService
 
     /**
      * @param array|\Iterator $entities
-     * @param array $facetConfiguration
-     * @param int $labelLength
+     * @param array           $facetConfiguration
+     * @param int             $labelLength
+     *
+     * @throws \Neos\Utility\Exception\PropertyNotAccessibleException
      *
      * @return array
-     * @throws \Neos\Utility\Exception\PropertyNotAccessibleException
      */
     protected function convertEntitiesForSearch($entities, $facetConfiguration, $labelLength)
     {
         $values = [];
         foreach ($entities as $key => $entity) {
             if (is_string($entity)) {
-                $values[] = array(
+                $values[] = [
                     'label' => $entity,
-                    'value' => $entity
-                );
+                    'value' => $entity,
+                ];
                 continue;
             }
             if (isset($facetConfiguration['display']['labelProperty'])) {

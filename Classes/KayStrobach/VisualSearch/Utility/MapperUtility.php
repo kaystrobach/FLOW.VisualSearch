@@ -77,9 +77,9 @@ class MapperUtility
                     $repository = $this->objectManager->get($repositoryClassName);
                     $value = $repository->findByIdentifier($queryEntry['value']);
                     if (is_object($value)) {
-                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value), LOG_DEBUG);
+                        $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as Object '.get_class($value), LOG_DEBUG);
                     } else {
-                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as literal', LOG_DEBUG);
+                        $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as literal', LOG_DEBUG);
                     }
                 } else {
                     $value = $queryEntry['value'];
@@ -125,9 +125,9 @@ class MapperUtility
                         $value
                     );
                     if ($dateStartObject instanceof \DateTime) {
-                        $dateStartObject->setTime(0,0);
+                        $dateStartObject->setTime(0, 0);
                         $dateEndObject = clone $dateStartObject;
-                        $dateEndObject->setTime(23,59,59);
+                        $dateEndObject->setTime(23, 59, 59);
 
                         foreach ($searchConfiguration[$facet]['matches']['sameday'] as $matchField) {
                             $subDemands[] = $queryObject->logicalAnd(
@@ -139,7 +139,6 @@ class MapperUtility
                         }
                         $demands[] = $queryObject->logicalOr($subDemands);
                     }
-
                 }
             }
         }

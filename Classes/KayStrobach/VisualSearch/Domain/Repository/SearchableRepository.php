@@ -174,7 +174,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
             'findByQuery:',
             LOG_DEBUG,
             [
-                'sql' => $doctrineQuery->getSQL(),
+                'sql'        => $doctrineQuery->getSQL(),
                 'parameters' => Debugger::renderDump($doctrineQuery->getParameters(), 2),
             ]
         );
