@@ -125,9 +125,9 @@ class MapperUtility
                         $value
                     );
                     if ($dateStartObject instanceof \DateTime) {
-                        $dateStartObject->setTime(0,0);
+                        $dateStartObject->setTime(0, 0);
                         $dateEndObject = clone $dateStartObject;
-                        $dateEndObject->setTime(23,59,59);
+                        $dateEndObject->setTime(23, 59, 59);
 
                         foreach ($searchConfiguration[$facet]['matches']['sameday'] as $matchField) {
                             $subDemands[] = $queryObject->logicalAnd(
@@ -139,7 +139,6 @@ class MapperUtility
                         }
                         $demands[] = $queryObject->logicalOr($subDemands);
                     }
-
                 }
             }
         }
