@@ -175,7 +175,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
             LOG_DEBUG,
             [
                 'sql' => $doctrineQuery->getSQL(),
-                'parameters' => Debugger::renderDump($doctrineQuery->getParameters(), 2),
+                'parameters' => Debugger::renderDump($doctrineQuery->getParameters(), 2, true),
             ]
         );
 
