@@ -140,6 +140,13 @@ class MapperUtility
                         $demands[] = $queryObject->logicalOr($subDemands);
                     }
                 }
+
+                if (isset($searchConfiguration[$facet]['matches']['instanceOf'])) {
+                    $demands[] = $queryObject->getQueryBuilder()->expr()->isInstanceOf(
+                        $queryObject->getQueryBuilder()->getRootAliases()[0],
+                        $value
+                    );
+                }
             }
         }
 
