@@ -224,3 +224,25 @@ Searches:
           #  - wunschFachpruefungen.1.schwerpunkt1
           #  - wunschFachpruefungen.1.schwerpunkt2
           #  - wunschFachpruefungen.1.schwerpunkt3
+
+      dtype:
+        label: "Prüfungstyp"
+        selector:
+          conditions:
+            once: true
+          values:
+            SBS\LaPo2012\Domain\Model\Pruefung\BerufsbildendeSchulenPruefung: "Berufsbildende Schulen - SP12"
+            SBS\LaPo2012\Domain\Model\Pruefung\BerufsbildendeSchulenErweiterungsPruefung: "Berufsbildende Schulen - EP12"
+        matches:
+          instanceOf: 1
+
+      tag:
+        label: "Datum (dd.mm.yyyy)"
+        selector:
+          conditions:
+            once: true
+          freeInput: true
+          dateFormat: d.m.Y
+        matches:
+          sameday:
+            - pruefungsdatum
