@@ -131,18 +131,18 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
      * this function should be used to display the filtered result list.
      *
      * @param array $query
-     * @param null  $searchName
+     * @param null $searchName
      *
      * @return QueryResultInterface
+     * @throws \Neos\Utility\Exception\PropertyNotAccessibleException
      */
     public function findByQuery($query, $searchName = null)
     {
         if ($searchName === null) {
-            if (isset($this->defaultSearchName)) {
-                $searchName = $this->defaultSearchName;
-            } else {
-                $searchName = $this->getEntityClassName();
-            }
+            $searchName = $this->defaultSearchName;
+        }
+        if ($searchName === null) {
+            $searchName = $this->getEntityClassName();
         }
 
         $demands = [];
