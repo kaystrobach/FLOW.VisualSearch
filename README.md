@@ -1,5 +1,4 @@
 [![StyleCI](https://github.styleci.io/repos/34098471/shield?branch=master)](https://github.styleci.io/repos/34098471)
-
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/187a572c4b314a868532dca36ae79fac)](https://www.codacy.com/app/github_130/FLOW.VisualSearch?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kaystrobach/FLOW.VisualSearch&amp;utm_campaign=Badge_Grade)
 
 # FLOW.VisualSearch
