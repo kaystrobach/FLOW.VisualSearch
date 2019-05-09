@@ -125,7 +125,7 @@ class ValueService
     protected function convertEntitiesForSearch($entities, $facetConfiguration, $labelLength)
     {
         $values = [];
-        foreach ($entities as $key => $entity) {
+        foreach ($entities as $entity) {
             if (is_string($entity)) {
                 $values[] = array(
                     'label' => $entity,
