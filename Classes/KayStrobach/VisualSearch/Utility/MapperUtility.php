@@ -1,41 +1,49 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kay
- * Date: 24.04.15
- * Time: 09:22.
- */
 
 namespace KayStrobach\VisualSearch\Utility;
 
+use KayStrobach\VisualSearch\Demands\EqualsDemand;
+use KayStrobach\VisualSearch\Demands\Like\ContainsDemand;
+use KayStrobach\VisualSearch\Demands\Like\EndsWithDemand;
+use KayStrobach\VisualSearch\Demands\Like\StartsWithDemand;
+use KayStrobach\VisualSearch\Demands\Date\DateDemand;
+use KayStrobach\VisualSearch\Demands\SimpleDemandInterface;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Configuration\ConfigurationManager;
+use Neos\Flow\Configuration\Exception\InvalidConfigurationTypeException;
+use Neos\Flow\Log\SystemLoggerInterface;
+use Neos\Flow\ObjectManagement\Exception\UnknownObjectException;
+use Neos\Flow\ObjectManagement\ObjectManager;
+use Neos\Flow\Persistence\Doctrine\Query;
+use Neos\Flow\Persistence\Doctrine\Repository;
 
 class MapperUtility
 {
     /**
-     * @var \Neos\Flow\Log\SystemLoggerInterface
+     * @var SystemLoggerInterface
      * @Flow\Inject
      */
     protected $systemLogger;
 
     /**
-     * @var \Neos\Flow\ObjectManagement\ObjectManager
+     * @var ObjectManager
      * @Flow\Inject
      */
     protected $objectManager;
 
     /**
-     * @var \Neos\Flow\Configuration\ConfigurationManager
+     * @var ConfigurationManager
      * @Flow\Inject
      */
     protected $configurationManager;
 
     /**
-     * @param array  $searchConfiguration
-     * @param array  $query
+     * @param array $searchConfiguration
+     * @param array $query
      * @param string $facet
      *
      * @return object
+     * @throws UnknownObjectException
      */
     public function getSingleObject($searchConfiguration, $query, $facet)
     {
@@ -52,15 +60,17 @@ class MapperUtility
     /**
      * iterates over all.
      *
-     * @todo make it work with multiple values per facet
-     *
-     * @param string                                $searchName
-     * @param array                                 $query
-     * @param \Neos\Flow\Persistence\Doctrine\Query $queryObject
+     * @param string $searchName
+     * @param array $query
+     * @param Query $queryObject
      *
      * @return array
+     * @throws InvalidConfigurationTypeException
+     * @throws UnknownObjectException
+     * @todo make it work with multiple values per facet
+     *
      */
-    public function buildQuery($searchName, $query, $queryObject)
+    public function buildQuery($searchName, $query, Query $queryObject)
     {
         $searchConfiguration = $this->configurationManager->getConfiguration(
             'VisualSearch',
@@ -73,7 +83,7 @@ class MapperUtility
                 $facet = $queryEntry['facet'];
                 if (isset($searchConfiguration[$facet]['selector']['repository'])) {
                     $repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];
-                    /** @var \Neos\Flow\Persistence\Doctrine\Repository $repository */
+                    /** @var Repository $repository */
                     $repository = $this->objectManager->get($repositoryClassName);
                     $value = $repository->findByIdentifier($queryEntry['value']);
                     if (is_object($value)) {
@@ -85,71 +95,55 @@ class MapperUtility
                     $value = $queryEntry['value'];
                     $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as string', LOG_DEBUG);
                 }
-                if (isset($searchConfiguration[$facet]['matches']['equals']) && (is_array($searchConfiguration[$facet]['matches']['equals']))) {
-                    $this->systemLogger->log('add equals demand for '.$facet, LOG_DEBUG);
-                    $subDemands = [];
-                    foreach ($searchConfiguration[$facet]['matches']['equals'] as $matchField) {
-                        $subDemands[] = $queryObject->equals($matchField, $value);
-                    }
-                    $demands[] = $queryObject->logicalOr($subDemands);
-                }
-                if (isset($searchConfiguration[$facet]['matches']['like']) && (is_array($searchConfiguration[$facet]['matches']['like']))) {
-                    $this->systemLogger->log('add like demand for '.$facet, LOG_DEBUG);
-                    $subDemands = [];
-                    foreach ($searchConfiguration[$facet]['matches']['like'] as $matchField) {
-                        $subDemands[] = $queryObject->like($matchField, '%'.$value.'%');
-                    }
-                    $demands[] = $queryObject->logicalOr($subDemands);
-                }
-                if (isset($searchConfiguration[$facet]['matches']['%like']) && (is_array($searchConfiguration[$facet]['matches']['%like']))) {
-                    $this->systemLogger->log('add %like demand for '.$facet, LOG_DEBUG);
-                    $subDemands = [];
-                    foreach ($searchConfiguration[$facet]['matches']['%like'] as $matchField) {
-                        $subDemands[] = $queryObject->like($matchField, '%'.$value);
-                    }
-                    $demands[] = $queryObject->logicalOr($subDemands);
-                }
-                if (isset($searchConfiguration[$facet]['matches']['like%']) && (is_array($searchConfiguration[$facet]['matches']['like%']))) {
-                    $this->systemLogger->log('add like% demand for '.$facet, LOG_DEBUG);
-                    $subDemands = [];
-                    foreach ($searchConfiguration[$facet]['matches']['like%'] as $matchField) {
-                        $subDemands[] = $queryObject->like($matchField, $value.'%');
-                    }
-                    $demands[] = $queryObject->logicalOr($subDemands);
-                }
-                if (isset($searchConfiguration[$facet]['matches']['sameday']) && (is_array($searchConfiguration[$facet]['matches']['sameday']))) {
-                    $this->systemLogger->log('add sameday demand for '.$facet, LOG_DEBUG);
-                    $subDemands = [];
-                    $dateStartObject = \DateTime::createFromFormat(
-                        $searchConfiguration[$facet]['selector']['dateFormat'] ?? 'd.m.Y',
-                        $value
-                    );
-                    if ($dateStartObject instanceof \DateTime) {
-                        $dateStartObject->setTime(0, 0);
-                        $dateEndObject = clone $dateStartObject;
-                        $dateEndObject->setTime(23, 59, 59);
 
-                        foreach ($searchConfiguration[$facet]['matches']['sameday'] as $matchField) {
-                            $subDemands[] = $queryObject->logicalAnd(
-                                [
-                                    $queryObject->greaterThanOrEqual($matchField, $dateStartObject),
-                                    $queryObject->lessThanOrEqual($matchField, $dateEndObject),
-                                ]
-                            );
-                        }
-                        $demands[] = $queryObject->logicalOr($subDemands);
-                    }
-                }
-
-                if (isset($searchConfiguration[$facet]['matches']['instanceOf'])) {
-                    $demands[] = $queryObject->getQueryBuilder()->expr()->isInstanceOf(
-                        $queryObject->getQueryBuilder()->getRootAliases()[0],
-                        $value
+                foreach ($searchConfiguration[$facet]['matches'] as $type => $fields) {
+                    $matcherClassName = $this->convertMatchShorthandIntoClassName($type);
+                    $matcher = new $matcherClassName(
+                        $queryObject,
+                        $fields,
+                        $searchConfiguration[$facet]['selector'] ?? []
                     );
+
+                    if (!$matcher instanceof SimpleDemandInterface) {
+                        $this->systemLogger->log(
+                            'Ignored "' . $type . '" converted to "' . $matcherClassName . '" as it is not a SimpleDemandInterface, but a ' . get_parent_class($matcherClassName),
+                            LOG_DEBUG
+                        );
+                        continue;
+                    }
+                    /** @var SimpleDemandInterface $matcher */
+
+                    $subDemands = $matcher->getDemands($value);
+                    if ($subDemands !== null) {
+                        $demands[] = $subDemands;
+                        $this->systemLogger->log(
+                            'Adding demands',
+                            LOG_DEBUG,
+                            $subDemands
+                        );
+                    }
                 }
             }
         }
 
         return $demands;
+    }
+
+    public function convertMatchShorthandIntoClassName(string $shorthand): string
+    {
+        switch ($shorthand) {
+            case 'equals':
+                return EqualsDemand::class;
+            case '%like':
+                return StartsWithDemand::class;
+            case 'like%':
+                return EndsWithDemand::class;
+            case 'like':
+                return ContainsDemand::class;
+            case 'sameday':
+                return DateDemand::class;
+            default:
+                return $shorthand;
+        }
     }
 }
