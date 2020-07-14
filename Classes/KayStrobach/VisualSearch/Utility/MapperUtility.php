@@ -3,6 +3,7 @@
 namespace KayStrobach\VisualSearch\Utility;
 
 use KayStrobach\VisualSearch\Demands\EqualsDemand;
+use KayStrobach\VisualSearch\Demands\InstanceOfDemand;
 use KayStrobach\VisualSearch\Demands\Like\ContainsDemand;
 use KayStrobach\VisualSearch\Demands\Like\EndsWithDemand;
 use KayStrobach\VisualSearch\Demands\Like\StartsWithDemand;
