@@ -142,6 +142,8 @@ class MapperUtility
                 return ContainsDemand::class;
             case 'sameday':
                 return DateDemand::class;
+            case 'instanceOf':
+                return InstanceOfDemand::class;
             default:
                 return $shorthand;
         }
