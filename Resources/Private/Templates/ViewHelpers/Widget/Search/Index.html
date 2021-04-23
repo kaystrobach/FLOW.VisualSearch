@@ -12,12 +12,14 @@
 		     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
 		     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
 		>
-			<span class="input-group-addon visualsearch-input-group-addon">
-				<span class="search-icons search-icons-search"></span>
-				<span class="visual-search-facets"></span>
+			<span class="input-group-addon input-group-prepend visualsearch-input-group-addon">
+				<span class="input-group-text">
+					<span class="search-icons search-icons-search"></span>
+					<span class="visual-search-facets"></span>
+				</span>
 			</span>
 			<input type="text" class="form-control" id="test">
-			<span class="input-group-btn">
+			<span class="input-group-btn input-group-append">
 				<button class="btn btn-default btn-clear" type="button">
 					<span class="search-icons search-icons-delete"></span>
 				</button>
