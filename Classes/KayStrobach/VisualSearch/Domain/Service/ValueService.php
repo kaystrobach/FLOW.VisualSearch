@@ -140,8 +140,8 @@ class ValueService
                 );
             } elseif (isset($facetConfiguration['selector']['labelProperty'])) {
                 $label = \Neos\Utility\ObjectAccess::getProperty(
-                        $entity,
-                        $facetConfiguration['selector']['labelProperty']
+                    $entity,
+                    $facetConfiguration['selector']['labelProperty']
                 );
             } elseif (method_exists($entity, '__toString')) {
                 $label = (string) $entity;

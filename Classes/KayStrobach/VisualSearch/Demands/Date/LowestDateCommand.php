@@ -2,7 +2,6 @@
 
 namespace KayStrobach\VisualSearch\Demands\Date;
 
-
 use KayStrobach\VisualSearch\Demands\AbstractDemand;
 
 class LowestDateCommand extends AbstractDemand
