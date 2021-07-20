@@ -32,6 +32,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
     protected $mapperUtility;
 
     /**
+     * @Flow\Inject()
      * @var LoggerInterface
      */
     protected $logger;

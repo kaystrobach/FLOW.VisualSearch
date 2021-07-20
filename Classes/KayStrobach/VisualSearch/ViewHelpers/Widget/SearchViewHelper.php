@@ -47,6 +47,9 @@ class SearchViewHelper extends AbstractWidgetViewHelper
     public function render()
     {
         $response = $this->initiateSubRequest();
+        if (is_string($response)) {
+            return $response;
+        }
         return $response->getContent();
     }
 }

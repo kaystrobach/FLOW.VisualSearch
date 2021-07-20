@@ -21,6 +21,7 @@ use Psr\Log\LoggerInterface;
 class MapperUtility
 {
     /**
+     * @Flow\Inject()
      * @var LoggerInterface
      */
     protected $logger;
