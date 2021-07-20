@@ -12,19 +12,18 @@ use KayStrobach\VisualSearch\Demands\SimpleDemandInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Configuration\Exception\InvalidConfigurationTypeException;
-use Neos\Flow\Log\SystemLoggerInterface;
 use Neos\Flow\ObjectManagement\Exception\UnknownObjectException;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Neos\Flow\Persistence\Doctrine\Query;
 use Neos\Flow\Persistence\Doctrine\Repository;
+use Psr\Log\LoggerInterface;
 
 class MapperUtility
 {
     /**
-     * @var SystemLoggerInterface
-     * @Flow\Inject
+     * @var LoggerInterface
      */
-    protected $systemLogger;
+    protected $logger;
 
     /**
      * @var ObjectManager
@@ -88,13 +87,19 @@ class MapperUtility
                     $repository = $this->objectManager->get($repositoryClassName);
                     $value = $repository->findByIdentifier($queryEntry['value']);
                     if (is_object($value)) {
-                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value), LOG_DEBUG);
+                        $this->logger->debug(
+                            'Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value)
+                        );
                     } else {
-                        $this->systemLogger->log('Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as literal', LOG_DEBUG);
+                        $this->logger->debug(
+                            'Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as literal'
+                        );
                     }
                 } else {
                     $value = $queryEntry['value'];
-                    $this->systemLogger->log('Facet: '.$facet.' = '.$queryEntry['value'].' as string', LOG_DEBUG);
+                    $this->logger->debug(
+                        'Facet: '.$facet.' = '.$queryEntry['value'].' as string'
+                    );
                 }
 
                 foreach ($searchConfiguration[$facet]['matches'] as $type => $fields) {
@@ -106,9 +111,8 @@ class MapperUtility
                     );
 
                     if (!$matcher instanceof SimpleDemandInterface) {
-                        $this->systemLogger->log(
-                            'Ignored "' . $type . '" converted to "' . $matcherClassName . '" as it is not a SimpleDemandInterface, but a ' . get_parent_class($matcherClassName),
-                            LOG_DEBUG
+                        $this->logger->debug(
+                            'Ignored "' . $type . '" converted to "' . $matcherClassName . '" as it is not a SimpleDemandInterface, but a ' . get_parent_class($matcherClassName)
                         );
                         continue;
                     }
@@ -117,10 +121,11 @@ class MapperUtility
                     $subDemands = $matcher->getDemands($value);
                     if ($subDemands !== null) {
                         $demands[] = $subDemands;
-                        $this->systemLogger->log(
+                        $this->logger->debug(
                             'Adding demands',
-                            LOG_DEBUG,
-                            $subDemands
+                            [
+                                $subDemands
+                            ]
                         );
                     }
                 }

@@ -8,6 +8,7 @@ use Neos\Flow\Persistence\Doctrine\Repository;
 use Neos\Flow\Persistence\QueryInterface;
 use Neos\Flow\Persistence\QueryResultInterface;
 use Neos\Utility\ObjectAccess;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Flow\Scope("singleton")
@@ -31,10 +32,9 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
     protected $mapperUtility;
 
     /**
-     * @var \Neos\Flow\Log\SystemLoggerInterface
-     * @Flow\Inject()
+     * @var LoggerInterface
      */
-    protected $systemLogger;
+    protected $logger;
 
     /**
      * @var \KayStrobach\VisualSearch\Domain\Session\QueryStorage
@@ -108,7 +108,12 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
         /** @var $doctrineQuery \Doctrine\ORM\Query */
         $doctrineQuery = $doctrineQueryBuilder->getQuery();
 
-        $this->systemLogger->log('findBySearchTerm:'.$doctrineQuery->getSQL(), LOG_ALERT);
+        $this->logger->info(
+            'findBySearchTerm',
+            [
+                $doctrineQuery->getSQL()
+            ]
+        );
 
         return $queryObject->execute();
     }
@@ -156,7 +161,12 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
         // merge demands from VisualSearch.yaml and the
         $demands = array_merge($demands, $this->mapperUtility->buildQuery($searchName, $query, $queryObject));
 
-        $this->systemLogger->log('demands: '.Debugger::renderDump($demands, 2, true));
+        $this->logger->info(
+            'demands',
+            [
+                Debugger::renderDump($demands, 2, true)
+            ]
+        );
 
         if (count($demands) > 0) {
             $queryObject->matching(
@@ -170,9 +180,9 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
         $doctrineQueryBuilder = ObjectAccess::getProperty($queryObject, 'queryBuilder', true);
         /** @var $doctrineQuery \Doctrine\ORM\Query */
         $doctrineQuery = $doctrineQueryBuilder->getQuery();
-        $this->systemLogger->log(
+
+        $this->logger->debug(
             'findByQuery:',
-            LOG_DEBUG,
             [
                 'sql' => $doctrineQuery->getSQL(),
                 'parameters' => Debugger::renderDump($doctrineQuery->getParameters(), 2, true),

@@ -115,12 +115,6 @@ use TYPO3\Flow\Reflection\ObjectAccess;
  */
 class StudentRepository extends SearchableRepository {
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
-	 */
-	protected $systemLogger;
-
-	/**
 	 * @param array $query
 	 * @return \TYPO3\Flow\Persistence\QueryResultInterface
 	 */
@@ -153,7 +147,7 @@ In a controller you can then use these lines to filter the resultset:
 	 * @Flow\Inject
 	 */
 	protected $queryStorage;
-	
+
 	public function indexAction() {
 		$this->view->assign('students', $this->studentRepository->findByQuery($this->queryStorage->getQuery('students')));
 	}
