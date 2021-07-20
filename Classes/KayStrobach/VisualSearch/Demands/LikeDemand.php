@@ -2,7 +2,6 @@
 
 namespace KayStrobach\VisualSearch\Demands;
 
-
 abstract class LikeDemand extends AbstractDemand
 {
     protected $prefix = '';

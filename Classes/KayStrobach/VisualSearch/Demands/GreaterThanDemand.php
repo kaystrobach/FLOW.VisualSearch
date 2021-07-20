@@ -2,7 +2,6 @@
 
 namespace KayStrobach\VisualSearch\Demands;
 
-
 class GreaterThanDemand extends AbstractDemand
 {
 

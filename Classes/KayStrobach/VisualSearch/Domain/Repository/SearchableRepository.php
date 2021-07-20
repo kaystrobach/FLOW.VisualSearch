@@ -70,14 +70,16 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
                 case 'beginsWith':
                     $queryObject->matching(
                         $queryObject->like(
-                            $facetConfiguration['labelProperty'], $term.'%'
+                            $facetConfiguration['labelProperty'],
+                            $term.'%'
                         )
                     );
                     break;
                 case 'endsWith':
                     $queryObject->matching(
                         $queryObject->like(
-                            $facetConfiguration['labelProperty'], '%'.$term.'%'
+                            $facetConfiguration['labelProperty'],
+                            '%'.$term.'%'
                         )
                     );
                     break;
@@ -85,7 +87,8 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
                 default:
                     $queryObject->matching(
                         $queryObject->like(
-                            $facetConfiguration['labelProperty'], '%'.$term.'%'
+                            $facetConfiguration['labelProperty'],
+                            '%'.$term.'%'
                         )
                     );
             }

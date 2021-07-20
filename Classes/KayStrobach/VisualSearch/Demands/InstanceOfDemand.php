@@ -5,7 +5,6 @@
 
 namespace KayStrobach\VisualSearch\Demands;
 
-
 class InstanceOfDemand extends AbstractDemand
 {
 
