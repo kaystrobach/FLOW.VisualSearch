@@ -134,12 +134,12 @@ class ValueService
                 continue;
             }
             if (isset($facetConfiguration['display']['labelProperty'])) {
-                $label = \Neos\Utility\ObjectAccess::getProperty(
+                $label = \Neos\Utility\ObjectAccess::getPropertyPath(
                     $entity,
                     $facetConfiguration['display']['labelProperty']
                 );
             } elseif (isset($facetConfiguration['selector']['labelProperty'])) {
-                $label = \Neos\Utility\ObjectAccess::getProperty(
+                $label = \Neos\Utility\ObjectAccess::getPropertyPath(
                     $entity,
                     $facetConfiguration['selector']['labelProperty']
                 );
