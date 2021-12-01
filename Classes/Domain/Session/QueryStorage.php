@@ -8,6 +8,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use KayStrobach\VisualSearch\Utility\ArrayUtility;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
@@ -79,14 +80,13 @@ class QueryStorage
     }
 
     /**
-     * @param string name
-     * @param array $query
+     * @param QueryDto $query
      *
      * @return void
      */
-    public function setQuery($name, $query)
+    public function setQuery(QueryDto $query)
     {
-        $this->queries[$name] = $query;
+        $this->queries[$query->getIdentifier()] = $query;
     }
 
     /**

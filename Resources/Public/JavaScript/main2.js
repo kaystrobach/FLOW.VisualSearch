@@ -123,6 +123,7 @@
                 $.ajax(
                     {
                         dataType: "json",
+                        method: 'POST',
                         url: $(settings['container']).attr('data-storeQueryAction'),
                         data: {
                             query: getTerm(settings.container)
@@ -183,9 +184,13 @@
      * @returns {Array}
      */
     function getTerm(element) {
-        var query = [];
+        console.log($(element.nextElementSibling));
+        var query = {
+            sorting: $(element.nextElementSibling).find('[name=sorting]:checked').val(),
+            facets: []
+        };
         $.each($(element).find('.label'), function(key, value) {
-            query.push(
+            query.facets.push(
                 {
                     facetLabel: $(value).children('.token-facet').text(),
                     facet: $(value).children('.token-facet').attr('data-facet'),

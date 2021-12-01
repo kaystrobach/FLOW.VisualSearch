@@ -2,6 +2,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
+use KayStrobach\VisualSearch\Domain\Model\QueryConfiguration;
 use Neos\Flow\Annotations as Flow;
 
 /**
@@ -18,13 +19,16 @@ class SearchRepository
     /**
      * @param $searchName
      *
-     * @return array
+     * @return \ArrayAccess
      */
     public function findByName($searchName)
     {
-        return $this->configurationManager->getConfiguration(
-            'VisualSearch',
-            'Searches.'.$searchName
+        return new QueryConfiguration(
+            $searchName,
+            $this->configurationManager->getConfiguration(
+                'VisualSearch',
+                'Searches.'.$searchName
+            )
         );
     }
 }

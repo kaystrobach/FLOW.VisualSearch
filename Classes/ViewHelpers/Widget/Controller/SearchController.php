@@ -3,6 +3,8 @@
 namespace KayStrobach\VisualSearch\ViewHelpers\Widget\Controller;
 
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepositoryInterface;
+use KayStrobach\VisualSearch\Domain\Repository\SearchRepository;
+use KayStrobach\VisualSearch\Domain\Session\QueryDto;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Reflection\Exception\InvalidValueObjectException;
 
@@ -48,18 +50,18 @@ class SearchController extends \Neos\FluidAdaptor\Core\Widget\AbstractWidgetCont
      */
     protected $valueService;
 
+    /**
+     * @Flow\Inject
+     * @var SearchRepository
+     */
+    protected $searchRepository;
+
     public function initializeAction()
     {
-        $this->searchConfiguration = $this->configurationManager->getConfiguration(
-            'VisualSearch',
-            'Searches.'.$this->widgetConfiguration['search']
-        );
+        parent::initializeAction();
+        $this->searchConfiguration = $this->searchRepository->findByName($this->widgetConfiguration['search']);
+        $this->facetConfiguration = $this->searchConfiguration->offsetGet('autocomplete');
         unset($this->searchConfiguration['autocomplete']);
-
-        $this->facetConfiguration = $this->configurationManager->getConfiguration(
-            'VisualSearch',
-            'Searches.'.$this->widgetConfiguration['search'].'.autocomplete'
-        );
     }
 
     public function indexAction()
@@ -114,16 +116,14 @@ class SearchController extends \Neos\FluidAdaptor\Core\Widget\AbstractWidgetCont
     }
 
     /**
-     * Stores a search query in the session.
-     *
-     * @param array $query
-     *
+     * @param QueryDto $query
      * @return string
+     *
+     * @Flow\SkipCsrfProtection
      */
-    public function storeQueryAction($query = [])
+    public function storeQueryAction(QueryDto $query): string
     {
         $this->queryStorage->setQuery(
-            $this->widgetConfiguration['search'],
             $query
         );
 

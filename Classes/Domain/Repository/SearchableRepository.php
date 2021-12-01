@@ -2,6 +2,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Error\Debugger;
 use Neos\Flow\Persistence\Doctrine\Repository;
@@ -107,7 +108,7 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
             }
         }
 
-        /** @var $doctrineQueryBuilder \Doctrine\ORM\QueryBuilder */
+        /** @var $doctrineQueryBuilder QueryBuilder */
         $doctrineQueryBuilder = ObjectAccess::getProperty($queryObject, 'queryBuilder', true);
         /** @var $doctrineQuery \Doctrine\ORM\Query */
         $doctrineQuery = $doctrineQueryBuilder->getQuery();
@@ -180,9 +181,8 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
             );
         }
 
-        /** @var $doctrineQueryBuilder \Doctrine\ORM\QueryBuilder */
+        /** @var $doctrineQueryBuilder QueryBuilder */
         $doctrineQueryBuilder = ObjectAccess::getProperty($queryObject, 'queryBuilder', true);
-        /** @var $doctrineQuery \Doctrine\ORM\Query */
         $doctrineQuery = $doctrineQueryBuilder->getQuery();
 
         $this->logger->debug(

@@ -9,7 +9,7 @@
 		     data-search="{search}"
 		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
 		     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
-		     data-storeQueryAction="{f:widget.uri(action:'storeQuery', ajax: true)}"
+		     data-storeQueryAction="{f:uri.action(package:'KayStrobach.VisualSearch', controller:'Search', action:'storeQuery', absolute:true, useMainRequest:true)}"
 		     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
 		>
 			<span class="input-group-addon input-group-prepend visualsearch-input-group-addon">
@@ -23,37 +23,48 @@
 				<button class="btn btn-default btn-outline-secondary btn-clear" type="button">
 					<span class="search-icons search-icons-delete"></span>
 				</button>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="dropdown-header">Actions</li>
-                        <li><a href="#">clear</a></li>
-                        <li class="dropdown-header">Sorting</li>
-                        <li>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="sorting" value="option1" checked>
-                                    Sorting 1
-                                </label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="sorting" value="option1" checked>
-                                    Sorting 2
-                                </label>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <button class="btn btn-default btn-outline-secondary" type="button" data-toggle="modal" data-target="#visualsearchModal">
+					<span class="glyphicon glyphicon-cog"></span>
+				</button>
 				<button class="btn btn-outline-secondary btn-default" type="button" onclick="document.location.reload();">
 					<span class="search-icons search-icons-send"></span>
 				</button>
 			</span>
 		</div>
+        <div class="modal fade" id="visualsearchModal" tabindex="-1" role="dialog" aria-labelledby="visualsearchModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Einstellungen</h4>
+                    </div>
+                    <div class="modal-body">
+                        <f:if condition="{settings.sorting}">
+                            <h2>
+                                Sorting
+                            </h2>
+
+                            <div class="alert alert-info">
+                                Check if sorting ID = sortingKey
+                            </div>
+
+                            <f:for each="{settings.sorting}" as="sortingContent" key="sortingKey">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="sorting" value="{sortingKey}">
+                                        {sortingContent.label}
+                                    </label>
+                                </div>
+                            </f:for>
+                        </f:if>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</f:then>
 	<f:else>
 		<div class="alert alert-danger" role="alert">
