@@ -32,35 +32,48 @@
 			</span>
 		</div>
         <div class="modal fade" id="visualsearchModal" tabindex="-1" role="dialog" aria-labelledby="visualsearchModal">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Einstellungen</h4>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <f:translate id="modal.title" package="KayStrobach.VisualSearch" />
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <f:if condition="{settings.sorting}">
                             <h2>
-                                Sorting
+                                <f:translate id="modal.sorting" package="KayStrobach.VisualSearch" />
                             </h2>
-
-                            <div class="alert alert-info">
-                                Check if sorting ID = sortingKey
+                            <div class="list-group">
+                                <f:for each="{settings.sorting}" as="sortingContent" key="sortingKey">
+                                    <div class="list-group-item">
+                                        <div class="radio">
+                                            <label style="display:block;">
+                                                <f:if condition="{sortingKey} === {query.sorting}">
+                                                    <f:then>
+                                                        <input type="radio" name="sorting" value="{sortingKey}" checked>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <input type="radio" name="sorting" value="{sortingKey}">
+                                                    </f:else>
+                                                </f:if>
+                                                <p>
+                                                    {sortingContent.label}
+                                                </p>
+                                                <f:if condition="{sortingContent.hint}">
+                                                    <span class="text-muted">{sortingContent.hint}</span>
+                                                </f:if>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </f:for>
                             </div>
 
-                            <f:for each="{settings.sorting}" as="sortingContent" key="sortingKey">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="sorting" value="{sortingKey}">
-                                        {sortingContent.label}
-                                    </label>
-                                </div>
-                            </f:for>
                         </f:if>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><f:translate id="modal.close" package="KayStrobach.VisualSearch" /></button>
                     </div>
                 </div>
             </div>
