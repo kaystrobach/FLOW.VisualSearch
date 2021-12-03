@@ -8,6 +8,7 @@
 
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
+use KayStrobach\VisualSearch\Domain\Session\QueryDto;
 use Neos\Flow\Persistence\QueryResultInterface;
 
 interface SearchableRepositoryInterface
@@ -48,10 +49,10 @@ interface SearchableRepositoryInterface
     public function getEntityClassName();
 
     /**
-     * @param array  $query
+     * @param QueryDto  $query
      * @param string $searchName
      *
      * @return \Neos\Flow\Persistence\QueryResultInterface
      */
-    public function findByQuery($query, $searchName = null);
+    public function findByQuery(QueryDto $query, $searchName = null);
 }

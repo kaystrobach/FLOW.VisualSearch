@@ -3,6 +3,7 @@
 namespace KayStrobach\VisualSearch\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use KayStrobach\VisualSearch\Domain\Session\QueryDto;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Error\Debugger;
 use Neos\Flow\Persistence\Doctrine\Repository;
@@ -140,13 +141,13 @@ class SearchableRepository extends Repository implements SearchableRepositoryInt
      * function to filter the repository result by a given query
      * this function should be used to display the filtered result list.
      *
-     * @param array $query
+     * @param QueryDto $query
      * @param null $searchName
      *
      * @return QueryResultInterface
      * @throws \Neos\Utility\Exception\PropertyNotAccessibleException
      */
-    public function findByQuery($query, $searchName = null)
+    public function findByQuery(QueryDto $query, $searchName = null)
     {
         if ($searchName === null) {
             $searchName = $this->defaultSearchName;

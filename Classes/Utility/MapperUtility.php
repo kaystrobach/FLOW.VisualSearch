@@ -9,6 +9,8 @@ use KayStrobach\VisualSearch\Demands\Like\EndsWithDemand;
 use KayStrobach\VisualSearch\Demands\Like\StartsWithDemand;
 use KayStrobach\VisualSearch\Demands\Date\DateDemand;
 use KayStrobach\VisualSearch\Demands\SimpleDemandInterface;
+use KayStrobach\VisualSearch\Domain\Session\Facet;
+use KayStrobach\VisualSearch\Domain\Session\QueryDto;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Configuration\Exception\InvalidConfigurationTypeException;
@@ -62,7 +64,7 @@ class MapperUtility
      * iterates over all.
      *
      * @param string $searchName
-     * @param array $query
+     * @param QueryDto $query
      * @param Query $queryObject
      *
      * @return array
@@ -71,7 +73,7 @@ class MapperUtility
      * @todo make it work with multiple values per facet
      *
      */
-    public function buildQuery($searchName, $query, Query $queryObject)
+    public function buildQuery($searchName, QueryDto $query, Query $queryObject)
     {
         $searchConfiguration = $this->configurationManager->getConfiguration(
             'VisualSearch',
@@ -79,27 +81,28 @@ class MapperUtility
         );
 
         $demands = [];
-        foreach ($query as $queryEntry) {
-            if (isset($queryEntry['facet'])) {
-                $facet = $queryEntry['facet'];
+        /** @var Facet $queryEntry */
+        foreach ($query->getFacets() as $queryEntry) {
+            if ($queryEntry->getFacet()) {
+                $facet = $queryEntry->getFacet();
                 if (isset($searchConfiguration[$facet]['selector']['repository'])) {
                     $repositoryClassName = $searchConfiguration[$facet]['selector']['repository'];
                     /** @var Repository $repository */
                     $repository = $this->objectManager->get($repositoryClassName);
-                    $value = $repository->findByIdentifier($queryEntry['value']);
+                    $value = $repository->findByIdentifier($queryEntry->getValue());
                     if (is_object($value)) {
                         $this->logger->debug(
-                            'Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as Object ' . get_class($value)
+                            'Facet: ' . $facet . ' = ' . $queryEntry->getValue() . ' as Object ' . get_class($value)
                         );
                     } else {
                         $this->logger->debug(
-                            'Facet: ' . $facet . ' = ' . $queryEntry['value'] . ' as literal'
+                            'Facet: ' . $facet . ' = ' . $queryEntry->getValue() . ' as literal'
                         );
                     }
                 } else {
-                    $value = $queryEntry['value'];
+                    $value = $queryEntry->getValue();
                     $this->logger->debug(
-                        'Facet: '.$facet.' = '.$queryEntry['value'].' as string'
+                        'Facet: ' . $facet . ' = ' . $value . ' as string'
                     );
                 }
 
@@ -131,6 +134,10 @@ class MapperUtility
                     }
                 }
             }
+        }
+
+        if ($query->getSortingForDoctrine() !== null) {
+            $queryObject->setOrderings($query->getSortingForDoctrine());
         }
 
         return $demands;

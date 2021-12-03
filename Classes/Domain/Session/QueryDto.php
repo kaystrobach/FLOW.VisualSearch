@@ -4,8 +4,10 @@ namespace KayStrobach\VisualSearch\Domain\Session;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Neos\Flow\Configuration\ConfigurationManager;
+use Neos\Flow\Annotations as Flow;
 
-class QueryDto
+class QueryDto implements \JsonSerializable
 {
     /**
      * @var string
@@ -22,11 +24,22 @@ class QueryDto
      */
     protected $sorting;
 
+    /**
+     * @var ConfigurationManager
+     * @Flow\Inject
+     */
+    protected $configurationManager;
+
     public function __construct()
     {
         $this->identifier = '';
         $this->facets = new ArrayCollection();
         $this->sorting = '';
+    }
+
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
     }
 
     public function getIdentifier()
@@ -60,9 +73,25 @@ class QueryDto
         return $this->sorting;
     }
 
+    public function getSortingForDoctrine(): ?array
+    {
+        if ($this->getSorting() === '') {
+            return null;
+        }
+        $sortingConfig = $this->configurationManager->getConfiguration(
+            'VisualSearch',
+            'Searches.' . $this->getIdentifier() . '.sorting.' . $this->getSorting() . '.fields'
+        );
+        if ($sortingConfig === null) {
+            return null;
+        }
+        return $sortingConfig;
+    }
+
     public static function fromArray(array $array): self
     {
         $o = new static();
+        $o->setIdentifier($array['identifier']);
         $o->setSorting($array['sorting'] ?? '');
         if (isset($array['facets']) && is_array($array['facets'])) {
             foreach ($array['facets'] as $facet) {
@@ -75,5 +104,10 @@ class QueryDto
             }
         }
         return $o;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->facets->toArray();
     }
 }

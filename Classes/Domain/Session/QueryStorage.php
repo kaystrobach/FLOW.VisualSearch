@@ -42,11 +42,12 @@ class QueryStorage
      */
     public function getQuery($name)
     {
-        if (isset($this->queries[$name])) {
-            return $this->queries[$name];
+        if (!isset($this->queries[$name])) {
+            $this->queries[$name] = new QueryDto();
+            $this->queries[$name]->setIdentifier($name);
         }
 
-        return [];
+        return $this->queries[$name];
     }
 
     /**

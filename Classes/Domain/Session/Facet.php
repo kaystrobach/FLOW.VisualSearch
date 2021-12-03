@@ -1,11 +1,8 @@
 <?php
-/**
- * Created by kay.
- */
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 
-class Facet
+class Facet implements \JsonSerializable
 {
     /**
      * @var string
@@ -89,5 +86,15 @@ class Facet
     public function setValueLabel(string $valueLabel): void
     {
         $this->valueLabel = $valueLabel;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'facet' => $this->getFacet(),
+            'facetLabel' => $this->getFacetLabel(),
+            'value' => $this->getValue(),
+            'valueLabel' => $this->getValueLabel(),
+        ];
     }
 }

@@ -25,13 +25,26 @@
         settings.ajaxArea = '#search-result-area';
         settings.loadingContent = '<span class="visual-search-loading-spinner"><div class="progress"><span class="search-icons search-icons-hourglass"></span><span class="sr-only"> ... </span></div></div></span>';
 
-        $(element).on('click', '.label .search-icons', function() {
-            $(settings.formfield).val('');
-            $(this).parent().remove();
-            window.setTimeout(function() {
-                storeQueryInSession();
-            }, 100);
-        });
+        $(element).on(
+            'click',
+            '.label .search-icons',
+            function() {
+                $(settings.formfield).val('');
+                $(this).parent().remove();
+                window.setTimeout(function() {
+                    storeQueryInSession();
+                }, 100);
+            }
+        );
+
+        $(element.nextElementSibling).find('[name=sorting]').on(
+            'click',
+            function() {
+                window.setTimeout(function() {
+                    storeQueryInSession();
+                }, 100);
+            }
+        );
 
         // bind basic autocomplete
         $(element).find('.form-control').autocomplete(
@@ -184,8 +197,8 @@
      * @returns {Array}
      */
     function getTerm(element) {
-        console.log($(element.nextElementSibling));
         var query = {
+            identifier: $(settings['container']).attr('data-search'),
             sorting: $(element.nextElementSibling).find('[name=sorting]:checked').val(),
             facets: []
         };
