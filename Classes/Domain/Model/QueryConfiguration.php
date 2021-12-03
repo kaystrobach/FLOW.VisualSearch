@@ -50,11 +50,11 @@ class QueryConfiguration implements \ArrayAccess
 
     public function getAutocomplete()
     {
-        return $this->queryConfiguration['autocomplete'];
+        return $this->queryConfiguration['autocomplete'] ?? [];
     }
 
     public function getSorting()
     {
-        return $this->queryConfiguration['sorting'];
+        return $this->queryConfiguration['sorting'] ?? [];
     }
 }
