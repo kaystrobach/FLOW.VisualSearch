@@ -93,7 +93,7 @@ class SearchController extends \Neos\FluidAdaptor\Core\Widget\AbstractWidgetCont
             $term
         );
 
-        return json_encode($values);
+        return json_encode($values, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
     }
 
     /**
@@ -112,7 +112,7 @@ class SearchController extends \Neos\FluidAdaptor\Core\Widget\AbstractWidgetCont
             $term
         );
 
-        return json_encode($facets);
+        return json_encode($facets, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
     }
 
     /**
