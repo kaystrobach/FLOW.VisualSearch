@@ -2,6 +2,10 @@
 	background-color: transparent;
 }
 
+.visualsearch-input-group-addon .input-group-text {
+    height: 100%;
+}
+
 @-webkit-keyframes fadeIn {
 	0% {opacity: 0;}
 	50% {opacity: 1;}
@@ -73,6 +77,10 @@
 
 .search-icons.search-icons-search {
 	background-image: url("../Icons/material-design-icons/baseline-search-24px.svg");
+}
+
+.search-icons.search-icons-settings {
+    background-image: url("../Icons/material-design-icons/baseline-settings-24px.svg");
 }
 
 span.label.label-default {

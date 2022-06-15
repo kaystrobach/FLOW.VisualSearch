@@ -1,89 +1,103 @@
-<script src="{f:uri.resource(path: 'JavaScript/main2.js', package: 'KayStrobach.VisualSearch')}" type="text/javascript"></script>
-<link href="{f:uri.resource(path: 'Stylesheets/main2.css', package: 'KayStrobach.VisualSearch')}" media="screen" rel="stylesheet" type="text/css" />
+<script src="{f:uri.resource(path: 'JavaScript/main2.js', package: 'KayStrobach.VisualSearch')}"
+        type="text/javascript"></script>
+<link href="{f:uri.resource(path: 'Stylesheets/main2.css', package: 'KayStrobach.VisualSearch')}" media="screen"
+      rel="stylesheet" type="text/css"/>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/flick/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <f:if condition="{search}">
-	<f:then>
-		<div class="input-group visualsearch" role="search"
-		     data-search="{search}"
-		     data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
-		     data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
-		     data-storeQueryAction="{f:uri.action(package:'KayStrobach.VisualSearch', controller:'Search', action:'storeQuery', absolute:true, useMainRequest:true)}"
-		     data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
-		>
-			<span class="input-group-addon input-group-prepend visualsearch-input-group-addon">
-				<span class="input-group-text">
-					<span class="search-icons search-icons-search"></span>
-					<span class="visual-search-facets"></span>
-				</span>
-			</span>
-			<input type="text" class="form-control" id="test">
-			<span class="input-group-btn input-group-append">
-				<button class="btn btn-default btn-outline-secondary btn-clear" type="button">
-					<span class="search-icons search-icons-delete"></span>
-				</button>
-                <button class="btn btn-default btn-outline-secondary" type="button" data-toggle="modal" data-target="#visualsearchModal">
-					<span class="glyphicon glyphicon-cog"></span>
-				</button>
-				<button class="btn btn-outline-secondary btn-default" type="button" onclick="document.location.reload();">
-					<span class="search-icons search-icons-send"></span>
-				</button>
-			</span>
-		</div>
-        <div class="modal fade" id="visualsearchModal" tabindex="-1" role="dialog" aria-labelledby="visualsearchModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <f:translate id="modal.title" package="KayStrobach.VisualSearch" />
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <f:if condition="{settings.sorting}">
-                            <h2>
-                                <f:translate id="modal.sorting" package="KayStrobach.VisualSearch" />
-                            </h2>
-                            <div class="list-group">
-                                <f:for each="{settings.sorting}" as="sortingContent" key="sortingKey">
-                                    <div class="list-group-item">
-                                        <div class="radio">
-                                            <label style="display:block;">
-                                                <f:if condition="{sortingKey} === {query.sorting}">
-                                                    <f:then>
-                                                        <input type="radio" name="sorting" value="{sortingKey}" checked>
-                                                    </f:then>
-                                                    <f:else>
-                                                        <input type="radio" name="sorting" value="{sortingKey}">
-                                                    </f:else>
-                                                </f:if>
-                                                <p>
-                                                    {sortingContent.label}
-                                                </p>
-                                                <f:if condition="{sortingContent.hint}">
-                                                    <span class="text-muted">{sortingContent.hint}</span>
-                                                </f:if>
-                                            </label>
+    <f:then>
+        <div class="input-group visualsearch" role="search"
+             data-search="{search}"
+             data-valueAction="{f:widget.uri(action:'values', ajax: true)}"
+             data-facetsAction="{f:widget.uri(action:'facets', ajax: true)}"
+             data-storeQueryAction="{f:uri.action(package:'KayStrobach.VisualSearch', controller:'Search', action:'storeQuery', absolute:true, useMainRequest:true)}"
+             data-query="{query -> f:format.json() -> f:format.htmlspecialchars()}"
+        >
+            <span class="input-group-addon input-group-prepend visualsearch-input-group-addon">
+                <span class="input-group-text">
+                    <span class="search-icons search-icons-search"></span>
+                    <span class="visual-search-facets"></span>
+                </span>
+            </span>
+            <input type="text" class="form-control" id="test">
+            <span class="input-group-btn input-group-append">
+                <button class="btn btn-default btn-outline-secondary btn-clear" type="button">
+                    <span class="search-icons search-icons-delete"></span>
+                </button>
+                <f:if condition="{settings.sorting}">
+                    <button class="btn btn-default btn-outline-secondary" type="button"
+                            data-toggle="modal"
+                            data-target="#visualsearchModal"
+                            data-bs-toggle="modal"
+                            data-bs-target="#visualsearchModal"
+                    >
+                        <span class="search-icons search-icons-settings"></span>
+                    </button>
+                </f:if>
+                <button class="btn btn-outline-secondary btn-default" type="button"
+                        onclick="document.location.reload();">
+                    <span class="search-icons search-icons-send"></span>
+                </button>
+            </span>
+        </div>
+        <f:if condition="{settings.sorting}">
+            <div class="modal fade" id="visualsearchModal" tabindex="-1" role="dialog" aria-labelledby="visualsearchModal">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">
+                                <f:translate id="modal.title" package="KayStrobach.VisualSearch"/>
+                            </h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <f:if condition="{settings.sorting}">
+                                <h2>
+                                    <f:translate id="modal.sorting" package="KayStrobach.VisualSearch"/>
+                                </h2>
+                                <div class="list-group">
+                                    <f:for each="{settings.sorting}" as="sortingContent" key="sortingKey">
+                                        <div class="list-group-item">
+                                            <div class="radio">
+                                                <label style="display:block;">
+                                                    <f:if condition="{sortingKey} === {query.sorting}">
+                                                        <f:then>
+                                                            <input type="radio" name="sorting" value="{sortingKey}" checked>
+                                                        </f:then>
+                                                        <f:else>
+                                                            <input type="radio" name="sorting" value="{sortingKey}">
+                                                        </f:else>
+                                                    </f:if>
+                                                    <p>
+                                                        {sortingContent.label}
+                                                    </p>
+                                                    <f:if condition="{sortingContent.hint}">
+                                                        <span class="text-muted">{sortingContent.hint}</span>
+                                                    </f:if>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </f:for>
-                            </div>
+                                    </f:for>
+                                </div>
 
-                        </f:if>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><f:translate id="modal.close" package="KayStrobach.VisualSearch" /></button>
+                            </f:if>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <f:translate id="modal.close" package="KayStrobach.VisualSearch"/>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </f:if>
+    </f:then>
+    <f:else>
+        <div class="alert alert-danger" role="alert">
+            Parameter search is missing
         </div>
-	</f:then>
-	<f:else>
-		<div class="alert alert-danger" role="alert">
-			Parameter search is missing
-		</div>
-	</f:else>
+    </f:else>
 </f:if>
 
 
