@@ -106,6 +106,13 @@ class MapperUtility
                     );
                 }
 
+                if (!array_key_exists($facet, $searchConfiguration)) {
+                    $this->logger->debug(
+                        'Facet: No config found for ' . $facet
+                    );
+                    continue;
+                }
+
                 foreach ($searchConfiguration[$facet]['matches'] as $type => $fields) {
                     $matcherClassName = $this->convertMatchShorthandIntoClassName($type);
                     $matcher = new $matcherClassName(
