@@ -25,6 +25,7 @@
         settings.ajaxArea = '#search-result-area';
         settings.loadingContent = '<span class="visual-search-loading-spinner"><div class="progress"><span class="search-icons search-icons-hourglass"></span><span class="sr-only"> ... </span></div></div></span>';
 
+
         $(element).on(
             'click',
             '.label .search-icons',
@@ -111,6 +112,21 @@
                     },
                     300
                 );
+            }
+        );
+
+        $(element).find('.btn-send').on(
+            'click',
+            function() {
+                let mode = $(settings.formfield).attr('data-type');
+                let text = $(settings.formfield).val();
+
+                if (mode == 'value') {
+                    setValue(text, text);
+                    storeQueryInSession();
+                    $(this).val('');
+                    return;
+                }
             }
         );
 
