@@ -1,0 +1,6 @@
+-
+  requestFilter: 'isPackage("Poke.Search") && isFormat("html")'
+  options:
+    partialRootPaths:
+      'KayStrobach.VisualSearch/Partials': 'resource://KayStrobach.VisualSearch/Private/Partials/'
+
