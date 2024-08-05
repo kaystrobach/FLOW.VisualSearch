@@ -106,8 +106,12 @@ class QueryDto implements \JsonSerializable
         return $o;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return $this->facets->toArray();
+        return [
+            'identifier' => $this->getIdentifier(),
+            'sorting' => $this->getSorting(),
+            'facets' => $this->facets->toArray(),
+        ];
     }
 }

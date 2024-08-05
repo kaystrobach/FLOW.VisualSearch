@@ -1,0 +1,42 @@
+Searches:
+  pokemon:
+    search:
+      repository: Happy\Coding\Domain\Repository\PokemonRepository
+
+    sorting:
+      1000:
+        label: "id"
+        fields:
+          'id': ASC
+
+    autocomplete:
+      identifier:
+        label: "Identifier"
+        selector:
+          conditions:
+            once: true
+          freeInput: true
+          labelProperty: identifier
+        matches:
+          like:
+            - identifier
+
+      height:
+        label: "Height"
+        selector:
+          conditions:
+            once: true
+          freeInput: true
+        matches:
+          like:
+            - height
+
+      weight:
+        label: "Weight"
+        selector:
+          conditions:
+            once: true
+          freeInput: true
+        matches:
+          like:
+            - weight

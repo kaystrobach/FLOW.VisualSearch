@@ -1,0 +1,25 @@
+body {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+  max-width: 800px;
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+}

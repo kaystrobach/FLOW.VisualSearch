@@ -1,0 +1,18 @@
+{
+    "description": "",
+    "type": "neos-package",
+    "name": "poke/search",
+    "require": {
+        "neos/flow": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Poke\\Search\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Poke.Search"
+        }
+    }
+}
