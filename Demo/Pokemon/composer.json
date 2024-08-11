@@ -35,10 +35,7 @@
     "repositories": {
         "visualSearch": {
             "type": "path",
-            "url": "../../",
-            "options": {
-                "symlink": false
-            }
+            "url": "../../"
         },
         "distributionPackages": {
             "type": "path",
