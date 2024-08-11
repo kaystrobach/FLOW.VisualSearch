@@ -1,6 +1,6 @@
-name: pokesearch
+name: visualsearch
 type: php
-docroot: Web
+docroot: Demo/Pokemon/Web
 php_version: "8.2"
 webserver_type: apache-fpm
 xdebug_enabled: false
