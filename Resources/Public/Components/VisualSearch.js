@@ -99,6 +99,7 @@ export class VisualSearch extends LitElement {
       }
 
       .vs-search__dropdown {
+        z-index: 100; // TODO add property
         display: none;
         flex-direction: column;
         list-style: none;
