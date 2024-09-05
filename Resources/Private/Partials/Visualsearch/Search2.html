@@ -2,7 +2,9 @@
 
 <!-- TODO rename search search namespace to eliminate ambigious vraiable naming -->
 
-<f:variable name="search" value="{searchName}"></f:variable>
+<f:if condition="{searchName}">
+    <f:variable name="search" value="{searchName}"></f:variable>
+</f:if>
 
 <f:if condition="{search}">
     <f:then>
