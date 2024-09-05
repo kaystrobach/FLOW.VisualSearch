@@ -100,7 +100,8 @@ export class VisualSearch extends LitElement {
 
       .vs-search__dropdown {
         z-index: 100; // TODO add property
-        display: none;
+        display: inline-flex;
+        visibility: hidden;
         flex-direction: column;
         list-style: none;
         padding: 0;
@@ -127,11 +128,11 @@ export class VisualSearch extends LitElement {
       }
 
       .vs-search__input:focus + .vs-search__dropdown {
-        display: inline-flex;
+        visibility: visible;
       }
 
       .vs-search__dropdown:hover {
-        display: inline-flex;
+        visibility: visible;
       }
 
       .vs-search__debug {
