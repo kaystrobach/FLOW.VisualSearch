@@ -189,6 +189,9 @@ export class VisualSearch extends LitElement {
       });
 
       this.updateAutocomplete();
+    } else {
+      this.pushValue(item.label); // TODO fix value data model
+      this.updateAutocomplete();
     }
 
     // TODO handle value selection -> update input or push directly?
@@ -317,7 +320,12 @@ export class VisualSearch extends LitElement {
     if (!this._mode) {
       this.fetchFacets("", term);
     } else {
-      this.fetchValue("height", "", term) // TODO
+      // this.fetchValue("height", "", term)
+      // console.log(this.selectedFacets);
+
+      // TODO remodel selected facets -> match api format for facets
+
+      this.fetchValue(this.selectedFacets.at(-1).label, "", term);
     }
 
     this.updateAutocomplete()
@@ -453,7 +461,7 @@ export class VisualSearch extends LitElement {
       // }
 
       this.autocomplete = this.values.map(value => {
-        return {key: value.key, label: value.value}
+        return {key: value.key, label: value.value} // TODO track facet label
       });
     }
 
@@ -555,6 +563,8 @@ export class VisualSearch extends LitElement {
       }
       return response.json();
     }).then(data => {
+      this.values = data;
+      this.updateAutocomplete();
       console.log(data);
     }).catch(error => {
       console.error('', error); // TODO implement
