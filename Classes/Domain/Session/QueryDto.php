@@ -108,6 +108,13 @@ class QueryDto implements \JsonSerializable
 
     public function jsonSerialize(): array
     {
+        return $this->facets->toArray();
+    }
+
+    public function jsonSerialize2(): array
+    {
+        // guess what broke backwards compatibility lol
+
         return [
             'identifier' => $this->getIdentifier(),
             'sorting' => $this->getSorting(),
