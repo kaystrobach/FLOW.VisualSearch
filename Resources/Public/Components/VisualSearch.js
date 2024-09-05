@@ -476,20 +476,26 @@ export class VisualSearch extends LitElement {
   pushFacet(facet) {
     this.selectedFacets.push(facet);
 
+    this._mode = true;
+
     this.clearInput();
     this.focusInput(); // TODO probably not necessary
 
-    this._mode = true;
+    // note that focus input triggers autocomplete which relies on mode
+    // thus mode must be updated before refocusing
+    // TODO use helper to determine mode based on selected facets
+
     this.requestUpdate();
   }
 
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
+    this._mode = false;
+
     this.clearInput();
     this.focusInput(); // TODO probably not necessary
 
-    this._mode = false;
     this.requestUpdate();
   }
 
