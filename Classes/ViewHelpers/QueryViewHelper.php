@@ -14,7 +14,7 @@ class QueryViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHel
 
     public function render() {
         try {
-            return json_encode($this->queryStorage->getQuery("pokemon")->jsonSerialize()); // TODO move into template
+            return json_encode($this->queryStorage->getQuery("pokemon")->jsonSerialize2()); // TODO move into template
         } catch (\Exception $e) {
             return htmlspecialchars(json_encode(["error" => $e->getMessage()]));
         }
