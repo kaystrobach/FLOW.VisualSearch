@@ -1,6 +1,86 @@
 // import {LitElement, html} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
 import {css, html, LitElement} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/all/lit-all.min.js';
 
+// [{"value":"expirationDateFrom","label":"Ablaufdatum ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"expirationDateUntil","label":"Ablaufdatum bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"creationDateFrom","label":"Anlegedatum ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"creationDateUntil","label":"Anlegendatum bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"account","label":"Anmeldename","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"role","label":"Benutzerrolle","configuration":{"conditions":{"once":true},"values":{"SBS.SingleSignOn:Student":"Student","SBS.SingleSignOn:Staff":"Staff","SBS.SingleSignOn:Teacher":"Teacher","SBS.SingleSignOn:Administrator":"Administrator","SBS.SingleSignOn:Secretary":"Secretary","SBS.SingleSignOn:SystemAdministrator":"SystemAdministrator","SBS.SingleSignOn:Rest":"Rest","SBS.SingleSignOn:FirstLogin":"FirstLogin","SBS.SingleSignOn:BetaTester":"BetaTester","SBS.SingleSignOn:TraineeTeacher":"TraineeTeacher"}}},{"value":"einrichtung","label":"Einrichtung","configuration":{"conditions":{"once":true},"labelProperty":"searchLabel","labelMatcher":"contains","orderBy":"searchLabel","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\Person\\EinrichtungRepository"}},{"value":"internalNotes","label":"Interne Notizen","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"legalStatus","label":"Juristischer Status der Einrichtung","configuration":{"conditions":{"once":true},"values":{"01":"\u00d6ffentliche Einrichtung","02":"Einrichtung in freier Tr\u00e4gerschaft","09":"Weitere Bildungseinrichtungen"}}},{"value":"lastLoginDateFrom","label":"Letztes Login ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"lastLoginDateUntil","label":"Letztes Login bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"nachname","label":"Nachname","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"fullname","label":"Name (komplett)","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"stammeinrichtung","label":"Stammeinrichtung","configuration":{"conditions":{"once":true},"labelProperty":"searchLabel","labelMatcher":"contains","orderBy":"searchLabel","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\Person\\EinrichtungRepository"}},{"value":"stammKlasse","label":"Stammklasse","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"stammKlassenstufe","label":"Stammklassenstufe","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"searchtext","label":"Suchtext","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"syncKey","label":"SyncKey","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"owner","label":"Tr\u00e4ger","configuration":{"conditions":{"once":true},"labelProperty":"name","labelMatcher":"contains","orderBy":"name","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\OwnerRepository"}},{"value":"firstname","label":"Vorname","configuration":{"conditions":{"once":true},"freeInput":true}}]
+// [{"label":"Student","value":"SBS.SingleSignOn:Student"},{"label":"Staff","value":"SBS.SingleSignOn:Staff"},{"label":"Teacher","value":"SBS.SingleSignOn:Teacher"},{"label":"Administrator","value":"SBS.SingleSignOn:Administrator"},{"label":"Secretary","value":"SBS.SingleSignOn:Secretary"},{"label":"SystemAdministrator","value":"SBS.SingleSignOn:SystemAdministrator"},{"label":"Rest","value":"SBS.SingleSignOn:Rest"},{"label":"FirstLogin","value":"SBS.SingleSignOn:FirstLogin"},{"label":"BetaTester","value":"SBS.SingleSignOn:BetaTester"},{"label":"TraineeTeacher","value":"SBS.SingleSignOn:TraineeTeacher"}]
+
+class Facet {
+    constructor(value, label, configuration, values) {
+        this.value = value; // this is actually the facet key
+        this.label = label; // display label for facet
+        // TODO track valueValue and valueLabel somewhere else
+        // TODO update autocomplete function ??
+        // this.configuration = configuration;
+        // this.values = values.map(value => Value.fromObject(value)); // TODO different structure FacetValues
+    }
+
+  static fromObject(data, obj) {
+    if (data) {
+      obj = obj || new Facet();
+
+      if (data.hasOwnProperty('value')) obj.value = data.value;
+      if (data.hasOwnProperty('label')) obj.label = data.label;
+      // if (data.hasOwnProperty('configuration')) obj.configuration = data.configuration;
+      // if (data.hasOwnProperty('values')) obj.values = data.values.map(value => Value.fromObject(value));
+    }
+
+    return obj;
+  }
+
+  static validate(facet) {
+    return typeof facet.value === 'number' && typeof facet.label === 'string'; // facets.every(Facet.validate);
+    // TODO validate configuration and values -> just call their validators
+  }
+}
+
+class Value {
+  constructor(value, label) {
+    this.value = value;
+    this.label = label;
+  }
+
+  static fromObject(data, obj) {
+    if (data) {
+      obj = obj || new Value();
+
+      if (data.hasOwnProperty('value')) obj.value = data.value;
+      if (data.hasOwnProperty('label')) obj.label = data.label;
+    }
+
+    return obj;
+  }
+
+  static validate(value) {
+    return typeof value.value === 'string' && typeof value.label === 'string';
+  }
+}
+
+// TODO this might make sense
+// TODO how to handle free text -> probably just another property?!
+// class SelectedFacet {
+//   constructor(facet, value) {
+//     this.facet = facet;
+//     this.value = value;
+//   }
+// }
+
+// class Configuration {
+//   constructor(conditions, freeInput, dateFormat, labelProperty, labelMatcher, orderBy, limit, repository) {
+//     this.conditions = conditions;
+//     this.freeInput = freeInput;
+//     this.dateFormat = dateFormat;
+//     this.labelProperty = labelProperty;
+//     this.labelMatcher = labelMatcher;
+//     this.orderBy = orderBy;
+//     this.limit = limit;
+//     this.repository = repository;
+//   }
+//
+//   // TODO verify data model
+//   // TODO implement
+// }
+
+
 export class VisualSearch extends LitElement {
   static get properties() {
     return {
@@ -148,9 +228,9 @@ export class VisualSearch extends LitElement {
         ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
         <div class="vs-search__wrapper">
           <ul class="vs-search__facets">
-            ${Array.from(this.selectedFacets).map(facet => html`
+            ${Array.from(this.selectedFacets).map((item) => html`
               <li>
-                <search-facet key="${facet.key}" value="${facet.value}" label="${facet.label}"></search-facet>
+                <search-facet key="${item.facet.value}" value="${item.value ? item.value.value : ''}" label="${item.facet.label}"></search-facet>
               </li>`)}
           </ul>
           <div class="vs-search">
@@ -185,14 +265,10 @@ export class VisualSearch extends LitElement {
     this._log("complete: " + item.label)
 
     if (!this._mode) {
-      this.pushFacet({
-        key: item.key,
-        label: item.label,
-      });
-
+      this.pushFacet(item.obj);
       this.updateAutocomplete();
     } else {
-      this.pushValue(item.label); // TODO fix value data model
+      this.pushValue(item.obj); // TODO fix value data model
       this.updateAutocomplete();
     }
 
@@ -240,7 +316,7 @@ export class VisualSearch extends LitElement {
         // this.clearInput();
         // this.focusInput();
 
-        this.pushValue(event.target.value);
+        this.pushValue(new Value(event.target.value, event.target.value));
         this.updateAutocomplete();
       } else {
         // TODO store state in local storage?
@@ -327,7 +403,7 @@ export class VisualSearch extends LitElement {
 
       // TODO remodel selected facets -> match api format for facets
 
-      this.fetchValue(this.selectedFacets.at(-1).label, "", term);
+      this.fetchValue(this.selectedFacets.at(-1).value.value, "", term);
     }
 
     this.updateAutocomplete()
@@ -412,10 +488,9 @@ export class VisualSearch extends LitElement {
     for (let facet of this.query.facets) {
       // TODO dont try to clear input
 
-      this.pushFacet({
-        key: facet.facet,
-        label: facet.facetLabel,
-        value: facet.value,
+      this.selectedFacets.push({
+        facet: new Facet(facet.facet, facet.facetLabel),
+        value: new Value(facet.value, facet.valueLabel),
       });
     }
 
@@ -449,7 +524,7 @@ export class VisualSearch extends LitElement {
       // }
 
       this.autocomplete = this.facets.map(facet => {
-        return {key: facet.key, label: facet.value}
+        return {value: facet.value, label: facet.label, obj: facet}
       });
 
     } else {
@@ -463,7 +538,7 @@ export class VisualSearch extends LitElement {
       // }
 
       this.autocomplete = this.values.map(value => {
-        return {key: value.key, label: value.value} // TODO track facet label
+        return {value: value.value, label: value.label, obj: value} // TODO track facet label
       });
     }
 
@@ -476,7 +551,10 @@ export class VisualSearch extends LitElement {
   }
 
   pushFacet(facet) {
-    this.selectedFacets.push(facet);
+    this.selectedFacets.push({
+        facet: facet,
+        value: null
+    });
 
     this._mode = true;
 
@@ -536,7 +614,9 @@ export class VisualSearch extends LitElement {
       }
       return response.json();
     }).then(data => {
-      this.facets = data;
+      let facets = data.map(facet => Facet.fromObject(facet));
+      facets.every(Facet.validate);
+      this.facets = facets;
       this.updateAutocomplete();
       console.log(data);
     }).catch(error => {
@@ -637,12 +717,12 @@ export class VisualSearch extends LitElement {
   }
 
   collectData() {
-    let facets = this.selectedFacets.map(facet => {
+    let facets = this.selectedFacets.map(item => {
       return {
-        facetLabel: facet.label,
-        facet: facet.label,
-        valueLabel: facet.value,
-        value: facet.value,
+        facetLabel: item.facet.label,
+        facet: item.facet.value,
+        valueLabel: item.value.label,
+        value: item.value.value,
       }
     });
 
