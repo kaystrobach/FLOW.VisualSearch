@@ -23,8 +23,7 @@ class SearchRestController extends RestController {
 
     function facetsAction(string $search, string $query, string $term)
     {
-        $queryJSON = base64_decode($query, true);
-        $queryArray = json_decode($queryJSON, true);
+        $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
 
         $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $queryArray, $term);
 
@@ -33,8 +32,7 @@ class SearchRestController extends RestController {
 
     function valuesAction(string $search, string $facet, string $query, string $term)
     {
-        $queryJSON = base64_decode($query, true);
-        $queryArray = json_decode($queryJSON, true);
+        $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
 
         $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $queryArray, $term);
 
