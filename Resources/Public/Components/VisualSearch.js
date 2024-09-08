@@ -85,7 +85,6 @@ export class VisualSearch extends LitElement {
   static get properties() {
     return {
       _focus: {state: true},
-      _mode: {state: true}, // mode: false -> facet, true -> value
 
       facets: {type: Array},
       values: {type: Array},
@@ -109,7 +108,6 @@ export class VisualSearch extends LitElement {
     super();
 
     this._focus = false;
-    this._mode = false;
 
     this.facets = [];
     this.values = [];
@@ -251,6 +249,10 @@ export class VisualSearch extends LitElement {
 
   // TODO PUT storeQueryAction
 
+  _mode() {
+    return this.selectedFacets.length > 0 && this.selectedFacets.at(-1).value == null;
+  }
+
   _log(message) {
     const event = new CustomEvent('debug', {
       detail: {
@@ -264,7 +266,7 @@ export class VisualSearch extends LitElement {
   complete(item) {
     this._log("complete: " + item.label)
 
-    if (!this._mode) {
+    if (!this._mode()) {
       this.pushFacet(item.obj);
       this.updateAutocomplete();
     } else {
@@ -300,7 +302,6 @@ export class VisualSearch extends LitElement {
       if (event.target.value === '') {
         /// this.selectedFacets.pop();
         /// this.requestUpdate();
-        /// this._mode = false;
         this.popFacet();
         this.updateAutocomplete();
         // TODO reset autocomplete
@@ -310,9 +311,8 @@ export class VisualSearch extends LitElement {
 
   handleKeyUp(event) {
     if (event.key === 'Enter') {
-      if (this._mode) {
+      if (this._mode()) {
         // this.selectedFacets.at(-1).value = event.target.value;
-        // this._mode = false;
         // this.clearInput();
         // this.focusInput();
 
@@ -395,7 +395,7 @@ export class VisualSearch extends LitElement {
   }
 
   completeTerm(term) {
-    if (!this._mode) {
+    if (!this._mode()) {
       this.fetchFacets("", term);
     } else {
       // this.fetchValue("height", "", term)
@@ -493,8 +493,6 @@ export class VisualSearch extends LitElement {
         value: new Value(facet.value, facet.valueLabel),
       });
     }
-
-    this._mode = false; // TODO not necessary
   }
 
   persistState() {
@@ -508,12 +506,11 @@ export class VisualSearch extends LitElement {
   updateAutocomplete() {
     // TODO via event
 
-    this._log("updating auto complete (mode: " + this._mode + ")");
-    // this._log("mode: " +  this._mode)
+    this._log("updating auto complete");
 
     // this.clearAutocomplete()
 
-    if (!this._mode) {
+    if (!this._mode()) {
       // for (let facet of this.facets) {
       //   // this.debug(facet.key + ' ' + facet.value)
       //
@@ -556,8 +553,6 @@ export class VisualSearch extends LitElement {
         value: null
     });
 
-    this._mode = true;
-
     this.clearInput();
     this.focusInput(); // TODO probably not necessary
 
@@ -571,8 +566,6 @@ export class VisualSearch extends LitElement {
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
-    this._mode = false;
-
     this.clearInput();
     this.focusInput(); // TODO probably not necessary
 
@@ -582,7 +575,6 @@ export class VisualSearch extends LitElement {
   popFacet() {
     const facet = this.selectedFacets.pop();
 
-    this._mode = false;
     this.requestUpdate();
 
     this.updateAutocomplete();
