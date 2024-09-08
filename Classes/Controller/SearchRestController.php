@@ -1,6 +1,8 @@
 <?php
 namespace KayStrobach\VisualSearch\Controller;
 
+use KayStrobach\VisualSearch\Domain\Session\QueryDto;
+use KayStrobach\VisualSearch\Domain\Session\QueryStorage;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\RestController;
 use KayStrobach\VisualSearch\Domain\Repository\FacetRepository;
@@ -19,20 +21,22 @@ class SearchRestController extends RestController {
      */
     protected $valueService;
 
-    function facetsAction(string $search, array $query, string $term)
+    function facetsAction(string $search, string $query, string $term)
     {
-        // TODO fetch query from session if not given via url parameters -> not necessary ?!
+        $queryJSON = base64_decode($query, true);
+        $queryArray = json_decode($queryJSON, true);
 
-        $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $query, $term);
+        $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $queryArray, $term);
 
         return json_encode($facets, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
     }
 
-    function valuesAction(string $search, string $facet, array $query, string $term)
+    function valuesAction(string $search, string $facet, string $query, string $term)
     {
-        // TODO fetch query from session if not given via url parameters -> not necessary ?!
+        $queryJSON = base64_decode($query, true);
+        $queryArray = json_decode($queryJSON, true);
 
-        $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $query, $term);
+        $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $queryArray, $term);
 
         return json_encode($values, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
     }

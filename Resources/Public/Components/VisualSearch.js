@@ -312,45 +312,11 @@ export class VisualSearch extends LitElement {
   handleKeyUp(event) {
     if (event.key === 'Enter') {
       if (this._mode()) {
-        // this.selectedFacets.at(-1).value = event.target.value;
-        // this.clearInput();
-        // this.focusInput();
-
         this.pushValue(new Value(event.target.value, event.target.value));
       } else {
-        // TODO store state in local storage?
-        // TODO submit query then refresh?
-
-        this._log("searching")
-
-        // TODO move into persist state -> base64 encode query
-
-        let data = this.collectData()
-        this.storeQuery(data.query, true); // TODO pass complete data object
-
-        // let url = new URL(window.location.href);
-        //
-        // let foo = this.encodeData(this.collectData());
-        //
-        // console.log(foo);
-        //
-        // // url.searchParams.set('foo', 'bar');
-        //
-        // // delete all query params
-        // for (let key of url.searchParams.keys()) {
-        //   if (!key.startsWith('query')) {
-        //     // continue; // TODO preserve non search related?
-        //     // TODO reset pagination
-        //   }
-        //
-        //   url.searchParams.delete(key);
-        // }
-        //
-        // for (let [key, value] of Object.entries(foo)) {
-        //   url.searchParams.set(key, value);
-        // }
-
-        // window.location.href = url.href;
+        this.storeQuery(this.collectQuery()).then(() => {
+          window.location.reload();
+        });
       }
     }
   }
@@ -384,106 +350,24 @@ export class VisualSearch extends LitElement {
       }).catch(e => {
         this._log(e)
       });
-    }
+    };
+
+    const query = btoa(JSON.stringify(this.collectQuery()));
 
     if (!this._mode()) {
-      handle(this.fetchFacets.bind(this), "", term);
+      handle(this.fetchFacets.bind(this), query, term);
     } else {
-      handle(this.fetchValues.bind(this), this.selectedFacets.at(-1).facet.value, "", term);
-    }
-  }
-
-  // clearInput() {
-  //   // this.shadowRoot.querySelector('input').value = '';
-  // }
-
-  // storeQuery() {
-  //   const data = this.collectData();
-  //
-  //   // TODO implement
-  //   // problem -> GET request with standard lib encoding not possible because nested too deep?!
-  //
-  //   const params = this.encodeData(data);
-  //
-  //   // send request like autocomplete
-  // }
-
-  loadState() {
-    let url = new URL(window.location.href);
-
-    let queryParams = [];
-
-    url.searchParams.forEach((value, key) => {
-      if (key.startsWith('query')) {
-        queryParams.push({
-          key: key,
-          value: value,
-        });
-      }
-    });
-
-    if (queryParams.length === 0) {
-      return;
-    }
-
-    function unflattenObject(queryParams) {
-      const result = {};
-
-      queryParams.forEach(param => {
-        const { key, value } = param;
-        if (key.startsWith('query')) {
-          const keys = key.replace('query[', '').slice(0, -1).split('][');
-          let currentLevel = result;
-
-          for (let i = 0; i < keys.length; i++) {
-            const nestedKey = keys[i];
-
-            if (i === keys.length - 1) {
-              currentLevel[nestedKey] = value;
-            } else {
-              if (!currentLevel[nestedKey]) {
-                currentLevel[nestedKey] = isNaN(Number(keys[i + 1])) ? {} : [];
-              }
-              currentLevel = currentLevel[nestedKey];
-            }
-          }
-        }
-      });
-
-      return result;
-    }
-
-    let state = unflattenObject(queryParams);
-
-    console.log(state)
-
-
-    for (let facet of state.facets) {
-      this.pushFacet({
-        key: facet.facet,
-        label: facet.facetLabel,
-        value: facet.value,
-      });
+      handle(this.fetchValues.bind(this), this.selectedFacets.at(-1).facet.value, query, term);
     }
   }
 
   loadStateFromQuery() {
     for (let facet of this.query.facets) {
-      // TODO dont try to clear input
-
       this.selectedFacets.push({
         facet: new Facet(facet.facet, facet.facetLabel),
         value: new Value(facet.value, facet.valueLabel),
       });
     }
-  }
-
-  persistState() {
-    // TODO persist query object vs selected facets + input text
-
-    // TODO how t handle ul encoded data -> decode into data object?
-
-    // const data = this.collectData()
   }
 
   updateAutocomplete() {
@@ -607,159 +491,54 @@ export class VisualSearch extends LitElement {
     });
   }
 
-  storeQuery(query, refresh = false) {
-    this._log('storing query')
-
+  async storeQuery(query) {
     let action = new URL(this.queryAction, window.location.origin);
 
-    // if (query === undefined) {
-    //   query = '';
-    // }
-    //
-    // action.searchParams.set('query', query);
-
-    // TODO use PUT method with json body
-    // TODO session is fine but get rid of widget?
-    // TODO get rid of pagination widget by using pagination http headers??
-
-    // const formData = new FormData();
-    //
-    // Object.keys(this.encodeData(query)).forEach(key => {
-    //   formData.append(key, query[key]);
-    // });
+    if (query === undefined) {
+      query = {};
+    }
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         query: query,
       }),
     };
 
-    fetch(action, options).then(response => {
+    return fetch(action, options).then(response => {
       if (!response.ok) {
-        throw new Error(''); // TODO implement
+        throw new Error(response.statusText);
       }
+
       return response.json();
-    }).then(data => {
-      console.log(data);
-      if (refresh) {
-        // let url = new URL(window.location.href);
-        // window.location.href = url.href;
-        // window.location.reload();
-        this._log('reloading page');
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 5000);
-
-        window.location.reload();
-
-
-        // TODO query does not seem to be persisted correctly -> only first facet is saved -> query is saved error during facet reload
-      }
-    }).catch(error => {
-      console.error('', error); // TODO implement
     });
   }
 
-  collectData() {
-    let facets = this.selectedFacets.map(item => {
-      return {
+  collectQuery() {
+    let facets = this.selectedFacets.reduce((acc, item) => {
+      if (item.value == null) {
+        return acc;
+      }
+
+      acc.push({
         facetLabel: item.facet.label,
         facet: item.facet.value,
         valueLabel: item.value.label,
-        value: item.value.value,
-      }
-    });
+        value: item.value.value
+      });
 
+      return acc;
+    }, []);
 
-    let data = {
-      query: {
-        identifier: this.search,
-        sorting: 'identifier', // TODO add to state
-        // facets: [
-        //   {
-        //     facetLabel: 'Height',
-        //     facet: 'height',
-        //     valueLabel: '50',
-        //     value: '50',
-        //   },
-        //   {
-        //     facetLabel: 'Identifier',
-        //     facet: 'identifier',
-        //     valueLabel: 'a',
-        //     value: 'a',
-        //   }
-        // ], // TODO implement
-        facets: facets,
-      }
-    }
-
-    return data;
-  }
-
-  // TODO native JS helper for url encoding nested objects
-
-  encodeData(data) {
-    function flattenObject(obj, parentKey = '', result = {}) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          const newKey = parentKey ? `${parentKey}[${key}]` : key;
-
-          if (Array.isArray(obj[key])) {
-            obj[key].forEach((item, index) => {
-              if (typeof item === 'object') {
-                flattenObject(item, `${newKey}[${index}]`, result);
-              } else {
-                result[`${newKey}[${index}]`] = item;
-              }
-            });
-          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-            flattenObject(obj[key], newKey, result);
-          } else {
-            result[newKey] = obj[key];
-          }
-        }
-      }
-      return result;
-    }
-
-    return flattenObject(data);
+    return {
+      identifier: this.search,
+      sorting: 'identifier', // TODO add to state
+      facets: facets,
+    };
   }
 }
 
-// data-search
-// data-valueAction
-// data-facetsAction
-// data-storeQueryAction
-// data-query
-
-// query
-// function getTerm(element) {
-//   var query = {
-//     identifier: $(settings['container']).attr('data-search'),
-//     sorting: $(element.nextElementSibling).find('[name=sorting]:checked').val(),
-//     facets: []
-//   };
-//   $.each($(element).find('.label'), function(key, value) {
-//     query.facets.push(
-//       {
-//         facetLabel: $(value).children('.token-facet').text(),
-//         facet: $(value).children('.token-facet').attr('data-facet'),
-//         valueLabel: $(value).children('.token-value').text(),
-//         value: $(value).children('.token-value').attr('data-value')
-//       }
-//     )
-//   });
-//   return query;
-// }
-
-// TODO create facet component to display inside input field??
-
 customElements.define('visual-search', VisualSearch);
-
-// animate border for search
-
-// [{"value":"name","label":"Name","configuration":{"conditions":{"once":true},"freeInput":true,"labelProperty":"name"}}]
