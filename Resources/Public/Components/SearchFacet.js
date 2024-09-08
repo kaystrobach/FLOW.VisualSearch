@@ -17,9 +17,10 @@ export class SearchFacet extends LitElement {
 
   static get properties() {
     return {
-      key: {type: String, attribute: true},
+      facetLabel: {type: String, attribute: 'facet-label'},
+      facet: {type: String, attribute: true},
+      valueLabel: {type: String, attribute: 'value-label'},
       value: {type: String, attribute: true},
-      label: {type: String, attribute: true},
     }
   }
 
@@ -35,7 +36,7 @@ export class SearchFacet extends LitElement {
 
   render() {
     return html`
-        <span @click="${this.handleClick()}">${this.label}: ${this.value}</span>
+        <span @click="${this.handleClick()}">${this.facetLabel}: ${this.valueLabel}</span>
       `;
   }
 }

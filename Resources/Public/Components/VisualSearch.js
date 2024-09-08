@@ -224,7 +224,12 @@ export class VisualSearch extends LitElement {
           <ul class="vs-search__facets">
             ${Array.from(this.selectedFacets).map((item) => html`
               <li>
-                <search-facet key="${item.facet.value}" value="${item.value ? item.value.value : ''}" label="${item.facet.label}"></search-facet>
+                <search-facet
+                    facet-label="${item.facet.label}"
+                    facet="${item.facet.value}"
+                    value-label="${item.value ? item.value.label : ''}"
+                    value="${item.value ? item.value.value : ''}">
+                </search-facet>
               </li>`)}
           </ul>
           <div class="vs-search">
