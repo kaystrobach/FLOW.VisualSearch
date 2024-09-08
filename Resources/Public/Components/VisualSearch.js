@@ -84,8 +84,6 @@ class Value {
 export class VisualSearch extends LitElement {
   static get properties() {
     return {
-      _focus: {state: true},
-
       facets: {type: Array},
       values: {type: Array},
 
@@ -106,8 +104,6 @@ export class VisualSearch extends LitElement {
 
   constructor() {
     super();
-
-    this._focus = false;
 
     this.facets = [];
     this.values = [];
@@ -253,6 +249,16 @@ export class VisualSearch extends LitElement {
     return this.selectedFacets.length > 0 && this.selectedFacets.at(-1).value == null;
   }
 
+  _input() {
+    const input =  this.renderRoot ? this.renderRoot.querySelector('input') : null; // return dummy input?
+
+    if (input === null) {
+      this._log('input not found');
+    }
+
+    return input;
+  }
+
   _log(message) {
     const event = new CustomEvent('debug', {
       detail: {
@@ -277,19 +283,16 @@ export class VisualSearch extends LitElement {
     // TODO handle value selection -> update input or push directly?
   }
 
-  handleFocus() {
-    this._focus = true;
+  handleFocus(event) {
+    if (this.selectedFacets.length !== 0 || event.target.value !== '') {
+      return;
+    }
 
-    this._log('focus == true');
-
-    // this.updateAutocomplete(); // TODO only if necessary
     this.completeTerm('');
   }
 
   handleBlur() {
-    this._focus = false;
-
-    this._log('focus == false');
+    // unused
   }
 
   handleKeyDown(event) {
@@ -371,27 +374,11 @@ export class VisualSearch extends LitElement {
   }
 
   focusInput() {
-    if (this.renderRoot) {
-      let input = this.renderRoot.querySelector('input');
-
-      if (input) {
-        input.focus();
-      }
-
-      // this.renderRoot.querySelector('input').focus(); // TODO update selector
-    }
+    this._input() ? this._input().focus() : null;
   }
 
   clearInput() {
-    if (this.renderRoot) {
-      let input = this.renderRoot.querySelector('input');
-
-      if (input) {
-        input.value = '';
-      }
-
-      // this.renderRoot.querySelector('input').value = ''; // TODO update selector
-    }
+    this._input() ? this._input().value = '' : null;
   }
 
   completeTerm(term) {
@@ -554,32 +541,39 @@ export class VisualSearch extends LitElement {
     });
 
     this.clearInput();
-    this.focusInput(); // TODO probably not necessary
+    this.focusInput();
 
-    // note that focus input triggers autocomplete which relies on mode
-    // thus mode must be updated before refocusing
-    // TODO use helper to determine mode based on selected facets
-
-    this.requestUpdate();
+    this.completeTerm('');
   }
 
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
     this.clearInput();
-    this.focusInput(); // TODO probably not necessary
+    this.focusInput();
 
-    this.requestUpdate();
+    this.completeTerm('');
   }
 
   popFacet() {
     const facet = this.selectedFacets.pop();
 
-    this.requestUpdate();
-
-    this.updateAutocomplete();
+    this.completeTerm('')
 
     return facet;
+  }
+
+  popValue() {
+    if (this.selectedFacets.length === 0) {
+      return undefined;
+    }
+
+    const value = this.selectedFacets.at(-1).value;
+    this.selectedFacets.at(-1).value = null;
+
+    this.completeTerm('')
+
+    return value;
   }
 
   fetchFacets(query, term) {
