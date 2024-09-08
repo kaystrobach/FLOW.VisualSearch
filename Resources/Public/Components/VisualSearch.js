@@ -403,7 +403,7 @@ export class VisualSearch extends LitElement {
 
       // TODO remodel selected facets -> match api format for facets
 
-      this.fetchValue(this.selectedFacets.at(-1).value.value, "", term);
+      this.fetchValue(this.selectedFacets.at(-1).facet.value, "", term);
     }
 
     this.updateAutocomplete()
