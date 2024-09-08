@@ -287,7 +287,7 @@ export class VisualSearch extends LitElement {
   }
 
   handleFocus(event) {
-    if (this.selectedFacets.length !== 0 || event.target.value !== '') {
+    if (event.target.value !== '') {
       return;
     }
 
