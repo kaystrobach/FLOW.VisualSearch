@@ -274,10 +274,8 @@ export class VisualSearch extends LitElement {
 
     if (!this._mode()) {
       this.pushFacet(item.obj);
-      this.updateAutocomplete();
     } else {
-      this.pushValue(item.obj); // TODO fix value data model
-      this.updateAutocomplete();
+      this.pushValue(item.obj);
     }
 
     // TODO handle value selection -> update input or push directly?
@@ -306,7 +304,6 @@ export class VisualSearch extends LitElement {
         /// this.selectedFacets.pop();
         /// this.requestUpdate();
         this.popFacet();
-        this.updateAutocomplete();
         // TODO reset autocomplete
       }
     }
@@ -320,7 +317,6 @@ export class VisualSearch extends LitElement {
         // this.focusInput();
 
         this.pushValue(new Value(event.target.value, event.target.value));
-        this.updateAutocomplete();
       } else {
         // TODO store state in local storage?
         // TODO submit query then refresh?
@@ -382,19 +378,19 @@ export class VisualSearch extends LitElement {
   }
 
   completeTerm(term) {
-    if (!this._mode()) {
-      this.fetchFacets("", term);
-    } else {
-      // this.fetchValue("height", "", term)
-      // console.log(this.selectedFacets);
-
-      // TODO remodel selected facets -> match api format for facets
-
-      this.fetchValue(this.selectedFacets.at(-1).facet.value, "", term);
+    const handle = (f, ...args) => {
+      f(...args).then(() => {
+        this.updateAutocomplete();
+      }).catch(e => {
+        this._log(e)
+      });
     }
 
-    this.updateAutocomplete()
-    this.requestUpdate(); // necessary
+    if (!this._mode()) {
+      handle(this.fetchFacets.bind(this), "", term);
+    } else {
+      handle(this.fetchValues.bind(this), this.selectedFacets.at(-1).facet.value, "", term);
+    }
   }
 
   // clearInput() {
@@ -491,47 +487,15 @@ export class VisualSearch extends LitElement {
   }
 
   updateAutocomplete() {
-    // TODO via event
-
-    this._log("updating auto complete");
-
-    // this.clearAutocomplete()
-
     if (!this._mode()) {
-      // for (let facet of this.facets) {
-      //   // this.debug(facet.key + ' ' + facet.value)
-      //
-      //   this.autocomplete.push({
-      //     key: facet.key,
-      //     label: facet.value,
-      //   });
-      // }
-
       this.autocomplete = this.facets.map(facet => {
         return {value: facet.value, label: facet.label, obj: facet}
       });
-
     } else {
-      // for (let value of this.values) {
-      //   // this.debug(value.key + ' ' + value.value)
-      //
-      //   this.autocomplete.push({
-      //     key: value.key,
-      //     label: value.value,
-      //   });
-      // }
-
       this.autocomplete = this.values.map(value => {
-        return {value: value.value, label: value.label, obj: value} // TODO track facet label
+        return {value: value.value, label: value.label, obj: value}
       });
     }
-
-    if (this.autocomplete.length === 0) {
-      this._log('no autocomplete results')
-      // this.autocomplete.push({ key: 'no-results', label: 'no results' }); // TODO remove
-    }
-
-    // this.requestUpdate(); // TODO not triggering
   }
 
   pushFacet(facet) {
@@ -576,9 +540,7 @@ export class VisualSearch extends LitElement {
     return value;
   }
 
-  fetchFacets(query, term) {
-    this._log('fetching facets')
-
+  async fetchFacets(query, term) {
     let action = new URL(this.facetsAction, window.location.origin);
 
     action.searchParams.set('search', this.search);
@@ -594,29 +556,28 @@ export class VisualSearch extends LitElement {
     action.searchParams.set('query', query);
     action.searchParams.set('term', term);
 
-    fetch(action).then(response => {
+    return fetch(action).then(response => {
       if (!response.ok) {
-        throw new Error(''); // TODO implement
+        throw new Error(response.statusText);
       }
+
       return response.json();
     }).then(data => {
       let facets = data.map(facet => Facet.fromObject(facet));
+
       facets.every(Facet.validate);
+
       this.facets = facets;
-      this.updateAutocomplete();
-      console.log(data);
-    }).catch(error => {
-      console.error('', error); // TODO implement
     });
   }
 
-  fetchValue(facet, query, term) {
+  async fetchValues(facet, query, term) {
     let action = new URL(this.valueAction, window.location.origin);
 
     action.searchParams.set('search', this.search);
 
     if (facet === undefined) {
-      // TODO handle
+      facet = '';
     }
 
     if (query === undefined) {
@@ -631,17 +592,18 @@ export class VisualSearch extends LitElement {
     action.searchParams.set('query', query);
     action.searchParams.set('term', term);
 
-    fetch(action).then(response => {
+    return fetch(action).then(response => {
       if (!response.ok) {
-        throw new Error(''); // TODO implement
+        throw new Error(response.statusText);
       }
+
       return response.json();
     }).then(data => {
-      this.values = data;
-      this.updateAutocomplete();
-      console.log(data);
-    }).catch(error => {
-      console.error('', error); // TODO implement
+        let values = data.map(value => Value.fromObject(value));
+
+        values.every(Value.validate);
+
+        this.values = values;
     });
   }
 
