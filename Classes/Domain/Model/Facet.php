@@ -63,7 +63,10 @@ class Facet implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->__toArray();
+        return [
+            'value'         => $this->value,
+            'label'         => $this->label,
+        ];
     }
 
     /**
