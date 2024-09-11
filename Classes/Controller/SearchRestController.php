@@ -7,6 +7,8 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\RestController;
 use KayStrobach\VisualSearch\Domain\Repository\FacetRepository;
 use KayStrobach\VisualSearch\Domain\Service\ValueService;
+use Neos\Flow\Mvc\View\JsonView;
+
 class SearchRestController extends RestController {
 
     /**
@@ -21,6 +23,23 @@ class SearchRestController extends RestController {
      */
     protected $valueService;
 
+    /**
+     * The default view object to use if none of the resolved views can render
+     * a response for the current request.
+     *
+     * @var string
+     * @api
+     */
+    protected $defaultViewObjectName = JsonView::class;
+
+    /**
+     * A list of IANA media types which are supported by this controller
+     *
+     * @var array
+     * @see http://www.iana.org/assignments/media-types/index.html
+     */
+    protected $supportedMediaTypes = ['application/json'];
+
     function facetsAction(string $search, string $query, string $term)
     {
         if (!empty($query)) {
@@ -31,7 +50,7 @@ class SearchRestController extends RestController {
 
         $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $queryArray, $term);
 
-        return json_encode($facets, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
+        $this->view->assign('value', $facets);
     }
 
     function valuesAction(string $search, string $facet, string $query, string $term)
@@ -44,6 +63,6 @@ class SearchRestController extends RestController {
 
         $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $queryArray, $term);
 
-        return json_encode($values, JSON_THROW_ON_ERROR|JSON_INVALID_UTF8_IGNORE);
+        $this->view->assign('value', $values);
     }
 }
