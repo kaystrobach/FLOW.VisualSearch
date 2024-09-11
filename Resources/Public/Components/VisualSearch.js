@@ -453,7 +453,9 @@ export class VisualSearch extends LitElement {
     }).then(data => {
       let facets = data.map(facet => Facet.fromObject(facet));
 
-      facets.every(Facet.validate);
+      if (!facets.every(Facet.validate)) {
+        this._log('invalid facets');
+      }
 
       this.facets = facets;
     });
@@ -489,7 +491,9 @@ export class VisualSearch extends LitElement {
     }).then(data => {
         let values = data.map(value => Value.fromObject(value));
 
-        values.every(Value.validate);
+        if (!values.every(Value.validate)) {
+          this._log('invalid values');
+        }
 
         this.values = values;
     });
