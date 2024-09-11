@@ -521,7 +521,7 @@ export class VisualSearch extends LitElement {
     }
 
     const options = {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
