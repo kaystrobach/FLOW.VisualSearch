@@ -28,8 +28,7 @@ class Facet {
   }
 
   static validate(facet) {
-    return typeof facet.value === 'number' && typeof facet.label === 'string'; // facets.every(Facet.validate);
-    // TODO validate configuration and values -> just call their validators
+    return typeof facet.value === 'string' && typeof facet.label === 'string';
   }
 }
 
