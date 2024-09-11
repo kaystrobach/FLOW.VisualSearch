@@ -444,7 +444,14 @@ export class VisualSearch extends LitElement {
     action.searchParams.set('query', query);
     action.searchParams.set('term', term);
 
-    return fetch(action).then(response => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    }
+
+    return fetch(action, options).then(response => {
       if (!response.ok) {
         throw new Error(response.statusText);
       }
@@ -482,7 +489,14 @@ export class VisualSearch extends LitElement {
     action.searchParams.set('query', query);
     action.searchParams.set('term', term);
 
-    return fetch(action).then(response => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    }
+
+    return fetch(action, options).then(response => {
       if (!response.ok) {
         throw new Error(response.statusText);
       }
@@ -509,6 +523,7 @@ export class VisualSearch extends LitElement {
     const options = {
       method: 'POST',
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
