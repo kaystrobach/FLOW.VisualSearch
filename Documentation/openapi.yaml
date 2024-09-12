@@ -112,6 +112,9 @@ components:
         inputType:
           type: string
           description: The input type
+      required:
+        - label
+        - value
     Value:
       type: object
       properties:
@@ -121,6 +124,9 @@ components:
          value:
            type: string
            description: The value key
+      required:
+        - label
+        - value
     FacetValue:
       type: object
       properties:
