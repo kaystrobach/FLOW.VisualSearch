@@ -109,6 +109,9 @@ components:
         value:
           type: string
           description: The facet key
+        inputType:
+          type: string
+          description: The input type
     Value:
       type: object
       properties:

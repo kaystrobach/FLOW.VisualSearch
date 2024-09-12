@@ -5,9 +5,10 @@ import {css, html, LitElement} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/all/
 // [{"label":"Student","value":"SBS.SingleSignOn:Student"},{"label":"Staff","value":"SBS.SingleSignOn:Staff"},{"label":"Teacher","value":"SBS.SingleSignOn:Teacher"},{"label":"Administrator","value":"SBS.SingleSignOn:Administrator"},{"label":"Secretary","value":"SBS.SingleSignOn:Secretary"},{"label":"SystemAdministrator","value":"SBS.SingleSignOn:SystemAdministrator"},{"label":"Rest","value":"SBS.SingleSignOn:Rest"},{"label":"FirstLogin","value":"SBS.SingleSignOn:FirstLogin"},{"label":"BetaTester","value":"SBS.SingleSignOn:BetaTester"},{"label":"TraineeTeacher","value":"SBS.SingleSignOn:TraineeTeacher"}]
 
 class Facet {
-    constructor(value, label, configuration, values) {
+    constructor(value, label, inputType, onfiguration, values) {
         this.value = value; // this is actually the facet key
         this.label = label; // display label for facet
+        this.inputType = inputType;
         // TODO track valueValue and valueLabel somewhere else
         // TODO update autocomplete function ??
         // this.configuration = configuration;
@@ -20,6 +21,7 @@ class Facet {
 
       if (data.hasOwnProperty('value')) obj.value = data.value;
       if (data.hasOwnProperty('label')) obj.label = data.label;
+      if (data.hasOwnProperty('inputType')) obj.inputType = data.inputType;
       // if (data.hasOwnProperty('configuration')) obj.configuration = data.configuration;
       // if (data.hasOwnProperty('values')) obj.values = data.values.map(value => Value.fromObject(value));
     }
@@ -392,6 +394,10 @@ export class VisualSearch extends LitElement {
         value: null
     });
 
+    if (facet.inputType) {
+      this._input().type = facet.inputType;
+    }
+
     this.clearInput();
     this.focusInput();
 
@@ -401,6 +407,8 @@ export class VisualSearch extends LitElement {
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
+    this._input().type = 'text';
+
     this.clearInput();
     this.focusInput();
 
@@ -409,6 +417,8 @@ export class VisualSearch extends LitElement {
 
   popFacet() {
     const facet = this.selectedFacets.pop();
+
+    this._input().type = 'text';
 
     this.completeTerm('')
 
@@ -422,6 +432,8 @@ export class VisualSearch extends LitElement {
 
     const value = this.selectedFacets.at(-1).value;
     this.selectedFacets.at(-1).value = null;
+
+    this._input().type = 'text';
 
     this.completeTerm('')
 

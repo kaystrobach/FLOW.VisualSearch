@@ -40,6 +40,7 @@ class FacetRepository
         if ((is_array($facetsFromConfiguration)) && (count($facetsFromConfiguration) > 0)) {
             foreach ($facetsFromConfiguration as $key => $value) {
                 $label = isset($value['label']) ? $value['label'] : $key;
+                $inputType = isset($value['inputType']) ? $value['inputType'] : 'text';
 
                 // restrict to items filtered by term
                 if (($term === '')
@@ -57,7 +58,8 @@ class FacetRepository
                                 $facets[] = new Facet(
                                     $label,
                                     $key,
-                                    $value['selector']
+                                    $value['selector'],
+                                    $inputType,
                                 );
                             }
                         }
