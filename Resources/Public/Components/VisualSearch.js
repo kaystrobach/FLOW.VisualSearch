@@ -244,7 +244,7 @@ export class VisualSearch extends LitElement {
                 @keyup='${this.handleKeyUp}'
                 @input='${this.handleInput}'>
             <ul class="vs-search__dropdown">
-            ${this.autocomplete.map(item => html`<li class="vs-search__dropdown-item" @click='${() => this.complete(item)}'>${item.label}</li>`)}
+            ${this.autocomplete.map(item => html`<li class="vs-search__dropdown-item" @click='${() => this.complete(item)}' @pointerdown=${(event) => event.preventDefault()}>${item.label}</li>`)}
             </ul>
           </div>
         </div>
@@ -401,7 +401,6 @@ export class VisualSearch extends LitElement {
     }
 
     this.clearInput();
-    this.focusInput();
 
     this.completeTerm('');
   }
@@ -412,7 +411,6 @@ export class VisualSearch extends LitElement {
     this._input().type = 'text';
 
     this.clearInput();
-    this.focusInput();
 
     this.completeTerm('');
   }
