@@ -2,16 +2,30 @@ import {LitElement, html, css} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/all/
 
 export class SearchFacet extends LitElement {
   static styles = css`
-      span {
-        // border: 1px solid white;
-        // border-radius: 4px;
-        // padding: 4px;
-        // margin: 0;
-        display: inline-block;
+      div {
+        display: inline-flex;
+        align-items: center;
         white-space: nowrap;
         background-color: #333;
         border-radius: 4px;
         padding: 0 4px;
+        user-select: none;
+        height: 18px;
+        gap: 4px;
+      }
+
+      button {
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+        height: 16px;
+        width: 16px;
+        line-height: 16px;
+        text-align: center;
+        border-radius: 8px;
       }
     `;
 
@@ -21,22 +35,26 @@ export class SearchFacet extends LitElement {
       facet: {type: String, attribute: true},
       valueLabel: {type: String, attribute: 'value-label'},
       value: {type: String, attribute: true},
+      disabled: {type: Boolean, attribute: true},
     }
   }
 
   constructor() {
     super();
+
+    this.disabled = false;
   }
 
-  handleClick() {
-    console.log('click');
-
-    // TODO fire removal event
+  _handleClick() {
+    this.dispatchEvent(new CustomEvent('facet-delete', { bubbles: true, composed: true }));
   }
 
   render() {
     return html`
-        <span @click="${this.handleClick()}">${this.facetLabel}: ${this.valueLabel}</span>
+        <div>
+          ${this.facetLabel}: ${this.valueLabel}
+          ${this.value ? html`<button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}">x</button>` : ''}
+        </div>
       `;
   }
 }
