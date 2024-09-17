@@ -223,13 +223,15 @@ export class VisualSearch extends LitElement {
         ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
         <div class="vs-search__wrapper">
           <ul class="vs-search__facets">
-            ${Array.from(this.selectedFacets).map((item) => html`
+            ${Array.from(this.selectedFacets).map((item, index) => html`
               <li>
                 <search-facet
                     facet-label="${item.facet.label}"
                     facet="${item.facet.value}"
                     value-label="${item.value ? item.value.label : ''}"
-                    value="${item.value ? item.value.value : ''}">
+                    value="${item.value ? item.value.value : ''}"
+                    ?disabled="${index < this.selectedFacets.length - 1}"
+                    @facet-delete="${() => this.deleteFacet(index)}">
                 </search-facet>
               </li>`)}
           </ul>
@@ -438,6 +440,12 @@ export class VisualSearch extends LitElement {
     this.completeTerm('')
 
     return value;
+  }
+
+  deleteFacet(index) {
+    this.selectedFacets.splice(index, 1);
+
+    this.completeTerm(this._input().value)
   }
 
   async fetchFacets(query, term) {
