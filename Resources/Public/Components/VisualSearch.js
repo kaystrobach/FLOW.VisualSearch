@@ -380,7 +380,7 @@ export class VisualSearch extends LitElement {
       });
     };
 
-    const query = btoa(encodeURIComponent(JSON.stringify(this.collectQuery())));
+    const query = btoa(encodeURIComponent(JSON.stringify(this.collectQuery().facets)));
 
     if (!this._mode()) {
       handle(this.fetchFacets.bind(this), query, term);

@@ -90,7 +90,7 @@ components:
       schema:
         type: string
       allowEmptyValue: true
-      description: The base64 and percent encoded query object
+      description: The base64 and percent encoded facets
     Term:
       name: term
       in: query
