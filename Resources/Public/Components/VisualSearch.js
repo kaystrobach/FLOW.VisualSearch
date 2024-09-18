@@ -423,9 +423,12 @@ export class VisualSearch extends LitElement {
     }
 
     this.clearInput();
-    this.focusInput();
 
-    this.completeTerm('');
+    if (this.renderRoot.activeElement !== this._input()) {
+        this.focusInput();
+    } else {
+        this.completeTerm('');
+    }
   }
 
   pushValue(value) {
@@ -436,9 +439,12 @@ export class VisualSearch extends LitElement {
     this._input().type = 'text';
 
     this.clearInput();
-    this.focusInput();
 
-    this.completeTerm('');
+    if (this.renderRoot.activeElement !== this._input()) {
+      this.focusInput();
+    } else {
+      this.completeTerm('');
+    }
   }
 
   popFacet() {
