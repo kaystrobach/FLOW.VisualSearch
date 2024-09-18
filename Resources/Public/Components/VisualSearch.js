@@ -416,6 +416,8 @@ export class VisualSearch extends LitElement {
         value: null
     });
 
+    this.requestUpdate();
+
     if (facet.inputType) {
       this._input().type = facet.inputType;
     }
@@ -429,6 +431,8 @@ export class VisualSearch extends LitElement {
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
+    this.requestUpdate();
+
     this._input().type = 'text';
 
     this.clearInput();
@@ -439,6 +443,8 @@ export class VisualSearch extends LitElement {
 
   popFacet() {
     const facet = this.selectedFacets.pop();
+
+    this.requestUpdate();
 
     this._input().type = 'text';
 
@@ -455,6 +461,8 @@ export class VisualSearch extends LitElement {
     const value = this.selectedFacets.at(-1).value;
     this.selectedFacets.at(-1).value = null;
 
+    this.requestUpdate();
+
     this._input().type = 'text';
 
     this.completeTerm('')
@@ -464,6 +472,8 @@ export class VisualSearch extends LitElement {
 
   deleteFacet(index) {
     this.selectedFacets.splice(index, 1);
+
+    this.requestUpdate();
 
     this.completeTerm(this._input().value)
   }
