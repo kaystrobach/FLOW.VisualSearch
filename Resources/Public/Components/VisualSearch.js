@@ -423,6 +423,7 @@ export class VisualSearch extends LitElement {
     }
 
     this.clearInput();
+    this.autocomplete = [];
 
     if (this.renderRoot.activeElement !== this._input()) {
         this.focusInput();
@@ -439,6 +440,7 @@ export class VisualSearch extends LitElement {
     this._input().type = 'text';
 
     this.clearInput();
+    this.autocomplete = [];
 
     if (this.renderRoot.activeElement !== this._input()) {
       this.focusInput();
