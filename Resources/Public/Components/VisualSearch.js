@@ -320,6 +320,10 @@ export class VisualSearch extends LitElement {
   handleKeyUp(event) {
     if (event.key === 'Enter') {
       if (this._mode()) {
+        if (event.target.value === '') {
+          return;
+        }
+
         this.pushValue(new Value(event.target.value, event.target.value));
       } else {
         this.storeQuery(this.collectQuery()).then(() => {
