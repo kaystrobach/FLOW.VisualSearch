@@ -192,14 +192,23 @@ export class VisualSearch extends LitElement {
       .vs-search__dropdown-item {
         padding: 4px;
         cursor: pointer;
+        background: none;
+        border: none;
+        text-align: left;
+        width: 100%;
+        color: white;
       }
 
       .vs-search__dropdown-item:hover {
         background-color: #333;
       }
 
-      .vs-search__dropdown-item + .vs-search__dropdown-item {
-        border-top: 1px solid white;
+      .vs-search__dropdown-item:focus {
+        background-color: #333;
+      }
+
+      .vs-search__dropdown li + li {
+         border-top: 1px solid white;
       }
 
       .vs-search__input:focus + .vs-search__dropdown {
@@ -207,6 +216,10 @@ export class VisualSearch extends LitElement {
       }
 
       .vs-search__dropdown:hover {
+        visibility: visible;
+      }
+
+      .vs-search:focus-within .vs-search__dropdown {
         visibility: visible;
       }
 
@@ -244,7 +257,10 @@ export class VisualSearch extends LitElement {
                 @keyup='${this.handleKeyUp}'
                 @input='${this.handleInput}'>
             <ul class="vs-search__dropdown">
-            ${this.autocomplete.map(item => html`<li class="vs-search__dropdown-item" @click='${() => this.complete(item)}' @pointerdown=${(event) => event.preventDefault()}>${item.label}</li>`)}
+              ${this.autocomplete.map(item => html`
+                <li>
+                  <button class="vs-search__dropdown-item" tabindex="0" @click='${() => this.complete(item)}' @pointerdown=${(event) => event.preventDefault()}>${item.label}</button>
+                </li>`)}
             </ul>
           </div>
         </div>
@@ -405,6 +421,7 @@ export class VisualSearch extends LitElement {
     }
 
     this.clearInput();
+    this.focusInput();
 
     this.completeTerm('');
   }
@@ -415,6 +432,7 @@ export class VisualSearch extends LitElement {
     this._input().type = 'text';
 
     this.clearInput();
+    this.focusInput();
 
     this.completeTerm('');
   }
