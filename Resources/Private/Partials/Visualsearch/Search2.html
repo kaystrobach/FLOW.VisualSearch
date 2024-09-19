@@ -2,14 +2,14 @@
 
 <f:if condition="{searchName}">
     <f:then>
-        <visual-search search="{searchName}"
-                       facets-action="{f:uri.action(action: 'facets', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
-                       value-action="{f:uri.action(action: 'values', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
-                       query-action="{f:uri.action(action: 'query', controller: 'SearchLegacy', package: 'KayStrobach.VisualSearch')}"
-                       debug="true"
-                       session="true"
-                       query="{search:query(name: searchName)}"
-        ></visual-search>
+        <visual-search
+                search="{searchName}"
+                facets-action="{f:uri.action(action: 'facets', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
+                value-action="{f:uri.action(action: 'values', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
+                query-action="{f:uri.action(action: 'query', controller: 'SearchLegacy', package: 'KayStrobach.VisualSearch')}"
+                debug="true"
+                query="{search:query(name: searchName)}">
+        </visual-search>
 
         <div class="table-responsive" id="search-result-area">
             {value -> f:format.raw()}
