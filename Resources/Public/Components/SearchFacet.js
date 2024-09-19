@@ -18,16 +18,82 @@ export class SearchFacet extends LitElement {
         background-color: white;
         border: none;
         cursor: pointer;
-        font-size: 16px;
         padding: 0;
         margin: 0;
         height: 16px;
         width: 16px;
-        line-height: 16px;
-        text-align: center;
         border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        justify-items: center;
       }
-    `;
+
+      .lock {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        transform: scale(0.4);
+        width: 12px;
+        height: 11px;
+        border: 2px solid;
+        border-top-right-radius: 50%;
+        border-top-left-radius: 50%;
+        border-bottom: transparent;
+        margin-top: calc(-8px * 0.6); // -12px;
+        background: transparent;
+        min-width: 12px;
+        min-height: 11px;
+      }
+
+      .lock::after {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        width: 16px;
+        height: 10px;
+        border-radius: 2px;
+        border: 2px solid transparent;
+        box-shadow: 0 0 0 2px;
+        left: -4px;
+        top: 9px;
+      }
+
+      .close {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        transform: scale(0.6);
+        width: 22px;
+        height: 22px;
+        border: 2px solid transparent;
+        border-radius: 40px;
+        background: transparent;
+        min-width: 22px;
+        min-height: 22px;
+      }
+    
+      .close::after,
+      .close::before {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        width: 16px;
+        height: 2px;
+        background: currentColor;
+        transform: rotate(45deg);
+        border-radius: 5px;
+        top: 8px;
+        left: 1px;
+      }
+      
+      .close::after {
+        transform: rotate(-45deg);
+      }
+  `;
 
   static get properties() {
     return {
@@ -53,7 +119,7 @@ export class SearchFacet extends LitElement {
     return html`
         <div>
           ${this.facetLabel}: ${this.valueLabel}
-          ${this.value ? html`<button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}">x</button>` : ''}
+          ${this.value ? html`<button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}"><div class="${this.disabled ? 'lock' : 'close'}"></div></button>` : ''}
         </div>
       `;
   }
