@@ -318,8 +318,19 @@ export class VisualSearch extends LitElement {
   }
 
   handleKeyDown(event) {
-    // this.debug(event.key + ' pressed');
-    // console.log(event.key, event.target.value);
+    if (event.key === 'Enter') {
+      if (this._mode()) {
+        if (event.target.value === '') {
+          return;
+        }
+
+        this.pushValue(new Value(event.target.value, event.target.value));
+      } else {
+        this.storeQuery(this.collectQuery()).then(() => {
+          window.location.reload();
+        });
+      }
+    }
 
     if (event.key === 'Backspace') {
       // TODO also deletes with 1 char left -> fix
@@ -334,19 +345,7 @@ export class VisualSearch extends LitElement {
   }
 
   handleKeyUp(event) {
-    if (event.key === 'Enter') {
-      if (this._mode()) {
-        if (event.target.value === '') {
-          return;
-        }
-
-        this.pushValue(new Value(event.target.value, event.target.value));
-      } else {
-        this.storeQuery(this.collectQuery()).then(() => {
-          window.location.reload();
-        });
-      }
-    }
+    // unused
   }
 
   handleInput(event) {
