@@ -257,9 +257,16 @@ export class VisualSearch extends LitElement {
                 @keyup='${this.handleKeyUp}'
                 @input='${this.handleInput}'>
             <ul class="vs-search__dropdown">
-              ${this.autocomplete.map(item => html`
+              ${this.autocomplete.map((item, index) => html`
                 <li>
-                  <button class="vs-search__dropdown-item" tabindex="0" @click='${() => this.complete(item)}' @pointerdown=${(event) => event.preventDefault()}>${item.label}</button>
+                  <button
+                      class="vs-search__dropdown-item"
+                      tabindex="0"
+                      @click='${() => this.complete(item)}'
+                      @pointerdown=${(event) => event.preventDefault()}
+                      @keydown="${index === this.autocomplete.length - 1 ? this.handleTab : null}">
+                    ${item.label}
+                  </button>
                 </li>`)}
             </ul>
           </div>
@@ -346,6 +353,16 @@ export class VisualSearch extends LitElement {
 
   handleKeyUp(event) {
     // unused
+  }
+
+  handleTab(event) {
+    if (event.key !== 'Tab' || event.shiftKey) {
+      return;
+    }
+
+    event.preventDefault();
+
+    this._input().focus();
   }
 
   handleInput(event) {
