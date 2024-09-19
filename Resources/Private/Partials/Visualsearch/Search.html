@@ -1,7 +1,23 @@
 {namespace search=KayStrobach\VisualSearch\ViewHelpers}
 
-<search:widget.search search="{searchName}"/>
+<f:if condition="{searchName}">
+    <f:then>
+        <visual-search
+                search="{searchName}"
+                facets-action="{f:uri.action(action: 'facets', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
+                value-action="{f:uri.action(action: 'values', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
+                query-action="{f:uri.action(action: 'query', controller: 'SearchLegacy', package: 'KayStrobach.VisualSearch')}"
+                query="{search:query(name: searchName)}">
+        </visual-search>
 
-<div class="table-responsive" id="search-result-area">
-    {value -> f:format.raw()}
-</div>
+        <div class="table-responsive" id="search-result-area">
+            {value -> f:format.raw()}
+        </div>
+    </f:then>
+</f:if>
+
+<f:if condition="true">
+    <script src="{f:uri.resource(path: 'Components/SearchFacet.js', package: 'KayStrobach.VisualSearch')}" type="module"></script>
+    <script src="{f:uri.resource(path: 'Components/DebugLog.js', package: 'KayStrobach.VisualSearch')}" type="module"></script>
+    <script src="{f:uri.resource(path: 'Components/VisualSearch.js', package: 'KayStrobach.VisualSearch')}" type="module"></script>
+</f:if>
