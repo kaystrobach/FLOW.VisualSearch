@@ -24,6 +24,12 @@ class SearchRestController extends RestController {
     protected $valueService;
 
     /**
+     * @var QueryStorage
+     * @Flow\Inject
+     */
+    protected $queryStorage;
+
+    /**
      * The default view object to use if none of the resolved views can render
      * a response for the current request.
      *
@@ -45,7 +51,7 @@ class SearchRestController extends RestController {
         if (!empty($query)) {
             $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
         } else {
-            $queryArray = []; // TODO from query storage
+            $queryArray = array_map(fn($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
         }
 
         $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $queryArray, $term);
@@ -58,7 +64,7 @@ class SearchRestController extends RestController {
         if (!empty($query)) {
             $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
         } else {
-            $queryArray = []; // TODO from query storage
+            $queryArray = array_map(fn($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
         }
 
         $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $queryArray, $term);
