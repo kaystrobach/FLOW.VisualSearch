@@ -88,6 +88,16 @@ class Facet implements \JsonSerializable
         $this->valueLabel = $valueLabel;
     }
 
+    public function __toArray()
+    {
+        return [
+            'facet' => $this->getFacet(),
+            'facetLabel' => $this->getFacetLabel(),
+            'value' => $this->getValue(),
+            'valueLabel' => $this->getValueLabel(),
+        ];
+    }
+
     public function jsonSerialize()
     {
         return [

@@ -396,13 +396,13 @@ export class VisualSearch extends LitElement {
       });
     };
 
-    const query = btoa(encodeURIComponent(JSON.stringify(this.collectQuery().facets)));
-
-    if (!this._mode()) {
-      handle(this.fetchFacets.bind(this), query, term);
-    } else {
-      handle(this.fetchValues.bind(this), this.selectedFacets.at(-1).facet.value, query, term);
-    }
+    this.storeQuery(this.collectQuery()).then(() => {
+      if (!this._mode()) {
+        handle(this.fetchFacets.bind(this), "", term);
+      } else {
+        handle(this.fetchValues.bind(this), this.selectedFacets.at(-1).facet.value, "", term);
+      }
+    });
   }
 
   loadStateFromQuery() {
@@ -635,6 +635,10 @@ export class VisualSearch extends LitElement {
       sorting: 'identifier', // TODO add to state
       facets: facets,
     };
+  }
+
+  encodeQuery(query) {
+    return btoa(encodeURIComponent(JSON.stringify(this.collectQuery().facets)));
   }
 }
 
