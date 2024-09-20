@@ -95,6 +95,7 @@ export class VisualSearch extends LitElement {
 
       search: {type: String, attribute: true},
       query: {type: Object, attribute: true},
+      sorting: {type: Object, attribute: true},
 
       facetsAction: {type: String, attribute: 'facets-action'}, // autocomplete facet
       valueAction: {type: String, attribute: 'value-action'}, // autocomplete facet value
@@ -115,6 +116,7 @@ export class VisualSearch extends LitElement {
     this.showDebugLog = false;
 
     this.query = null;
+    this.sorting = null;
 
     // console.log(this);
     // console.log(this.search);
@@ -144,6 +146,7 @@ export class VisualSearch extends LitElement {
         padding: 4px;
         border: 1px solid white;
         align-items: center;
+        gap: 4px;
       }
 
       .vs-search__facets {
@@ -152,11 +155,7 @@ export class VisualSearch extends LitElement {
         list-style: none;
         padding: 0;
         margin: 0;
-        // gap: 2px;
-      }
-
-      .vs-search__facets li {
-        margin-right: 4px;
+        gap: 4px;
       }
 
       .vs-search {
@@ -181,7 +180,7 @@ export class VisualSearch extends LitElement {
         padding: 0;
         margin: 0;
         position: absolute;
-        top: calc(100% + 4px);
+        top: calc(100% + 4.5px);
         left: -5px;
         background-color: black;
         width: calc(100% + 8px);
@@ -228,25 +227,42 @@ export class VisualSearch extends LitElement {
         width: 100%;
         padding: 4px;
       }
+
+      .select-button-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .select-native {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
     `;
 
   render() {
     return html`
         ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
         <div class="vs-search__wrapper">
-          <ul class="vs-search__facets">
-            ${Array.from(this.selectedFacets).map((item, index) => html`
-              <li>
-                <search-facet
-                    facet-label="${item.facet.label}"
-                    facet="${item.facet.value}"
-                    value-label="${item.value ? item.value.label : ''}"
-                    value="${item.value ? item.value.value : ''}"
-                    ?disabled="${index < this.selectedFacets.length - 1}"
-                    @facet-delete="${() => this.deleteFacet(index)}">
-                </search-facet>
-              </li>`)}
-          </ul>
+          ${this.selectedFacets.length > 0 ? html`
+            <ul class="vs-search__facets">
+              ${Array.from(this.selectedFacets).map((item, index) => html`
+                <li>
+                  <search-facet
+                      facet-label="${item.facet.label}"
+                      facet="${item.facet.value}"
+                      value-label="${item.value ? item.value.label : ''}"
+                      value="${item.value ? item.value.value : ''}"
+                      ?disabled="${index < this.selectedFacets.length - 1}"
+                      @facet-delete="${() => this.deleteFacet(index)}">
+                  </search-facet>
+                </li>`)}
+            </ul>
+          ` : ''}
           <div class="vs-search">
             <input class="vs-search__input"
                 type="text"
@@ -269,6 +285,19 @@ export class VisualSearch extends LitElement {
                 </li>`)}
             </ul>
           </div>
+          <button @click="${this.submit}">Search</button>
+          ${this.sorting ? html`
+            <div class="select-button-wrapper">
+              <button>Sort</button>
+              <select id="sorting" class="select-native">
+                <option value="" disabled ?selected="${!(this.query.sorting in this.sorting)}"></option>
+                ${Object.keys(this.sorting).map((key) => html`
+                  <option value="${key}" ?selected="${key === this.query.sorting}" >${this.sorting[key].label}</option>
+                `)}
+              </select>
+            </div>
+          `: ''}
+          <button @click="${this.clear}">Clear</button>
         </div>
       `;
   }
@@ -287,6 +316,10 @@ export class VisualSearch extends LitElement {
     }
 
     return input;
+  }
+
+  _sort() {
+    return this.renderRoot.querySelector('#sorting');
   }
 
   _log(message) {
@@ -493,6 +526,25 @@ export class VisualSearch extends LitElement {
     return value;
   }
 
+  submit() {
+    if (this._mode()) {
+      this.popFacet();
+    }
+
+    this.storeQuery(this.collectQuery()).then(() => {
+      window.location.reload();
+    });
+  }
+
+  clear() {
+    this._input().value = '';
+
+    this._sort() ? this._sort().value = '' : null;
+
+    this.selectedFacets = [];
+    this.autocomplete = [];
+  }
+
   deleteFacet(index) {
     this.selectedFacets.splice(index, 1);
 
@@ -631,7 +683,7 @@ export class VisualSearch extends LitElement {
 
     return {
       identifier: this.search,
-      sorting: 'identifier', // TODO add to state
+      sorting: this._sort() ? this._sort().value : '',
       facets: facets,
     };
   }
