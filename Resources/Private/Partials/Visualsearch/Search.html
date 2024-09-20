@@ -7,7 +7,8 @@
                 facets-action="{f:uri.action(action: 'facets', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
                 value-action="{f:uri.action(action: 'values', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
                 query-action="{f:uri.action(action: 'query', controller: 'SearchLegacy', package: 'KayStrobach.VisualSearch')}"
-                query="{search:query(name: searchName)}">
+                query="{search:query(name: searchName)}"
+                sorting="{search:settings(name: searchName, key: 'sorting')}">
         </visual-search>
 
         <div class="table-responsive" id="search-result-area">
