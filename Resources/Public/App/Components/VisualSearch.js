@@ -230,7 +230,7 @@ export class VisualSearch extends LitElement {
 
       .select-button-wrapper {
         position: relative;
-        display: inline-block;
+        display: inline-flex;
       }
       
       .select-native {
