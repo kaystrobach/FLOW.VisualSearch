@@ -139,6 +139,7 @@ export class VisualSearch extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        position: relative;
       }
 
       .vs-search__wrapper {
@@ -147,44 +148,41 @@ export class VisualSearch extends LitElement {
         border: 1px solid white;
         align-items: center;
         gap: 4px;
+        flex-wrap: wrap;
       }
 
       .vs-search__facets {
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         list-style: none;
         padding: 0;
         margin: 0;
         gap: 4px;
       }
 
-      .vs-search {
-        position: relative;
-        width: 100%;
-      }
-
       .vs-search__input {
-        width: 100%;
         box-sizing: border-box;
         color: white;
         background-color: transparent;
         border: none;
+        flex-grow: 1;
       }
 
       .vs-search__dropdown {
         z-index: 100; // TODO add property
-        display: inline-flex;
+        display: flex;
         visibility: hidden;
         flex-direction: column;
         list-style: none;
         padding: 0;
         margin: 0;
         position: absolute;
-        top: calc(100% + 4.5px);
-        left: -5px;
+        top: calc(100% - 1px);
+        left: 0;
         background-color: black;
-        width: calc(100% + 8px);
+        width: 100%;
         border: 1px solid white;
+        box-sizing: border-box;
       }
 
       .vs-search__dropdown-item {
@@ -217,7 +215,7 @@ export class VisualSearch extends LitElement {
         visibility: visible;
       }
 
-      .vs-search:focus-within .vs-search__dropdown {
+      .vs-search__dropdown:focus-within {
         visibility: visible;
       }
 
@@ -226,6 +224,14 @@ export class VisualSearch extends LitElement {
         flex-direction: column;
         width: 100%;
         padding: 4px;
+      }
+    
+      .vs-search__controls {
+        display: flex;
+        flex-wrap: nowrap;
+        padding: 0;
+        margin: 0;
+        gap: 4px;
       }
 
       .select-button-wrapper {
@@ -263,7 +269,6 @@ export class VisualSearch extends LitElement {
                 </li>`)}
             </ul>
           ` : ''}
-          <div class="vs-search">
             <input class="vs-search__input"
                 type="text"
                 @focus='${this.handleFocus}'
@@ -284,9 +289,9 @@ export class VisualSearch extends LitElement {
                   </button>
                 </li>`)}
             </ul>
-          </div>
-          <button @click="${this.submit}">Search</button>
-          ${this.sorting ? html`
+          <div class="vs-search__controls">
+            <button @click="${this.submit}">Search</button>
+            ${this.sorting ? html`
             <div class="select-button-wrapper">
               <button>Sort</button>
               <select id="sorting" class="select-native">
@@ -297,7 +302,8 @@ export class VisualSearch extends LitElement {
               </select>
             </div>
           `: ''}
-          <button @click="${this.clear}">Clear</button>
+            <button @click="${this.clear}">Clear</button>
+          </div>
         </div>
       `;
   }
