@@ -1,3 +1,14 @@
+:root {
+  --visual-search-background-color: black;
+  --visual-search-color: white;
+
+  --visual-search-background-color-focus: #333333;
+  --visual-search-color-focus: white;
+
+  --visual-search-facet-background-color: black;
+  --visual-search-facet-color: white;
+}
+
 body {
   background-color: black;
   display: flex;

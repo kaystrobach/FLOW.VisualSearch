@@ -142,12 +142,14 @@ export class VisualSearch extends LitElement {
         flex-direction: column;
         gap: 8px;
         position: relative;
+        background-color: var(--visual-search-background-color, white);
+        color: var(--visual-search-color, black);
       }
 
       .vs-search__wrapper {
         display: flex;
         padding: 4px;
-        border: 1px solid white;
+        border: 1px solid var(--visual-search-color, black);
         align-items: center;
         gap: 4px;
         flex-wrap: wrap;
@@ -164,7 +166,7 @@ export class VisualSearch extends LitElement {
 
       .vs-search__input {
         box-sizing: border-box;
-        color: white;
+        color: var(--visual-search-color, black);
         background-color: transparent;
         border: none;
         flex-grow: 1;
@@ -181,9 +183,9 @@ export class VisualSearch extends LitElement {
         position: absolute;
         top: calc(100% - 1px);
         left: 0;
-        background-color: black;
+        background-color: var(--visual-search-background-color, white);
         width: 100%;
-        border: 1px solid white;
+        border: 1px solid var(--visual-search-color, black);
         box-sizing: border-box;
       }
 
@@ -194,19 +196,21 @@ export class VisualSearch extends LitElement {
         border: none;
         text-align: left;
         width: 100%;
-        color: white;
+        color: var(--visual-search-color, black);
       }
 
       .vs-search__dropdown-item:hover {
-        background-color: #333;
+        background-color: var(--visual-search-background-color-focus, lightgray);
+        color: var(--visual-search-color-focus, black);
       }
 
       .vs-search__dropdown-item:focus {
-        background-color: #333;
+        background-color: var(--visual-search-background-color-focus, lightgray);
+        color: var(--visual-search-color-focus, black);
       }
 
       .vs-search__dropdown li + li {
-         border-top: 1px solid white;
+         border-top: 1px solid var(--visual-search-color, black);
       }
 
       .vs-search__input:focus + .vs-search__dropdown {

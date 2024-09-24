@@ -2,11 +2,12 @@ import {LitElement, html, css} from 'lit';
 
 export class SearchFacet extends LitElement {
   static styles = css`
-      div {
+      :host {
         display: inline-flex;
         align-items: center;
         white-space: nowrap;
-        background-color: #333;
+        background-color: var(--visual-search-facet-background-color, lightgray);
+        color: var(--visual-search-facet-color, black);
         border-radius: 4px;
         padding: 0 4px;
         user-select: none;
@@ -28,6 +29,11 @@ export class SearchFacet extends LitElement {
         align-content: center;
         justify-content: center;
         justify-items: center;
+        color: black;
+      }
+    
+      button:disabled {
+        color: graytext;
       }
 
       .lock {
@@ -117,11 +123,9 @@ export class SearchFacet extends LitElement {
 
   render() {
     return html`
-        <div>
-          ${this.facetLabel}: ${this.valueLabel}
-          ${this.value ? html`<button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}"><div class="${this.disabled ? 'lock' : 'close'}"></div></button>` : ''}
-        </div>
-      `;
+      ${this.facetLabel}: ${this.valueLabel}
+      ${this.value ? html`<button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}"><div class="${this.disabled ? 'lock' : 'close'}"></div></button>` : ''}
+    `;
   }
 }
 
