@@ -92,6 +92,7 @@ export class VisualSearch extends LitElement {
       autocomplete: {type: Array, state: true},
 
       showDebugLog: {type: Boolean, attribute: 'debug'},
+      nestedFacets: {type: Boolean, attribute: 'nested-facets'},
 
       search: {type: String, attribute: true},
       query: {type: Object, attribute: true},
@@ -114,6 +115,7 @@ export class VisualSearch extends LitElement {
     this.autocomplete = [];
 
     this.showDebugLog = false;
+    this.nestedFacets = false;
 
     this.query = null;
     this.sorting = null;
@@ -263,7 +265,7 @@ export class VisualSearch extends LitElement {
                       facet="${item.facet.value}"
                       value-label="${item.value ? item.value.label : ''}"
                       value="${item.value ? item.value.value : ''}"
-                      ?disabled="${index < this.selectedFacets.length - 1}"
+                      ?disabled="${this.nestedFacets && (index < this.selectedFacets.length - 1)}"
                       @facet-delete="${() => this.deleteFacet(index)}">
                   </search-facet>
                 </li>`)}
