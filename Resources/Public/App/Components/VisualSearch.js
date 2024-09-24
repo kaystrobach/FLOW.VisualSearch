@@ -254,6 +254,19 @@ export class VisualSearch extends LitElement {
         opacity: 0;
         cursor: pointer;
       }
+    
+      .vs-search__controls button {
+        background-color: var(--visual-search-background-color, white);
+        color: var(--visual-search-color, black);
+        border: 1px solid var(--visual-search-color, black);
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .vs-search__controls button:hover, .select-button-wrapper:hover > button {
+        background-color: var(--visual-search-background-color-focus, lightgray);
+        color: var(--visual-search-color-focus, black);
+      }
     `;
 
   render() {
