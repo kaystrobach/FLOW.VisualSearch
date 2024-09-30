@@ -4,7 +4,6 @@ namespace KayStrobach\VisualSearch\Demands;
 
 class EqualsDemand extends AbstractDemand
 {
-
     /**
      * @param mixed $value
      * @return object
