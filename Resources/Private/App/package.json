@@ -6,6 +6,6 @@
     "esbuild": "0.23.1"
   },
   "scripts": {
-    "build": "esbuild app.js --bundle --minify --outfile=build/visualsearch.min.js"
+    "build": "esbuild app.js --bundle --minify --outfile=../../Public/visualsearch.min.js"
   }
 }
