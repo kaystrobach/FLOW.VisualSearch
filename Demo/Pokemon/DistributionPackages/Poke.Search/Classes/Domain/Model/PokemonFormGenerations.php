@@ -7,7 +7,8 @@ use Neos\Flow\Annotations as Flow;
 /**
  * @Flow\Entity
  */
-class PokemonFormGenerations {
+class PokemonFormGenerations
+{
     // pokemon_form_id,generation_id,game_index
 
     /**

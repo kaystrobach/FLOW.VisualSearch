@@ -6,7 +6,6 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\Repository;
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepository;
 
-
 /**
  * @Flow\Scope("singleton")
  */

@@ -9,8 +9,8 @@ use KayStrobach\VisualSearch\Domain\Repository\FacetRepository;
 use KayStrobach\VisualSearch\Domain\Service\ValueService;
 use Neos\Flow\Mvc\View\JsonView;
 
-class SearchRestController extends RestController {
-
+class SearchRestController extends RestController
+{
     /**
      * @Flow\Inject
      * @var FacetRepository
@@ -46,12 +46,12 @@ class SearchRestController extends RestController {
      */
     protected $supportedMediaTypes = ['application/json'];
 
-    function facetsAction(string $search, string $query, string $term)
+    public function facetsAction(string $search, string $query, string $term)
     {
         if (!empty($query)) {
             $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
         } else {
-            $queryArray = array_map(fn($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
+            $queryArray = array_map(fn ($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
         }
 
         $facets = $this->facetRepository->findFacetsByQueryAndTerm($search, $queryArray, $term);
@@ -59,12 +59,12 @@ class SearchRestController extends RestController {
         $this->view->assign('value', $facets);
     }
 
-    function valuesAction(string $search, string $facet, string $query, string $term)
+    public function valuesAction(string $search, string $facet, string $query, string $term)
     {
         if (!empty($query)) {
             $queryArray = json_decode(urldecode(base64_decode($query, true)), true);
         } else {
-            $queryArray = array_map(fn($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
+            $queryArray = array_map(fn ($facet) => $facet->__toArray(), $this->queryStorage->getQuery($search)->getFacets()->toArray());
         }
 
         $values = $this->valueService->getValuesByFacetQueryAndTerm($search, $facet, $queryArray, $term);
