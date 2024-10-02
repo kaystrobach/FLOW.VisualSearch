@@ -81,6 +81,28 @@ The search component can be styled using the following CSS properties:
 | --visual-search-facet-background-color | lightgray |
 | --visual-search-facet-color            | black     |
 
+## Development
+
+Install front-end dependencies via npm.
+
+```sh
+cd Resources/Private/App
+npm install
+```
+
+After making changes to the front-end code, run the build script to bundle the assets.
+
+```sh
+npm run build
+```
+
+Linters are available for both JavaScript and CSS templates.
+
+```sh
+npm run lint:js
+npm run lint:css
+```
+
 ## License
 
 This project is licensed under the MIT License.
