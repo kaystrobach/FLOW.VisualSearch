@@ -309,10 +309,10 @@ export class VisualSearch extends LitElement {
                 </li>`)}
             </ul>
           <div class="vs-search__controls">
-            <button @click="${this.submit}">Search</button>
+            <button @click="${this.submit}"><slot name="search-label">Search</slot></button>
             ${this.sorting ? html`
             <div class="select-button-wrapper">
-              <button>Sort</button>
+              <button><slot name="sort-label">Sort</slot></button>
               <select id="sorting" class="select-native">
                 <option value="" disabled ?selected="${!(this.query.sorting in this.sorting)}"></option>
                 ${Object.keys(this.sorting).map((key) => html`
@@ -321,7 +321,7 @@ export class VisualSearch extends LitElement {
               </select>
             </div>
           `: ''}
-            <button @click="${this.clear}">Clear</button>
+            <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
           </div>
         </div>
       `;
