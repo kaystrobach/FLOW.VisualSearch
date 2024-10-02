@@ -9,9 +9,9 @@
                 query-action="{f:uri.action(action: 'query', controller: 'SearchLegacy', package: 'KayStrobach.VisualSearch')}"
                 query="{search:query(name: searchName)}"
                 sorting="{search:settings(name: searchName, key: 'sorting')}">
-            <span slot="search-label"><f:translate id="button.search" package="KayStrobach.VisualSearch"></f:translate></span>
-            <span slot="sort-label"><f:translate id="button.sort" package="KayStrobach.VisualSearch"></f:translate></span>
-            <span slot="clear-label"><f:translate id="button.clear" package="KayStrobach.VisualSearch"></f:translate></span>
+            <span slot="search-label">{f:translate(id:"button.search", package:"KayStrobach.VisualSearch")}</span>
+            <span slot="sort-label">{f:translate(id:"button.sort", package:"KayStrobach.VisualSearch")}</span>
+            <span slot="clear-label">{f:translate(id:"button.clear", package:"KayStrobach.VisualSearch")}</span>
         </visual-search>
 
         <div class="table-responsive" id="search-result-area">
