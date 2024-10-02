@@ -1,156 +1,86 @@
+# FLOW.VisualSearch
+
 [![StyleCI](https://github.styleci.io/repos/34098471/shield?branch=master)](https://github.styleci.io/repos/34098471)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/187a572c4b314a868532dca36ae79fac)](https://www.codacy.com/app/github_130/FLOW.VisualSearch?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kaystrobach/FLOW.VisualSearch&amp;utm_campaign=Badge_Grade)
 
-# FLOW.VisualSearch
+This package provides a powerful search component for Flow ecosystem. Any search repository can be made searchable by
+extending `SearchableRepository` and providing an appropriate configuration. The front-end component is provided as a
+Fluid partial.
 
-![Filter](Documentation/filter.gif)
-
-Basicly it ships a FLUID ViewHelper and the ability to configure that viewHelper heavily, this way we can do advanced searches
-
-You can define:
-
-* and configure multiple Searches
-* search multiple attributes of a model (uses dynamic query building)
-* Repositories have to implement an interface to be searchable
-* Searches are instantly stored in the user session if the user changes it
+![Demo](demo.gif)
 
 ## Installation
 
-This package can be installed via composer.
-
-Please execute:
-
-```
-composer require kaystrobach/visualsearch @dev
+```sh
+composer require kaystrobach/visualsearch:^3.0.0
 ```
 
+## Usage
 
-Alternativly you can add the following line to your ```composer.json``` and execute ```composer update```
-
-```
-	"kaystrobach/visualsearch": "@dev"
-```
-
-## Basic Usage
-
-### Inclusion in a FLUID Template
-
-To include the viewHelper you include a line like:
-
-```
-<search:widget.search search="KayStrobach_Contact_Institution"/>
-```
-
-This way you define, that ```students``` is the key for storing the filter query in the session for later usage and it is the key for configuring the search in the ```VisualSearch.yaml```.
-
-To make it even easier, you can use the partial provided by the package:
-
-```
-<f:render partial="Visualsearch/Search" arguments="{searchName:'KayStrobach_Contact_Institution', institutions:institutions}" contentAs="value">
-	...
-</f:render>
-```
-
-### Make it possible to query your repository
+To make a repository searchable, extend `SearchableRepository` or implement the `SearchableRepositoryInterface`.
+Note that the `defaultSearchName` property should set to the name of the corresponding search configuration.
 
 ```php
 <?php
-namespace Acme\Project\Domain\Repository;
+
+namespace Poke\Search\Domain\Repository;
+
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Persistence\Repository;
 
 use KayStrobach\VisualSearch\Domain\Repository\SearchableRepository;
-use TYPO3\Flow\Annotations as Flow;
 
 /**
  * @Flow\Scope("singleton")
  */
-class StudentRepository extends SearchableRepository {
-
+class PokemonRepository extends SearchableRepository
+{
     /**
      * @var string
      */
-    protected $defaultSearchName = 'KayStrobach_Contact_Institution';
+    protected $defaultSearchName = 'pokemon';
+
+    public function findByName(string $name)
+    {
+        ...
+    }
+}
 ```
 
-### query the repository in your controller
+The repository can now be queried using the `findByDefaultQuery` method, e.g., from inside a controller action.
 
 ```php
-    public function indexAction() {
-        $this->view->assign(
-            'institutions',
-            $this->institutionRepository->findByDefaultQuery()
-        );
-    }
-
+public function indexAction() {
+    $this->view->assign('pokemon', $this->pokemonRepository->findByDefaultQuery());
+}
 ```
 
-### VisualSearch.yaml
+To actually display the search component, include the search partial in your template.
 
-to define the search please checkout the visualSearch.yaml file, please use the package `kaystrobach/contact` as reference.
-
-
-## Advanced Usage
-
-
-
-
-## Searching in the Repository by query
-
-In the studentsRepository you can use the following function to get the filtered students:
-
-```
-<?php
-namespace Acme\Project\Domain\Repository;
-
-/*                                                                        *
- * This script belongs to the TYPO3 Flow package "SBS.LaPo".              *
- *                                                                        *
- *                                                                        */
-
-use KayStrobach\VisualSearch\Domain\Repository\SearchableRepository;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Reflection\ObjectAccess;
-
-/**
- * @Flow\Scope("singleton")
- */
-class StudentRepository extends SearchableRepository {
-	/**
-	 * @param array $query
-	 * @return \TYPO3\Flow\Persistence\QueryResultInterface
-	 */
-	public function findByQuery($query) {
-		$queryObject = $this->createQuery();
-
-		$demands = $this->mapperUtility->buildQuery('lapoStudents', $query, $queryObject);
-
-		// move easy filter to the beginning
-		array_unshift($demands, $queryObject->lessThan('deleted', 1));
-
-		$queryObject->matching(
-			$queryObject->logicalAnd(
-				$demands
-			)
-		);
-		return $queryObject->execute();
-	}
+```html
+<f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', pokemon:pokemon}" contentAs="value">
+    ...
+</f:render>
 ```
 
-The buildQuery function is currently in a state, where is maybe moved to the SearchableRepository lateron.
+## Configuration
 
-## Usage in the controller
+Search configurations are defined in the `Configuration/VisualSearch.yaml` file. Please see the demo package for an
+[example configuration](Demo/Pokemon/DistributionPackages/Poke.Search/Configuration/VisualSearch.pokemon.yaml).
 
-In a controller you can then use these lines to filter the resultset:
+## Theming
 
-```
-	/**
-	 * @var \KayStrobach\VisualSearch\Domain\Session\QueryStorage
-	 * @Flow\Inject
-	 */
-	protected $queryStorage;
+The search component can be styled using the following CSS properties:
 
-	public function indexAction() {
-		$this->view->assign('students', $this->studentRepository->findByQuery($this->queryStorage->getQuery('students')));
-	}
-```
+| Custom Property                        | Default   |
+|----------------------------------------|-----------|
+| --visual-search-background-color       | white     |
+| --visual-search-color                  | black     |
+| --visual-search-background-color-focus | lightgray |
+| --visual-search-color-focus            | black     |
+| --visual-search-facet-background-color | lightgray |
+| --visual-search-facet-color            | black     |
 
-Additionally you need to define how the search should do the autocompletition, this is done in ```Configuration/VisualSearch.yaml``` please take a look into the example file to get an idea.
+## License
+
+This project is licensed under the MIT License.
