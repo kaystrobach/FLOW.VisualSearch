@@ -10,7 +10,7 @@ use Neos\Flow\Mvc\View\JsonView;
 /**
  * @Flow\Scope("session")
  */
-class SearchLegacyController extends RestController
+class SearchStateController extends RestController
 {
     /**
      * @var QueryStorage
@@ -41,19 +41,8 @@ class SearchLegacyController extends RestController
      */
     public function queryAction(QueryDto $query)
     {
-        // TODO implement
-        // TODO parse body as json
-
-        // put query into query storage
-        // how to start session?
-        // maybe move into search controller
-
-        // widgets -> flow 3 / 4
-
-        // flow property mapper
-        // initializeQuery action before property mapping
-
         $this->queryStorage->setQuery($query);
+
         $storedQuery = $this->queryStorage->getQuery($query->getIdentifier());
 
         $this->view->assign('value', $storedQuery);
