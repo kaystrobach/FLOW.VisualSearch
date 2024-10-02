@@ -2,9 +2,9 @@
 # /Configuration/
 /Data/
 /Packages/
-# /Web/
-# /bin/
+/Web/
+/bin/
 # /Readme.rst
 # /Upgrading.rst
-# /flow
-# /flow.bat
+/flow
+/flow.bat
