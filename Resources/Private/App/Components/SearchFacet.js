@@ -47,7 +47,7 @@ export class SearchFacet extends LitElement {
         border-top-right-radius: 50%;
         border-top-left-radius: 50%;
         border-bottom: transparent;
-        margin-top: calc(-8px * 0.6); // -12px;
+        margin-top: calc(-8px * 0.6); /* -12px; */
         background: transparent;
         min-width: 12px;
         min-height: 11px;
