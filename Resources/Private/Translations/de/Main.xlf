@@ -14,6 +14,18 @@
             <source>close</source>
             <target state="final">Schließen</target>
         </trans-unit>
+        <trans-unit id="button.search" xml:space="preserve">
+            <source>Search</source>
+            <target state="final">Suchen</target>
+        </trans-unit>
+        <trans-unit id="button.sort" xml:space="preserve">
+            <source>Sort</source>
+            <target state="final">Sortieren</target>
+        </trans-unit>
+        <trans-unit id="button.clear" xml:space="preserve">
+            <source>Clear</source>
+            <target state="final">Löschen</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

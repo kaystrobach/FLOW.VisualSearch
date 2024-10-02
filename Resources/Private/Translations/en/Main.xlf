@@ -11,6 +11,15 @@
 			<trans-unit id="modal.close" xml:space="preserve">
 				<source>Primary</source>
 			</trans-unit>
+			<trans-unit id="button.search" xml:space="preserve">
+				<source>Search</source>
+			</trans-unit>
+			<trans-unit id="button.sort" xml:space="preserve">
+				<source>Sort</source>
+			</trans-unit>
+			<trans-unit id="button.clear" xml:space="preserve">
+				<source>Clear</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
