@@ -10,8 +10,8 @@ use Neos\Flow\Mvc\View\JsonView;
 /**
  * @Flow\Scope("session")
  */
-class SearchLegacyController extends RestController {
-
+class SearchLegacyController extends RestController
+{
     /**
      * @var QueryStorage
      * @Flow\Inject
@@ -39,7 +39,8 @@ class SearchLegacyController extends RestController {
      * @param QueryDto $query
      * @Flow\Session(autoStart = true)
      */
-    function queryAction(QueryDto $query) {
+    public function queryAction(QueryDto $query)
+    {
         // TODO implement
         // TODO parse body as json
 

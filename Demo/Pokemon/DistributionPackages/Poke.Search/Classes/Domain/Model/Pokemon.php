@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping\Column;
 /**
  * @Flow\Entity
  */
-class Pokemon {
+class Pokemon
+{
     /**
      * @var int
      */

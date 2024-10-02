@@ -6,7 +6,8 @@ use KayStrobach\VisualSearch\Domain\Repository\SearchRepository;
 use Neos\Flow\Annotations as Flow;
 use KayStrobach\VisualSearch\Domain\Session\QueryStorage;
 
-class SettingsViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper {
+class SettingsViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+{
     /**
      * @var QueryStorage
      * @Flow\Inject
@@ -27,7 +28,8 @@ class SettingsViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractView
         $this->registerArgument('key', 'string', '', true);
     }
 
-    public function render() {
+    public function render()
+    {
         try {
             $queryConfiguration = $this->searchRepository->findByName($this->arguments['name']);
 
