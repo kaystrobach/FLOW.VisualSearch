@@ -5,9 +5,13 @@ Searches:
 
     sorting:
       1000:
-        label: "id"
+        label: "Identifier"
         fields:
-          'id': ASC
+          'identifier': ASC
+      2000:
+        label: "Weight"
+        fields:
+          'weight': ASC
 
     autocomplete:
       identifier:
@@ -33,10 +37,14 @@ Searches:
 
       weight:
         label: "Weight"
+        inputType: "number"
         selector:
           conditions:
             once: true
-          freeInput: true
+          values:
+            '50': '50'
+            '100': '100'
+            '150': '150'
         matches:
           like:
             - weight
