@@ -26,7 +26,7 @@ class Facet implements \JsonSerializable
      *
      * @var string
      */
-    protected $inputType = '';
+    protected $inputType = 'text';
 
     /**
      * Additional Configuration for a facet.
