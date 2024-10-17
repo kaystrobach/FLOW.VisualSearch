@@ -261,6 +261,7 @@ export class VisualSearch extends LitElement {
         border: 1px solid var(--visual-search-color, black);
         border-radius: 4px;
         cursor: pointer;
+        padding: 4px;
       }
 
       .vs-search__controls button:hover, .select-button-wrapper:hover > button {
