@@ -4,51 +4,51 @@ export class SearchIcon extends LitElement {
     static styles = css`
         :host {
             display: flex;
-            min-width: 14px;
-            min-height: 14px;
-            width: 14px;
-            height: 14px;
             align-items: center;
             justify-content: center;
+            width: 14px;
+            min-width: 14px;
+            height: 14px;
+            min-height: 14px;
             transform: scale(calc(14/24));
         }
 
         .search {
-            box-sizing: border-box;
             position: relative;
+            box-sizing: border-box;
             display: block;
             width: 16px;
+            max-width: 100%;
             height: 16px;
+            max-height: 100%;
+            margin-top: -4px;
+            margin-left: -4px;
             border: 2px solid;
             border-radius: 100%;
-            margin-left: -4px;
-            margin-top: -4px;
-            max-width: 100%;
-            max-height: 100%;
         }
 
         .search::after {
-            content: "";
-            display: block;
-            box-sizing: border-box;
             position: absolute;
-            border-radius: 3px;
-            width: 2px;
-            height: 8px;
-            background: currentcolor;
-            transform: rotate(-45deg);
             top: 10px;
             left: 12px;
+            box-sizing: border-box;
+            display: block;
+            width: 2px;
+            height: 8px;
+            content: "";
+            background: currentcolor;
+            border-radius: 3px;
+            transform: rotate(-45deg);
         }
 
         .sort,
         .sort::after,
         .sort::before {
-            display: block;
             box-sizing: border-box;
+            display: block;
             height: 2px;
-            border-radius: 4px;
             background: currentcolor;
+            border-radius: 4px;
         }
 
         .sort {
@@ -58,20 +58,20 @@ export class SearchIcon extends LitElement {
 
         .sort::after,
         .sort::before {
-            content: "";
             position: absolute;
+            content: "";
         }
 
         .sort::before {
-            width: 12px;
             top: -4px;
             left: -2px;
+            width: 12px;
         }
 
         .sort::after {
-            width: 4px;
             top: 4px;
             left: 2px;
+            width: 4px;
         }
 
         .clear {
@@ -80,51 +80,51 @@ export class SearchIcon extends LitElement {
         }
 
         .clear {
-            box-sizing: border-box;
             position: relative;
+            box-sizing: border-box;
             display: block;
             width: 10px;
             height: 12px;
+            margin-top: 4px;
             border: 2px solid transparent;
+            border-bottom-right-radius: 1px;
+            border-bottom-left-radius: 1px;
             box-shadow:
                     0 0 0 2px,
                     inset -2px 0 0,
                     inset 2px 0 0;
-            border-bottom-left-radius: 1px;
-            border-bottom-right-radius: 1px;
-            margin-top: 4px;
         }
 
         .clear::after,
         .clear::before {
-            content: "";
-            display: block;
-            box-sizing: border-box;
             position: absolute;
+            box-sizing: border-box;
+            display: block;
+            content: "";
         }
 
         .clear::after {
-            background: currentcolor;
-            border-radius: 3px;
-            width: 16px;
-            height: 2px;
             top: -4px;
             left: -5px;
+            width: 16px;
             min-width: 16px;
+            height: 2px;
             min-height: 2px;
+            background: currentcolor;
+            border-radius: 3px;
         }
 
         .clear::before {
+            top: -7px;
+            left: -2px;
             width: 10px;
+            min-width: 10px;
             height: 4px;
+            min-height: 4px;
             border: 2px solid;
             border-bottom: transparent;
             border-top-left-radius: 2px;
             border-top-right-radius: 2px;
-            top: -7px;
-            left: -2px;
-            min-width: 10px;
-            min-height: 4px;
         }
     `;
 

@@ -103,75 +103,75 @@ export class VisualSearch extends LitElement {
 
   static styles = css`
       :host {
+        position: relative;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        position: relative;
-        background-color: var(--visual-search-background-color, white);
         color: var(--visual-search-color, black);
+        background-color: var(--visual-search-background-color, white);
       }
 
       .vs-search__wrapper {
         display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
         padding: 4px;
         border: 1px solid var(--visual-search-color, black);
-        align-items: center;
-        gap: 4px;
-        flex-wrap: wrap;
       }
 
       .vs-search__facets {
         display: flex;
         flex-wrap: wrap;
-        list-style: none;
+        gap: 4px;
         padding: 0;
         margin: 0;
-        gap: 4px;
+        list-style: none;
       }
 
       .vs-search__input {
         box-sizing: border-box;
+        flex-grow: 1;
         color: var(--visual-search-color, black);
         background-color: transparent;
         border: none;
-        flex-grow: 1;
       }
 
       .vs-search__dropdown {
-        z-index: 100; /* TODO add property */
-        display: flex;
-        visibility: hidden;
-        flex-direction: column;
-        list-style: none;
-        padding: 0;
-        margin: 0;
         position: absolute;
         top: calc(100% - 1px);
         left: 0;
-        background-color: var(--visual-search-background-color, white);
-        width: 100%;
-        border: 1px solid var(--visual-search-color, black);
+        z-index: 100; /* TODO add property */
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        visibility: hidden;
+        background-color: var(--visual-search-background-color, white);
+        border: 1px solid var(--visual-search-color, black);
       }
 
       .vs-search__dropdown-item {
+        width: 100%;
         padding: 4px;
+        color: var(--visual-search-color, black);
+        text-align: left;
         cursor: pointer;
         background: none;
         border: none;
-        text-align: left;
-        width: 100%;
-        color: var(--visual-search-color, black);
       }
 
       .vs-search__dropdown-item:hover {
-        background-color: var(--visual-search-background-color-focus, lightgray);
         color: var(--visual-search-color-focus, black);
+        background-color: var(--visual-search-background-color-focus, lightgray);
       }
 
       .vs-search__dropdown-item:focus {
-        background-color: var(--visual-search-background-color-focus, lightgray);
         color: var(--visual-search-color-focus, black);
+        background-color: var(--visual-search-background-color-focus, lightgray);
       }
 
       .vs-search__dropdown li + li {
@@ -200,9 +200,9 @@ export class VisualSearch extends LitElement {
       .vs-search__controls {
         display: flex;
         flex-wrap: nowrap;
+        gap: 4px;
         padding: 0;
         margin: 0;
-        gap: 4px;
       }
 
       .select-button-wrapper {
@@ -216,22 +216,22 @@ export class VisualSearch extends LitElement {
         left: 0;
         width: 100%;
         height: 100%;
-        opacity: 0;
         cursor: pointer;
+        opacity: 0;
       }
     
       .vs-search__controls button {
-        background-color: var(--visual-search-background-color, white);
+        padding: 4px;
         color: var(--visual-search-color, black);
+        cursor: pointer;
+        background-color: var(--visual-search-background-color, white);
         border: 1px solid var(--visual-search-color, black);
         border-radius: 4px;
-        cursor: pointer;
-        padding: 4px;
       }
 
       .vs-search__controls button:hover, .select-button-wrapper:hover > button {
-        background-color: var(--visual-search-background-color-focus, lightgray);
         color: var(--visual-search-color-focus, black);
+        background-color: var(--visual-search-background-color-focus, lightgray);
       }
     `;
 
