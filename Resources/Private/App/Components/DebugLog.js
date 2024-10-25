@@ -30,11 +30,11 @@ export class DebugLog extends LitElement {
     ul {
       display: flex;
       flex-direction: column-reverse;
-      border: 1px solid white;
-      overflow-y: scroll;
+      height: 80px;
       padding: 8px;
       margin: 0;
-      height: 80px;
+      overflow-y: scroll;
+      border: 1px solid white;
     }
 
     li {

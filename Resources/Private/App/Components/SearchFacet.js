@@ -4,32 +4,30 @@ export class SearchFacet extends LitElement {
   static styles = css`
       :host {
         display: inline-flex;
-        align-items: center;
-        white-space: nowrap;
-        background-color: var(--visual-search-facet-background-color, lightgray);
-        color: var(--visual-search-facet-color, black);
-        border-radius: 4px;
-        padding: 0 4px;
-        user-select: none;
-        height: 18px;
         gap: 4px;
+        align-items: center;
+        height: 18px;
+        padding: 0 4px;
+        color: var(--visual-search-facet-color, black);
+        white-space: nowrap;
+        user-select: none;
+        background-color: var(--visual-search-facet-background-color, lightgray);
+        border-radius: 4px;
       }
 
       button {
-        background-color: white;
-        border: none;
-        cursor: pointer;
+        display: inline-flex;
+        place-content: center center;
+        place-items: center center;
+        width: 16px;
+        height: 16px;
         padding: 0;
         margin: 0;
-        height: 16px;
-        width: 16px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-        justify-items: center;
         color: black;
+        cursor: pointer;
+        background-color: white;
+        border: none;
+        border-radius: 8px;
       }
     
       button:disabled {
@@ -37,63 +35,63 @@ export class SearchFacet extends LitElement {
       }
 
       .lock {
-        box-sizing: border-box;
         position: relative;
+        box-sizing: border-box;
         display: block;
-        transform: scale(0.4);
         width: 12px;
+        min-width: 12px;
         height: 11px;
-        border: 2px solid;
-        border-top-right-radius: 50%;
-        border-top-left-radius: 50%;
-        border-bottom: transparent;
+        min-height: 11px;
         margin-top: calc(-8px * 0.6); /* -12px; */
         background: transparent;
-        min-width: 12px;
-        min-height: 11px;
+        border: 2px solid;
+        border-bottom: transparent;
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        transform: scale(0.4);
       }
 
       .lock::after {
-        content: "";
-        display: block;
-        box-sizing: border-box;
         position: absolute;
+        top: 9px;
+        left: -4px;
+        box-sizing: border-box;
+        display: block;
         width: 16px;
         height: 10px;
-        border-radius: 2px;
+        content: "";
         border: 2px solid transparent;
+        border-radius: 2px;
         box-shadow: 0 0 0 2px;
-        left: -4px;
-        top: 9px;
       }
 
       .close {
-        box-sizing: border-box;
         position: relative;
+        box-sizing: border-box;
         display: block;
-        transform: scale(0.6);
         width: 22px;
+        min-width: 22px;
         height: 22px;
+        min-height: 22px;
+        background: transparent;
         border: 2px solid transparent;
         border-radius: 40px;
-        background: transparent;
-        min-width: 22px;
-        min-height: 22px;
+        transform: scale(0.6);
       }
     
       .close::after,
       .close::before {
-        content: "";
-        display: block;
-        box-sizing: border-box;
         position: absolute;
-        width: 16px;
-        height: 2px;
-        background: currentColor;
-        transform: rotate(45deg);
-        border-radius: 5px;
         top: 8px;
         left: 1px;
+        box-sizing: border-box;
+        display: block;
+        width: 16px;
+        height: 2px;
+        content: "";
+        background: currentcolor;
+        border-radius: 5px;
+        transform: rotate(45deg);
       }
       
       .close::after {
