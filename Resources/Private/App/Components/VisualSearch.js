@@ -1,28 +1,19 @@
 import {LitElement, html, css} from 'lit';
 
-// [{"value":"expirationDateFrom","label":"Ablaufdatum ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"expirationDateUntil","label":"Ablaufdatum bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"creationDateFrom","label":"Anlegedatum ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"creationDateUntil","label":"Anlegendatum bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"account","label":"Anmeldename","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"role","label":"Benutzerrolle","configuration":{"conditions":{"once":true},"values":{"SBS.SingleSignOn:Student":"Student","SBS.SingleSignOn:Staff":"Staff","SBS.SingleSignOn:Teacher":"Teacher","SBS.SingleSignOn:Administrator":"Administrator","SBS.SingleSignOn:Secretary":"Secretary","SBS.SingleSignOn:SystemAdministrator":"SystemAdministrator","SBS.SingleSignOn:Rest":"Rest","SBS.SingleSignOn:FirstLogin":"FirstLogin","SBS.SingleSignOn:BetaTester":"BetaTester","SBS.SingleSignOn:TraineeTeacher":"TraineeTeacher"}}},{"value":"einrichtung","label":"Einrichtung","configuration":{"conditions":{"once":true},"labelProperty":"searchLabel","labelMatcher":"contains","orderBy":"searchLabel","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\Person\\EinrichtungRepository"}},{"value":"internalNotes","label":"Interne Notizen","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"legalStatus","label":"Juristischer Status der Einrichtung","configuration":{"conditions":{"once":true},"values":{"01":"\u00d6ffentliche Einrichtung","02":"Einrichtung in freier Tr\u00e4gerschaft","09":"Weitere Bildungseinrichtungen"}}},{"value":"lastLoginDateFrom","label":"Letztes Login ab einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"lastLoginDateUntil","label":"Letztes Login bis einschlie\u00dflich (dd.mm.yyyy)","configuration":{"conditions":{"once":true},"freeInput":true,"dateFormat":"d.m.Y"}},{"value":"nachname","label":"Nachname","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"fullname","label":"Name (komplett)","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"stammeinrichtung","label":"Stammeinrichtung","configuration":{"conditions":{"once":true},"labelProperty":"searchLabel","labelMatcher":"contains","orderBy":"searchLabel","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\Person\\EinrichtungRepository"}},{"value":"stammKlasse","label":"Stammklasse","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"stammKlassenstufe","label":"Stammklassenstufe","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"searchtext","label":"Suchtext","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"syncKey","label":"SyncKey","configuration":{"conditions":{"once":true},"freeInput":true}},{"value":"owner","label":"Tr\u00e4ger","configuration":{"conditions":{"once":true},"labelProperty":"name","labelMatcher":"contains","orderBy":"name","limit":15,"repository":"SBS\\SingleSignOn\\Domain\\Repository\\OwnerRepository"}},{"value":"firstname","label":"Vorname","configuration":{"conditions":{"once":true},"freeInput":true}}]
-// [{"label":"Student","value":"SBS.SingleSignOn:Student"},{"label":"Staff","value":"SBS.SingleSignOn:Staff"},{"label":"Teacher","value":"SBS.SingleSignOn:Teacher"},{"label":"Administrator","value":"SBS.SingleSignOn:Administrator"},{"label":"Secretary","value":"SBS.SingleSignOn:Secretary"},{"label":"SystemAdministrator","value":"SBS.SingleSignOn:SystemAdministrator"},{"label":"Rest","value":"SBS.SingleSignOn:Rest"},{"label":"FirstLogin","value":"SBS.SingleSignOn:FirstLogin"},{"label":"BetaTester","value":"SBS.SingleSignOn:BetaTester"},{"label":"TraineeTeacher","value":"SBS.SingleSignOn:TraineeTeacher"}]
-
 class Facet {
-    constructor(value, label, inputType, onfiguration, values) {
-        this.value = value; // this is actually the facet key
-        this.label = label; // display label for facet
-        this.inputType = inputType;
-        // TODO track valueValue and valueLabel somewhere else
-        // TODO update autocomplete function ??
-        // this.configuration = configuration;
-        // this.values = values.map(value => Value.fromObject(value)); // TODO different structure FacetValues
-    }
+  constructor(value, label, inputType) {
+      this.value = value;
+      this.label = label;
+      this.inputType = inputType;
+  }
 
   static fromObject(data, obj) {
     if (data) {
       obj = obj || new Facet();
 
-      if (data.hasOwnProperty('value')) obj.value = data.value;
-      if (data.hasOwnProperty('label')) obj.label = data.label;
-      if (data.hasOwnProperty('inputType')) obj.inputType = data.inputType;
-      // if (data.hasOwnProperty('configuration')) obj.configuration = data.configuration;
-      // if (data.hasOwnProperty('values')) obj.values = data.values.map(value => Value.fromObject(value));
+      if (Object.hasOwn(data, 'value')) obj.value = data.value;
+      if (Object.hasOwn(data, 'label')) obj.label = data.label;
+      if (Object.hasOwn(data, 'inputType')) obj.inputType = data.inputType;
     }
 
     return obj;
@@ -43,8 +34,8 @@ class Value {
     if (data) {
       obj = obj || new Value();
 
-      if (data.hasOwnProperty('value')) obj.value = data.value;
-      if (data.hasOwnProperty('label')) obj.label = data.label;
+      if (Object.hasOwn(data, 'value')) obj.value = data.value;
+      if (Object.hasOwn(data, 'label')) obj.label = data.label;
     }
 
     return obj;
@@ -54,32 +45,6 @@ class Value {
     return typeof value.value === 'string' && typeof value.label === 'string';
   }
 }
-
-// TODO this might make sense
-// TODO how to handle free text -> probably just another property?!
-// class SelectedFacet {
-//   constructor(facet, value) {
-//     this.facet = facet;
-//     this.value = value;
-//   }
-// }
-
-// class Configuration {
-//   constructor(conditions, freeInput, dateFormat, labelProperty, labelMatcher, orderBy, limit, repository) {
-//     this.conditions = conditions;
-//     this.freeInput = freeInput;
-//     this.dateFormat = dateFormat;
-//     this.labelProperty = labelProperty;
-//     this.labelMatcher = labelMatcher;
-//     this.orderBy = orderBy;
-//     this.limit = limit;
-//     this.repository = repository;
-//   }
-//
-//   // TODO verify data model
-//   // TODO implement
-// }
-
 
 export class VisualSearch extends LitElement {
   static get properties() {
