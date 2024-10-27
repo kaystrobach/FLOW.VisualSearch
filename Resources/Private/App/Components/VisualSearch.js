@@ -178,16 +178,16 @@ export class VisualSearch extends LitElement {
          border-top: 1px solid var(--visual-search-color, black);
       }
 
-      .vs-search__input:focus + .vs-search__dropdown {
-        visibility: visible;
-      }
-
       .vs-search__dropdown:hover {
         visibility: visible;
       }
 
       .vs-search__dropdown:focus-within {
         visibility: visible;
+      }
+
+      .vs-search__input:focus + .vs-search__dropdown {
+          visibility: visible;
       }
 
       .vs-search__debug {
