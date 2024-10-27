@@ -233,6 +233,11 @@ export class VisualSearch extends LitElement {
         color: var(--visual-search-color-focus, black);
         background-color: var(--visual-search-background-color-focus, lightgray);
       }
+      
+      .vs-search__keyboard-indicator {
+          position: absolute;
+          right: 96px;
+      }
     `;
 
   render() {
@@ -289,6 +294,7 @@ export class VisualSearch extends LitElement {
           `: ''}
             <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
           </div>
+          ${this._input()?.value ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
         </div>
       `;
   }
