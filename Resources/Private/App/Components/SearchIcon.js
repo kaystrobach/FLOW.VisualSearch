@@ -75,11 +75,6 @@ export class SearchIcon extends LitElement {
         }
 
         .clear {
-            min-width: 10px;
-            min-height: 12px;
-        }
-
-        .clear {
             position: relative;
             box-sizing: border-box;
             display: block;
