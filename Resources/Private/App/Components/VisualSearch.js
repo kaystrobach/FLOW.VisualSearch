@@ -132,6 +132,7 @@ export class VisualSearch extends LitElement {
       .vs-search__input {
         box-sizing: border-box;
         flex-grow: 1;
+        align-self: stretch;
         color: var(--visual-search-color, black);
         background-color: transparent;
         border: none;
