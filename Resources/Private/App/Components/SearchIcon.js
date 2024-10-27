@@ -121,6 +121,41 @@ export class SearchIcon extends LitElement {
             border-top-left-radius: 2px;
             border-top-right-radius: 2px;
         }
+
+        .enter {
+            position: relative;
+            box-sizing: border-box;
+            display: block;
+            width: 22px;
+            height: 22px;
+        }
+
+        .enter::after,
+        .enter::before {
+            position: absolute;
+            left: 3px;
+            box-sizing: border-box;
+            display: block;
+            content: "";
+        }
+
+        .enter::after {
+            bottom: 3px;
+            width: 8px;
+            height: 8px;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+            transform: rotate(45deg);
+        }
+
+        .enter::before {
+            bottom: 6px;
+            width: 16px;
+            height: 12px;
+            border-right: 2px solid;
+            border-bottom: 2px solid;
+            border-bottom-right-radius: 4px;
+        }
     `;
 
     static get properties() {
