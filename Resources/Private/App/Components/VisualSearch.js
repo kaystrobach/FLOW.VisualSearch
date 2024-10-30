@@ -350,10 +350,8 @@ export class VisualSearch extends LitElement {
       }
     }
 
-    if (event.key === 'Backspace') {
-      if (event.target.value === '') {
-        this.popFacet();
-      }
+    if (event.key === 'Backspace' && event.target.value === '') {
+      this.popFacet();
     }
   }
 
