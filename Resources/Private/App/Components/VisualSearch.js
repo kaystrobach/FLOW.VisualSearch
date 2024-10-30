@@ -66,6 +66,8 @@ export class VisualSearch extends LitElement {
       facetsAction: {type: String, attribute: 'facets-action'}, // autocomplete facet
       valueAction: {type: String, attribute: 'value-action'}, // autocomplete facet value
       queryAction: {type: String, attribute: 'query-action'}, // store query
+
+      changed: {type: Boolean, state: true},
     }
   };
 
@@ -292,7 +294,7 @@ export class VisualSearch extends LitElement {
           ` : ''}
           <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
         </div>
-        ${(this._input()?.value || this.selectedFacets.length > 0) ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
+        ${this.changed ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
       </div>
     `;
   }
@@ -457,6 +459,8 @@ export class VisualSearch extends LitElement {
     this._input().value = '';
 
     this.autocomplete = [];
+
+    this.changed = true;
 
     if (this.renderRoot.activeElement !== this._input()) {
       this._input().focus();
