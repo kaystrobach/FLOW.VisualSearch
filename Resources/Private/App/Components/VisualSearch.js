@@ -263,9 +263,7 @@ export class VisualSearch extends LitElement {
             <input class="vs-search__input"
                 type="text"
                 @focus='${this.handleFocus}'
-                @blur='${this.handleBlur}'
                 @keydown='${this.handleKeyDown}'
-                @keyup='${this.handleKeyUp}'
                 @input='${this.handleInput}'>
             <ul class="vs-search__dropdown">
               ${this.autocomplete.map((item, index) => html`
@@ -350,10 +348,6 @@ export class VisualSearch extends LitElement {
     this.completeTerm('');
   }
 
-  handleBlur() {
-    // unused
-  }
-
   handleKeyDown(event) {
     if (event.key === 'Enter') {
       if (this._mode()) {
@@ -379,10 +373,6 @@ export class VisualSearch extends LitElement {
         // TODO reset autocomplete
       }
     }
-  }
-
-  handleKeyUp(event) {
-    // unused
   }
 
   handleTab(event) {
