@@ -44,7 +44,9 @@ export class DebugLog extends LitElement {
   render() {
     return html`
       <ul>
-        ${this._log.reverse().map((item) => html`<li>${item.time} ${item.message}</li>`)}
+        ${this._log.reverse().map((item) => html`
+          <li>${item.time} ${item.message}</li>
+        `)}
       </ul>
     `;
   }
