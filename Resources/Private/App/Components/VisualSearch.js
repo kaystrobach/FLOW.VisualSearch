@@ -84,21 +84,13 @@ export class VisualSearch extends LitElement {
 
     this.query = null;
     this.sorting = null;
-
-    // console.log(this);
-    // console.log(this.search);
-
-    // this.facetsAction = null;
-    // this.facetsAction = document.getElementById('facets-action').innerText;
-
-    // this.loadState(); // TODO legacy switch
   }
 
   connectedCallback() {
     super.connectedCallback()
 
     console.log(this.query)
-    this.loadStateFromQuery(); // TODO load via html template instead of json object
+    this.loadStateFromQuery();
   }
 
   static styles = css`
@@ -298,8 +290,6 @@ export class VisualSearch extends LitElement {
       `;
   }
 
-  // TODO PUT storeQueryAction
-
   _mode() {
     return this.selectedFacets.length > 0 && this.selectedFacets.at(-1).value == null;
   }
@@ -336,8 +326,6 @@ export class VisualSearch extends LitElement {
     } else {
       this.pushValue(item.obj);
     }
-
-    // TODO handle value selection -> update input or push directly?
   }
 
   handleFocus(event) {
@@ -364,13 +352,8 @@ export class VisualSearch extends LitElement {
     }
 
     if (event.key === 'Backspace') {
-      // TODO also deletes with 1 char left -> fix
-      // after backspace target is empty? need value BEFORE backspace
       if (event.target.value === '') {
-        /// this.selectedFacets.pop();
-        /// this.requestUpdate();
         this.popFacet();
-        // TODO reset autocomplete
       }
     }
   }
@@ -387,16 +370,6 @@ export class VisualSearch extends LitElement {
 
   handleInput(event) {
     this.completeTerm(event.target.value);
-
-    // TODO remove
-
-    // const data = this.collectData();
-
-    // const query = data;
-    // const encoded = this.encodeData(query);
-    // console.log(data, query, encoded);
-
-    // this.storeQuery(data.query);
   }
 
   focusInput() {

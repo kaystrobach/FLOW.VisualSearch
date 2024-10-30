@@ -1,6 +1,5 @@
 import {LitElement, html, css} from 'lit';
 
-// TODO rename to debug log
 export class DebugLog extends LitElement {
   static get properties() {
     return {
