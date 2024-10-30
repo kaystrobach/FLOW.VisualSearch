@@ -145,6 +145,10 @@ export class VisualSearch extends LitElement {
       background-color: var(--visual-search-background-color, white);
       border: 1px solid var(--visual-search-color, black);
     }
+    
+    .vs-search__dropdown--visible {
+      visibility: visible;
+    }
 
     .vs-search__dropdown-item {
       width: 100%;
@@ -164,6 +168,7 @@ export class VisualSearch extends LitElement {
     .vs-search__dropdown-item:focus {
       color: var(--visual-search-color-focus, black);
       background-color: var(--visual-search-background-color-focus, lightgray);
+      outline: auto; /* Safari: necessary when changing focus with .focus() */
     }
 
     .vs-search__dropdown li + li {
@@ -349,6 +354,21 @@ export class VisualSearch extends LitElement {
 
     if (event.key === 'Backspace' && event.target.value === '') {
       this.popFacet();
+    }
+
+    // Firefox: necessary to navigate to first item in dropdown
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+
+      const dropdown = this.renderRoot.querySelector('.vs-search__dropdown');
+
+      if (dropdown === null) {
+        return;
+      }
+
+      dropdown.classList.add('vs-search__dropdown--visible');
+      dropdown.querySelector('.vs-search__dropdown-item')?.focus();
+      dropdown.classList.remove('vs-search__dropdown--visible');
     }
   }
 
