@@ -541,6 +541,10 @@ export class VisualSearch extends LitElement {
 
     this.selectedFacets = [];
     this.autocomplete = [];
+
+    this.storeQuery(this.collectQuery()).then(() => {
+      window.location.reload();
+    });
   }
 
   deleteFacet(index) {
