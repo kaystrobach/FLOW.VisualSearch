@@ -284,8 +284,8 @@ export class VisualSearch extends LitElement {
           ${this.sorting ? html`
             <div class="select-button-wrapper">
               <button><slot name="sort-label">Sort</slot></button>
-              <select id="sorting" class="select-native">
-                <option value="" disabled ?selected="${!(this.query.sorting in this.sorting)}"></option>
+              <select id="sorting" class="select-native" @change="${this.submit}">
+                <option value="" ?selected="${!(this.query.sorting in this.sorting)}"></option>
                 ${Object.keys(this.sorting).map((key) => html`
                   <option value="${key}" ?selected="${key === this.query.sorting}">${this.sorting[key].label}</option>
                 `)}
