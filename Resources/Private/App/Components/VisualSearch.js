@@ -89,7 +89,6 @@ export class VisualSearch extends LitElement {
   connectedCallback() {
     super.connectedCallback()
 
-    console.log(this.query)
     this.loadStateFromQuery();
   }
 
