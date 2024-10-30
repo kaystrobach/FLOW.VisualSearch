@@ -2,9 +2,9 @@ import {LitElement, html, css} from 'lit';
 
 class Facet {
   constructor(value, label, inputType) {
-      this.value = value;
-      this.label = label;
-      this.inputType = inputType;
+    this.value = value;
+    this.label = label;
+    this.inputType = inputType;
   }
 
   static fromObject(data, obj) {
@@ -93,200 +93,203 @@ export class VisualSearch extends LitElement {
   }
 
   static styles = css`
-      :host {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        color: var(--visual-search-color, black);
-        background-color: var(--visual-search-background-color, white);
-      }
+    :host {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--visual-search-color, black);
+      background-color: var(--visual-search-background-color, white);
+    }
 
-      .vs-search__wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        align-items: center;
-        padding: 4px;
-        border: 1px solid var(--visual-search-color, black);
-      }
+    .vs-search__wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid var(--visual-search-color, black);
+    }
 
-      .vs-search__facets {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-      }
+    .vs-search__facets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
 
-      .vs-search__input {
-        box-sizing: border-box;
-        flex-grow: 1;
-        align-self: stretch;
-        color: var(--visual-search-color, black);
-        background-color: transparent;
-        border: none;
-      }
+    .vs-search__input {
+      box-sizing: border-box;
+      flex-grow: 1;
+      align-self: stretch;
+      color: var(--visual-search-color, black);
+      background-color: transparent;
+      border: none;
+    }
 
-      .vs-search__dropdown {
-        position: absolute;
-        top: calc(100% - 1px);
-        left: 0;
-        z-index: 100; /* TODO add property */
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        visibility: hidden;
-        background-color: var(--visual-search-background-color, white);
-        border: 1px solid var(--visual-search-color, black);
-      }
+    .vs-search__dropdown {
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 0;
+      z-index: 100; /* TODO add property */
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      visibility: hidden;
+      background-color: var(--visual-search-background-color, white);
+      border: 1px solid var(--visual-search-color, black);
+    }
 
-      .vs-search__dropdown-item {
-        width: 100%;
-        padding: 4px;
-        color: var(--visual-search-color, black);
-        text-align: left;
-        cursor: pointer;
-        background: none;
-        border: none;
-      }
+    .vs-search__dropdown-item {
+      width: 100%;
+      padding: 4px;
+      color: var(--visual-search-color, black);
+      text-align: left;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
 
-      .vs-search__dropdown-item:hover {
-        color: var(--visual-search-color-focus, black);
-        background-color: var(--visual-search-background-color-focus, lightgray);
-      }
+    .vs-search__dropdown-item:hover {
+      color: var(--visual-search-color-focus, black);
+      background-color: var(--visual-search-background-color-focus, lightgray);
+    }
 
-      .vs-search__dropdown-item:focus {
-        color: var(--visual-search-color-focus, black);
-        background-color: var(--visual-search-background-color-focus, lightgray);
-      }
+    .vs-search__dropdown-item:focus {
+      color: var(--visual-search-color-focus, black);
+      background-color: var(--visual-search-background-color-focus, lightgray);
+    }
 
-      .vs-search__dropdown li + li {
-         border-top: 1px solid var(--visual-search-color, black);
-      }
+    .vs-search__dropdown li + li {
+      border-top: 1px solid var(--visual-search-color, black);
+    }
 
-      .vs-search__dropdown:hover {
-        visibility: visible;
-      }
+    .vs-search__dropdown:hover {
+      visibility: visible;
+    }
 
-      .vs-search__dropdown:focus-within {
-        visibility: visible;
-      }
+    .vs-search__dropdown:focus-within {
+      visibility: visible;
+    }
 
-      .vs-search__input:focus + .vs-search__dropdown {
-          visibility: visible;
-      }
+    .vs-search__input:focus + .vs-search__dropdown {
+      visibility: visible;
+    }
 
-      .vs-search__debug {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 4px;
-      }
-    
-      .vs-search__controls {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 4px;
-        padding: 0;
-        margin: 0;
-      }
+    .vs-search__debug {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 4px;
+    }
 
-      .select-button-wrapper {
-        position: relative;
-        display: inline-flex;
-      }
-      
-      .select-native {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-        opacity: 0;
-      }
-    
-      .vs-search__controls button {
-        padding: 4px;
-        color: var(--visual-search-color, black);
-        cursor: pointer;
-        background-color: var(--visual-search-background-color, white);
-        border: 1px solid var(--visual-search-color, black);
-        border-radius: 4px;
-      }
+    .vs-search__controls {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 4px;
+      padding: 0;
+      margin: 0;
+    }
 
-      .vs-search__controls button:hover, .select-button-wrapper:hover > button {
-        color: var(--visual-search-color-focus, black);
-        background-color: var(--visual-search-background-color-focus, lightgray);
-      }
-      
-      .vs-search__keyboard-indicator {
-          position: absolute;
-          right: 96px;
-      }
-    `;
+    .select-button-wrapper {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .select-native {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .vs-search__controls button {
+      padding: 4px;
+      color: var(--visual-search-color, black);
+      cursor: pointer;
+      background-color: var(--visual-search-background-color, white);
+      border: 1px solid var(--visual-search-color, black);
+      border-radius: 4px;
+    }
+
+    .vs-search__controls button:hover, .select-button-wrapper:hover > button {
+      color: var(--visual-search-color-focus, black);
+      background-color: var(--visual-search-background-color-focus, lightgray);
+    }
+
+    .vs-search__keyboard-indicator {
+      position: absolute;
+      right: 96px;
+    }
+  `;
 
   render() {
     return html`
-        ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
-        <div class="vs-search__wrapper">
-          ${this.selectedFacets.length > 0 ? html`
-            <ul class="vs-search__facets">
-              ${Array.from(this.selectedFacets).map((item, index) => html`
-                <li>
-                  <search-facet
-                      facet-label="${item.facet.label}"
-                      facet="${item.facet.value}"
-                      value-label="${item.value ? item.value.label : ''}"
-                      value="${item.value ? item.value.value : ''}"
-                      ?disabled="${this.nestedFacets && (index < this.selectedFacets.length - 1)}"
-                      @facet-delete="${() => this.deleteFacet(index)}">
-                  </search-facet>
-                </li>`)}
-            </ul>
-          ` : ''}
-            <input class="vs-search__input"
-                type="text"
-                @focus='${this.handleFocus}'
-                @keydown='${this.handleKeyDown}'
-                @input='${this.handleInput}'>
-            <ul class="vs-search__dropdown">
-              ${this.autocomplete.map((item, index) => html`
-                <li>
-                  <button
-                      class="vs-search__dropdown-item"
-                      tabindex="0"
-                      @click='${() => this.complete(item)}'
-                      @pointerdown=${(event) => event.preventDefault()}
-                      @keydown="${index === this.autocomplete.length - 1 ? this.handleTab : null}">
-                    ${item.label}
-                  </button>
-                </li>`)}
-            </ul>
-          <div class="vs-search__controls">
-            <button @click="${this.submit}"><slot name="search-label">Search</slot></button>
-            ${this.sorting ? html`
+      ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
+      <div class="vs-search__wrapper">
+        ${this.selectedFacets.length > 0 ? html`
+          <ul class="vs-search__facets">
+            ${Array.from(this.selectedFacets).map((item, index) => html`
+              <li>
+                <search-facet
+                  facet-label="${item.facet.label}"
+                  facet="${item.facet.value}"
+                  value-label="${item.value ? item.value.label : ''}"
+                  value="${item.value ? item.value.value : ''}"
+                  ?disabled="${this.nestedFacets && (index < this.selectedFacets.length - 1)}"
+                  @facet-delete="${() => this.deleteFacet(index)}">
+                </search-facet>
+              </li>
+            `)}
+          </ul>
+        ` : ''}
+        <input
+          class="vs-search__input"
+          type="text"
+          @focus='${this.handleFocus}'
+          @keydown='${this.handleKeyDown}'
+          @input='${this.handleInput}'>
+        <ul class="vs-search__dropdown">
+          ${this.autocomplete.map((item, index) => html`
+            <li>
+              <button
+                class="vs-search__dropdown-item"
+                tabindex="0"
+                @click='${() => this.complete(item)}'
+                @pointerdown=${(event) => event.preventDefault()}
+                @keydown="${index === this.autocomplete.length - 1 ? this.handleTab : null}">
+                ${item.label}
+              </button>
+            </li>
+          `)}
+        </ul>
+        <div class="vs-search__controls">
+          <button @click="${this.submit}"><slot name="search-label">Search</slot></button>
+          ${this.sorting ? html`
             <div class="select-button-wrapper">
               <button><slot name="sort-label">Sort</slot></button>
               <select id="sorting" class="select-native">
                 <option value="" disabled ?selected="${!(this.query.sorting in this.sorting)}"></option>
                 ${Object.keys(this.sorting).map((key) => html`
-                  <option value="${key}" ?selected="${key === this.query.sorting}" >${this.sorting[key].label}</option>
+                  <option value="${key}" ?selected="${key === this.query.sorting}">${this.sorting[key].label}</option>
                 `)}
               </select>
             </div>
-          `: ''}
-            <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
-          </div>
-          ${(this._input()?.value || this.selectedFacets.length > 0) ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
+          ` : ''}
+          <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
         </div>
-      `;
+        ${(this._input()?.value || this.selectedFacets.length > 0) ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
+      </div>
+    `;
   }
 
   _mode() {
@@ -294,7 +297,7 @@ export class VisualSearch extends LitElement {
   }
 
   _input() {
-    const input =  this.renderRoot ? this.renderRoot.querySelector('input') : null; // return dummy input?
+    const input = this.renderRoot ? this.renderRoot.querySelector('input') : null; // return dummy input?
 
     if (input === null) {
       this._log('input not found');
@@ -418,8 +421,8 @@ export class VisualSearch extends LitElement {
 
   pushFacet(facet) {
     this.selectedFacets.push({
-        facet: facet,
-        value: null
+      facet: facet,
+      value: null
     });
 
     this.requestUpdate();
@@ -432,9 +435,9 @@ export class VisualSearch extends LitElement {
     this.autocomplete = [];
 
     if (this.renderRoot.activeElement !== this._input()) {
-        this.focusInput();
+      this.focusInput();
     } else {
-        this.completeTerm('');
+      this.completeTerm('');
     }
   }
 
@@ -590,13 +593,13 @@ export class VisualSearch extends LitElement {
 
       return response.json();
     }).then(data => {
-        let values = data.map(value => Value.fromObject(value));
+      let values = data.map(value => Value.fromObject(value));
 
-        if (!values.every(Value.validate)) {
-          this._log('invalid values');
-        }
+      if (!values.every(Value.validate)) {
+        this._log('invalid values');
+      }
 
-        this.values = values;
+      this.values = values;
     });
   }
 
