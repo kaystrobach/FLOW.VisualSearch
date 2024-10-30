@@ -52,7 +52,7 @@ export class VisualSearch extends LitElement {
       facets: {type: Array},
       values: {type: Array},
 
-      selectedFacets: {type: Array},
+      selectedFacets: {type: Array, state: true},
 
       autocomplete: {type: Array, state: true},
 
