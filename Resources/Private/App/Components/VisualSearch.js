@@ -690,7 +690,7 @@ export class VisualSearch extends LitElement {
     };
   }
 
-  encodeQuery(query) {
+  encodeQuery() {
     return btoa(encodeURIComponent(JSON.stringify(this.collectQuery().facets)));
   }
 }
