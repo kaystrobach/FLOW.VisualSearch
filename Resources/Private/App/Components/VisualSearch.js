@@ -297,13 +297,7 @@ export class VisualSearch extends LitElement {
   }
 
   _input() {
-    const input = this.renderRoot ? this.renderRoot.querySelector('input') : null; // return dummy input?
-
-    if (input === null) {
-      this._log('input not found');
-    }
-
-    return input;
+    return this.renderRoot.querySelector('input');
   }
 
   _sort() {
@@ -372,14 +366,6 @@ export class VisualSearch extends LitElement {
     this.completeTerm(event.target.value);
   }
 
-  focusInput() {
-    this._input() ? this._input().focus() : null;
-  }
-
-  clearInput() {
-    this._input() ? this._input().value = '' : null;
-  }
-
   completeTerm(term) {
     const handle = (f, ...args) => {
       f(...args).then(() => {
@@ -431,11 +417,12 @@ export class VisualSearch extends LitElement {
       this._input().type = facet.inputType;
     }
 
-    this.clearInput();
+    this._input().value = '';
+
     this.autocomplete = [];
 
     if (this.renderRoot.activeElement !== this._input()) {
-      this.focusInput();
+      this._input().focus();
     } else {
       this.completeTerm('');
     }
@@ -447,12 +434,12 @@ export class VisualSearch extends LitElement {
     this.requestUpdate();
 
     this._input().type = 'text';
+    this._input().value = '';
 
-    this.clearInput();
     this.autocomplete = [];
 
     if (this.renderRoot.activeElement !== this._input()) {
-      this.focusInput();
+      this._input().focus();
     } else {
       this.completeTerm('');
     }
