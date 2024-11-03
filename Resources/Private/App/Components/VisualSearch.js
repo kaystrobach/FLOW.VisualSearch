@@ -86,12 +86,26 @@ export class VisualSearch extends LitElement {
 
     this.query = null;
     this.sorting = null;
+
+    this.changed = null;
   }
 
   connectedCallback() {
     super.connectedCallback()
 
     this.loadStateFromQuery();
+  }
+
+  requestUpdate(name, oldValue, options) {
+    if (name === 'selectedFacets') {
+      this.changed = this.changed !== null;
+
+      super.requestUpdate()
+
+      return;
+    }
+
+    super.requestUpdate(name, oldValue, options);
   }
 
   static styles = css`
@@ -407,12 +421,12 @@ export class VisualSearch extends LitElement {
   }
 
   loadStateFromQuery() {
-    for (let facet of this.query.facets) {
-      this.selectedFacets.push({
+    this.selectedFacets = this.query.facets.map(facet => {
+      return {
         facet: new Facet(facet.facet, facet.facetLabel),
         value: new Value(facet.value, facet.valueLabel),
-      });
-    }
+      };
+    });
   }
 
   updateAutocomplete() {
@@ -433,7 +447,7 @@ export class VisualSearch extends LitElement {
       value: null
     });
 
-    this.requestUpdate();
+    this.requestUpdate('selectedFacets');
 
     if (facet.inputType) {
       this._input().type = facet.inputType;
@@ -453,14 +467,12 @@ export class VisualSearch extends LitElement {
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
 
-    this.requestUpdate();
+    this.requestUpdate('selectedFacets');
 
     this._input().type = 'text';
     this._input().value = '';
 
     this.autocomplete = [];
-
-    this.changed = true;
 
     if (this.renderRoot.activeElement !== this._input()) {
       this._input().focus();
@@ -472,7 +484,7 @@ export class VisualSearch extends LitElement {
   popFacet() {
     const facet = this.selectedFacets.pop();
 
-    this.requestUpdate();
+    this.requestUpdate('selectedFacets');
 
     this._input().type = 'text';
 
@@ -489,7 +501,7 @@ export class VisualSearch extends LitElement {
     const value = this.selectedFacets.at(-1).value;
     this.selectedFacets.at(-1).value = null;
 
-    this.requestUpdate();
+    this.requestUpdate('selectedFacets');
 
     this._input().type = 'text';
 
@@ -524,7 +536,7 @@ export class VisualSearch extends LitElement {
   deleteFacet(index) {
     this.selectedFacets.splice(index, 1);
 
-    this.requestUpdate();
+    this.requestUpdate('selectedFacets');
 
     this.completeTerm(this._input().value)
   }
