@@ -287,7 +287,7 @@ export class VisualSearch extends LitElement {
                 tabindex="0"
                 @click='${() => this.complete(item)}'
                 @pointerdown=${(event) => event.preventDefault()}
-                @keydown="${index === this.autocomplete.length - 1 ? this.handleTab : null}">
+                @keydown="${(event) => this.handleNavigation(event, index)}">
                 ${item.label}
               </button>
             </li>
@@ -366,10 +366,36 @@ export class VisualSearch extends LitElement {
           window.location.reload();
         });
       }
+
+      return;
     }
 
     if (event.key === 'Backspace' && event.target.value === '') {
       this.popFacet();
+
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      this.renderRoot.querySelector('.vs-search__dropdown-item')?.focus();
+
+      return;
+    }
+
+    if (event.key === 'ArrowUp' || (event.key === 'Tab' && event.shiftKey)) {
+      event.preventDefault();
+
+      const items = this.renderRoot.querySelectorAll('.vs-search__dropdown-item');
+
+      if (items.length === 0) {
+        return;
+      }
+
+      items.item(items.length - 1).focus();
+
+      return;
     }
 
     // Firefox: necessary to navigate to first item in dropdown
@@ -385,17 +411,59 @@ export class VisualSearch extends LitElement {
       dropdown.classList.add('vs-search__dropdown--visible');
       dropdown.querySelector('.vs-search__dropdown-item')?.focus();
       dropdown.classList.remove('vs-search__dropdown--visible');
-    }
-  }
 
-  handleTab(event) {
-    if (event.key !== 'Tab' || event.shiftKey) {
       return;
     }
 
-    event.preventDefault();
+    if (event.key === 'Escape') {
+      this._input().blur();
 
-    this._input().focus();
+      return;
+    }
+  }
+
+  handleNavigation(event, index) {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      if (index === this.autocomplete.length - 1) {
+        this._input().focus();
+
+        return;
+      }
+
+      this.renderRoot.querySelectorAll('.vs-search__dropdown-item').item(index + 1).focus();
+
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+
+      if (index === 0) {
+        this._input().focus();
+
+        return;
+      }
+
+      this.renderRoot.querySelectorAll('.vs-search__dropdown-item').item(index - 1).focus();
+
+      return;
+    }
+
+    if (event.key === 'Tab' && !event.shiftKey && index === this.autocomplete.length - 1) {
+      event.preventDefault();
+
+      this._input().focus();
+
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      this._input().focus();
+
+      return;
+    }
   }
 
   handleInput(event) {
