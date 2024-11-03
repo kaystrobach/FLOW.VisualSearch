@@ -308,7 +308,7 @@ export class VisualSearch extends LitElement {
           ` : ''}
           <button @click="${this.clear}"><slot name="clear-label">Clear</slot></button>
         </div>
-        ${this.changed ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
+        ${this.changed && this.selectedFacets.at(-1)?.value !== null ? html`<search-icon class="vs-search__keyboard-indicator" icon="enter"></search-icon>` : ''}
       </div>
     `;
   }
