@@ -376,30 +376,9 @@ export class VisualSearch extends LitElement {
       return;
     }
 
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-
-      this.renderRoot.querySelector('.vs-search__dropdown-item')?.focus();
-
-      return;
-    }
-
-    if (event.key === 'ArrowUp' || (event.key === 'Tab' && event.shiftKey)) {
-      event.preventDefault();
-
-      const items = this.renderRoot.querySelectorAll('.vs-search__dropdown-item');
-
-      if (items.length === 0) {
-        return;
-      }
-
-      items.item(items.length - 1).focus();
-
-      return;
-    }
-
-    // Firefox: necessary to navigate to first item in dropdown
-    if (event.key === 'Tab' && !event.shiftKey) {
+    // Firefox: necessary to navigate to dropdown
+    if (event.key === 'Tab' || event.key === 'ArrowDown' || event.key === 'ArrowUp')
+    {
       event.preventDefault();
 
       const dropdown = this.renderRoot.querySelector('.vs-search__dropdown');
@@ -408,8 +387,18 @@ export class VisualSearch extends LitElement {
         return;
       }
 
+      const items = dropdown.querySelectorAll('.vs-search__dropdown-item');
+
       dropdown.classList.add('vs-search__dropdown--visible');
-      dropdown.querySelector('.vs-search__dropdown-item')?.focus();
+
+      if ((event.key === 'Tab' && !event.shiftKey) || event.key === 'ArrowDown') {
+        items.item(0)?.focus();
+      }
+
+      if ((event.key === 'Tab' && event.shiftKey) || event.key === 'ArrowUp') {
+        items.item(items.length - 1)?.focus();
+      }
+
       dropdown.classList.remove('vs-search__dropdown--visible');
 
       return;
