@@ -177,6 +177,6 @@ class ValueService
         if (strlen($string) <= $length) {
             return $string;
         }
-        return substr($string, 0, $length).$append;
+        return mb_substr($string, 0, $length).$append;
     }
 }
