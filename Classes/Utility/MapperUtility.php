@@ -4,10 +4,10 @@ namespace KayStrobach\VisualSearch\Utility;
 
 use KayStrobach\VisualSearch\Demands\EqualsDemand;
 use KayStrobach\VisualSearch\Demands\InstanceOfDemand;
-use KayStrobach\VisualSearch\Demands\Like\ContainsDemand;
 use KayStrobach\VisualSearch\Demands\Like\EndsWithDemand;
 use KayStrobach\VisualSearch\Demands\Like\StartsWithDemand;
 use KayStrobach\VisualSearch\Demands\Date\DateDemand;
+use KayStrobach\VisualSearch\Demands\Like\StringContainsDemand;
 use KayStrobach\VisualSearch\Demands\SimpleDemandInterface;
 use KayStrobach\VisualSearch\Domain\Session\Facet;
 use KayStrobach\VisualSearch\Domain\Session\QueryDto;
@@ -160,11 +160,13 @@ class MapperUtility
             case 'like%':
                 return EndsWithDemand::class;
             case 'like':
-                return ContainsDemand::class;
+                return StringContainsDemand::class;
             case 'sameday':
                 return DateDemand::class;
             case 'instanceOf':
                 return InstanceOfDemand::class;
+            case 'contains':
+                return \KayStrobach\VisualSearch\Demands\ContainsDemand::class;
             default:
                 return $shorthand;
         }
