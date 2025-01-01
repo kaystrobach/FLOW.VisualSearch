@@ -80,6 +80,9 @@ class ValueService
                     $this->searchRepository->findByName($searchName)['autocomplete']
                 );
                 $entities = $result;
+                if (is_array($result)) {
+                    return $this->convertEntitiesForSearch($result, $facetConfiguration, $stringLength);
+                }
                 if (method_exists($result, 'getQuery')) {
                     $limit = $facetConfiguration['selector']['limit'] ?? 10;
                     $entities = $result->getQuery()->setLimit($limit)->execute(true);
