@@ -58,26 +58,24 @@ class QueryStorage
      */
     public function isFacetInQuery($name, $facet)
     {
-        return ArrayUtility::hasSubEntryWith(
-            $this->getQuery($name),
-            'facet',
-            $facet
-        );
+        return $this->getOneFacetInQuery($name, $facet) !== null;
     }
 
     /**
      * @param string $name
      * @param string $facet
-     *
-     * @return array|null
+     * @return Facet|null
      */
-    public function getOneFacetInQuery($name, $facet)
+    public function getOneFacetInQuery(string $name, string $facet): ?Facet
     {
-        return ArrayUtility::getOneSubEntryWith(
-            $this->getQuery($name),
-            'facet',
-            $facet
-        );
+        $query = $this->getQuery($name);
+        /** @var Facet $facet */
+        foreach ($query->getFacets() as $facetObject) {
+            if ($facetObject->getFacet() === $facet) {
+                return $facetObject;
+            }
+        }
+        return null;
     }
 
     /**
