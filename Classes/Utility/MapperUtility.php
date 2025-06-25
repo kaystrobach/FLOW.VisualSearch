@@ -143,11 +143,31 @@ class MapperUtility
             }
         }
 
-        if ($query->getSortingForDoctrine() !== null) {
-            $queryObject->setOrderings($query->getSortingForDoctrine());
+        $sorting = $this->getSortingForDoctrine($query->getIdentifier(), $query->getSorting());
+
+        if ($sorting !== null) {
+            $queryObject->setOrderings($sorting);
         }
 
         return $demands;
+    }
+
+    public function getSortingForDoctrine(string $identifier, string $sorting): ?array
+    {
+        if ($sorting === '') {
+            return null;
+        }
+
+        $sortingConfig = $this->configurationManager->getConfiguration(
+            'VisualSearch',
+            'Searches.' . $identifier . '.sorting.' . $sorting . '.fields'
+        );
+
+        if ($sortingConfig === null) {
+            return null;
+        }
+
+        return $sortingConfig;
     }
 
     public function convertMatchShorthandIntoClassName(string $shorthand): string

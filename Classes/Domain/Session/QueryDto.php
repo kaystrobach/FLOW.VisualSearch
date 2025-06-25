@@ -24,12 +24,6 @@ class QueryDto implements \JsonSerializable
      */
     protected $sorting;
 
-    /**
-     * @var ConfigurationManager
-     * @Flow\Inject
-     */
-    protected $configurationManager;
-
     public function __construct()
     {
         $this->identifier = '';
@@ -71,21 +65,6 @@ class QueryDto implements \JsonSerializable
     public function getSorting(): ?string
     {
         return $this->sorting;
-    }
-
-    public function getSortingForDoctrine(): ?array
-    {
-        if ($this->getSorting() === '') {
-            return null;
-        }
-        $sortingConfig = $this->configurationManager->getConfiguration(
-            'VisualSearch',
-            'Searches.' . $this->getIdentifier() . '.sorting.' . $this->getSorting() . '.fields'
-        );
-        if ($sortingConfig === null) {
-            return null;
-        }
-        return $sortingConfig;
     }
 
     public static function fromArray(array $array): self
