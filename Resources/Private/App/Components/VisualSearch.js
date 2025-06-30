@@ -62,6 +62,7 @@ export class VisualSearch extends LitElement {
       search: {type: String, attribute: true},
       query: {type: Object, attribute: true},
       sorting: {type: Object, attribute: true},
+      freetext: {type: Boolean, attribute: true},
 
       facetsAction: {type: String, attribute: 'facets-action'}, // autocomplete facet
       valueAction: {type: String, attribute: 'value-action'}, // autocomplete facet value
@@ -86,6 +87,8 @@ export class VisualSearch extends LitElement {
 
     this.query = null;
     this.sorting = null;
+
+    this.freetext = false;
 
     this.changed = null;
   }
@@ -338,6 +341,12 @@ export class VisualSearch extends LitElement {
   complete(item) {
     this._log("complete: " + item.label)
 
+    if (item.value === 'freetext') {
+      this.pushFacetValue(item.obj.facet, item.obj.value);
+
+      return;
+    }
+
     if (!this._mode()) {
       this.pushFacet(item.obj);
     } else {
@@ -487,15 +496,43 @@ export class VisualSearch extends LitElement {
   }
 
   updateAutocomplete() {
-    if (!this._mode()) {
-      this.autocomplete = this.facets.map(facet => {
-        return {value: facet.value, label: facet.label, obj: facet}
-      });
-    } else {
+    if (this._mode()) {
       this.autocomplete = this.values.map(value => {
         return {value: value.value, label: value.label, obj: value}
       });
+
+      return;
     }
+
+    this.autocomplete = this.facets.map(facet => {
+      return {value: facet.value, label: facet.label, obj: facet}
+    });
+
+    if (!this.freetext || this.autocomplete.length > 0 ) {
+      return;
+    }
+
+    const term = this._input().value.trim();
+
+    if (term === '') {
+      return;
+    }
+
+    if (this.selectedFacets.some((value) => value.facet.value === 'freetext')) {
+      return;
+    }
+
+    const facet = new Facet("freetext", "", "text");
+    const value = new Value(term, term);
+
+    this.autocomplete = [{
+      value: 'freetext',
+      label: 'Suche nach "' + term + '"',
+      obj: {
+        facet: facet,
+        value: value
+      }
+    }];
   }
 
   pushFacet(facet) {
@@ -523,6 +560,26 @@ export class VisualSearch extends LitElement {
 
   pushValue(value) {
     this.selectedFacets.at(-1).value = value;
+
+    this.requestUpdate('selectedFacets');
+
+    this._input().type = 'text';
+    this._input().value = '';
+
+    this.autocomplete = [];
+
+    if (this.renderRoot.activeElement !== this._input()) {
+      this._input().focus();
+    } else {
+      this.completeTerm('');
+    }
+  }
+
+  pushFacetValue(facet, value) {
+    this.selectedFacets.push({
+      facet: facet,
+      value: value
+    });
 
     this.requestUpdate('selectedFacets');
 
