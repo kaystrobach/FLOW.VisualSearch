@@ -121,7 +121,7 @@ export class SearchFacet extends LitElement {
 
   render() {
     return html`
-      ${this.facetLabel}: ${this.valueLabel}
+      ${this.facetLabel ? this.facetLabel + ':' : ''} ${this.valueLabel}
       ${this.value ? html`
         <button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}">
           <div class="${this.disabled ? 'lock' : 'close'}"></div>

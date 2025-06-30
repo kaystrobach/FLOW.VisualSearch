@@ -8,7 +8,8 @@
                 value-action="{f:uri.action(action: 'values', controller: 'SearchRest', package: 'KayStrobach.VisualSearch')}"
                 query-action="{f:uri.action(action: 'query', controller: 'SearchState', package: 'KayStrobach.VisualSearch')}"
                 query="{search:query(name: searchName)}"
-                sorting="{search:settings(name: searchName, key: 'sorting')}">
+                sorting="{search:settings(name: searchName, key: 'sorting')}"
+                freetext>
             <span slot="search-label"><search-icon icon="search" aria-label="{f:translate(id:'button.search', package:'KayStrobach.VisualSearch')}"></search-icon></span>
             <span slot="sort-label"><search-icon icon="sort" aria-label="{f:translate(id:'button.sort', package:'KayStrobach.VisualSearch')}"></search-icon></span>
             <span slot="clear-label"><search-icon icon="clear" aria-label="{f:translate(id:'button.clear', package:'KayStrobach.VisualSearch')}"></search-icon></span>
