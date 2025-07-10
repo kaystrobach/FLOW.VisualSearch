@@ -504,8 +504,18 @@ export class VisualSearch extends LitElement {
       return;
     }
 
+    let freetext = false;
+    let freetextLabel = '';
+
     this.autocomplete = this.facets.filter(facet => {
-      return facet.value !== 'freetext';
+      if (facet.value === 'freetext') {
+        freetext = true;
+        freetextLabel = facet.label;
+
+        return false;
+      }
+
+      return true;
     }).map(facet => {
       return {value: facet.value, label: facet.label, obj: facet}
     });
@@ -516,11 +526,7 @@ export class VisualSearch extends LitElement {
 
     const term = this._input().value.trim();
 
-    if (term === '') {
-      return;
-    }
-
-    if (this.selectedFacets.some((value) => value.facet.value === 'freetext')) {
+    if (term === '' || !freetext) {
       return;
     }
 
@@ -529,7 +535,7 @@ export class VisualSearch extends LitElement {
 
     this.autocomplete = [{
       value: 'freetext',
-      label: 'Suche nach "' + term + '"',
+      label: freetextLabel + ' "' + term + '"',
       obj: {
         facet: facet,
         value: value

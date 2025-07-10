@@ -46,6 +46,7 @@ class FacetRepository
                 if (($term === '')
                     || (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
                     || (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
+                    || $key === 'freetext'
                 ) {
                     // should item be displayed just once?
                     if ((!isset($value['selector']['conditions']['once']))

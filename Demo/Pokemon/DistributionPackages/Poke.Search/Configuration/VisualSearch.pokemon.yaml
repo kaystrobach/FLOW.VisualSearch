@@ -50,7 +50,7 @@ Searches:
             - weight
 
       freetext:
-        label: ""
+        label: "Suche nach"
         selector:
           conditions:
             once: true
