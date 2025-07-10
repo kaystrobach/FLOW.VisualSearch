@@ -504,7 +504,9 @@ export class VisualSearch extends LitElement {
       return;
     }
 
-    this.autocomplete = this.facets.map(facet => {
+    this.autocomplete = this.facets.filter(facet => {
+      return facet.value !== 'freetext';
+    }).map(facet => {
       return {value: facet.value, label: facet.label, obj: facet}
     });
 
