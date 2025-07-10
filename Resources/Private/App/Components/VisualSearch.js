@@ -62,7 +62,6 @@ export class VisualSearch extends LitElement {
       search: {type: String, attribute: true},
       query: {type: Object, attribute: true},
       sorting: {type: Object, attribute: true},
-      freetext: {type: Boolean, attribute: true},
 
       facetsAction: {type: String, attribute: 'facets-action'}, // autocomplete facet
       valueAction: {type: String, attribute: 'value-action'}, // autocomplete facet value
@@ -87,8 +86,6 @@ export class VisualSearch extends LitElement {
 
     this.query = null;
     this.sorting = null;
-
-    this.freetext = false;
 
     this.changed = null;
   }
@@ -510,43 +507,22 @@ export class VisualSearch extends LitElement {
       return;
     }
 
-    let freetext = false;
-    let freetextLabel = '';
-
-    this.autocomplete = this.facets.filter(facet => {
+    this.autocomplete = this.facets.map(facet => {
       if (facet.value === 'freetext') {
-        freetext = true;
-        freetextLabel = facet.label;
+        const term = this._input().value.trim();
 
-        return false;
+        return {
+          value: 'freetext',
+          label: facet.label + ' "' + term + '"',
+          obj: {
+            facet: new Facet('freetext', '', 'text'),
+            value: new Value(term, term)
+          }
+        }
       }
 
-      return true;
-    }).map(facet => {
       return {value: facet.value, label: facet.label, obj: facet}
     });
-
-    if (!this.freetext || this.autocomplete.length > 0 ) {
-      return;
-    }
-
-    const term = this._input().value.trim();
-
-    if (term === '' || !freetext) {
-      return;
-    }
-
-    const facet = new Facet("freetext", "", "text");
-    const value = new Value(term, term);
-
-    this.autocomplete = [{
-      value: 'freetext',
-      label: freetextLabel + ' "' + term + '"',
-      obj: {
-        facet: facet,
-        value: value
-      }
-    }];
   }
 
   pushFacet(facet) {
