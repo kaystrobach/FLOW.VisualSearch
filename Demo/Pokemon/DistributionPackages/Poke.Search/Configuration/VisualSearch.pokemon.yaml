@@ -48,3 +48,14 @@ Searches:
         matches:
           like:
             - weight
+
+      freetext:
+        label: ""
+        selector:
+          conditions:
+            once: true
+        matches:
+          like:
+            - identifier
+            - height
+            - weight
