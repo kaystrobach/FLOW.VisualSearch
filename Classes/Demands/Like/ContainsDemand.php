@@ -9,5 +9,4 @@ use KayStrobach\VisualSearch\Demands\LikeDemand;
  */
 class ContainsDemand extends StringContainsDemand
 {
-
 }
