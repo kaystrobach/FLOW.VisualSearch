@@ -64,7 +64,11 @@ class ValueService
 
         $stringLength = isset($facetConfiguration['display']['maxLength']) ? $facetConfiguration['display']['maxLength'] : 30;
         if (isset($facetConfiguration['selector']['values'])) {
-            return $this->convertArrayForSearch($facetConfiguration['selector']['values']);
+            $values = $this->convertArrayForSearch($facetConfiguration['selector']['values']);
+
+            return array_values(array_filter($values, function ($value) use ($term) {
+                return (stripos($value['label'], $term) !== false || stripos($value['value'], $term) !== false);
+            }));
         }
 
         if (isset($facetConfiguration['selector']['repository'])) {
