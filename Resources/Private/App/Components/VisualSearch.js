@@ -366,6 +366,12 @@ export class VisualSearch extends LitElement {
           return;
         }
 
+        if (this.autocomplete.length > 0) {
+          this.complete(this.autocomplete[0]);
+
+          return;
+        }
+
         this.pushValue(new Value(event.target.value, event.target.value));
       } else {
         if (event.target.value !== '' && this.autocomplete.length > 0) {
