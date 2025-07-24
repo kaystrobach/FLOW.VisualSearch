@@ -36,7 +36,6 @@ class FacetRepository
             'Searches.'.$searchName.'.autocomplete'
         );
         $facets = [];
-        $lowerCasedTerm = strtolower($term);
         if ((is_array($facetsFromConfiguration)) && (count($facetsFromConfiguration) > 0)) {
             foreach ($facetsFromConfiguration as $key => $value) {
                 if ($key === 'freetext') {
@@ -47,10 +46,7 @@ class FacetRepository
                 $inputType = isset($value['inputType']) ? $value['inputType'] : 'text';
 
                 // restrict to items filtered by term
-                if (($term === '')
-                    || (strtolower(substr($label, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
-                    || (strtolower(substr($key, 0, strlen($lowerCasedTerm))) === $lowerCasedTerm)
-                ) {
+                if (($term === '') || (stripos($label, $term) !== false) || (stripos($key, $term) !== false)) {
                     if ($this->evalFacet($query, $key, $value)) {
                         $facets[] = new Facet(
                             $label,
