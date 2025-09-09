@@ -63,7 +63,7 @@ class QueryDto implements \JsonSerializable
     /**
      * @param string|null $sorting
      */
-    public function setSorting(string $sorting = null)
+    public function setSorting(?string $sorting = null)
     {
         $this->sorting = $sorting;
     }
