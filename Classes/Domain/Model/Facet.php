@@ -22,6 +22,13 @@ class Facet implements \JsonSerializable
     protected $value = '';
 
     /**
+     * Type of the input field.
+     *
+     * @var string
+     */
+    protected $inputType = 'text';
+
+    /**
      * Additional Configuration for a facet.
      *
      * @var array
@@ -35,11 +42,12 @@ class Facet implements \JsonSerializable
      * @param string $value
      * @param array  $configuration
      */
-    public function __construct($label = '', $value = '', $configuration = [])
+    public function __construct($label = '', $value = '', $configuration = [], $inputType = '')
     {
         $this->label = $label;
         $this->value = $value;
         $this->configuration = $configuration;
+        $this->inputType = $inputType;
     }
 
     /**
@@ -53,6 +61,7 @@ class Facet implements \JsonSerializable
             'value'         => $this->value,
             'label'         => $this->label,
             'configuration' => $this->configuration,
+            'inputType'     => $this->inputType,
         ];
     }
 
@@ -63,7 +72,16 @@ class Facet implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->__toArray();
+        $facet = [
+            'value'         => $this->value,
+            'label'         => $this->label,
+        ];
+
+        if ($this->inputType !== '') {
+            $facet['inputType'] = $this->inputType;
+        }
+
+        return $facet;
     }
 
     /**

@@ -3,7 +3,7 @@
     "type": "neos-package",
     "description": "package to handle advanced facetted searches",
     "require": {
-        "neos/flow": "~5.0 || ~6.0 || ~7.0"
+        "neos/flow": "~7.0 || ^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -11,6 +11,9 @@
         }
     },
     "license": "MIT",
+    "archive": {
+        "exclude": ["/Demo"]
+    },
     "extra": {
         "applied-flow-migrations": [
             "TYPO3.FLOW3-201201261636",

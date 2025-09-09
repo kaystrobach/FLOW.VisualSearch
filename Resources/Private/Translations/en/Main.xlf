@@ -2,14 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file original="" product-name="KayStrobach.VisualSearch" source-language="en" datatype="plaintext">
 		<body>
-			<trans-unit id="modal.title" xml:space="preserve">
-				<source>search settings</source>
+			<trans-unit id="button.search" xml:space="preserve">
+				<source>Search</source>
 			</trans-unit>
-			<trans-unit id="modal.sorting" xml:space="preserve">
-				<source>sorting</source>
+			<trans-unit id="button.sort" xml:space="preserve">
+				<source>Sort</source>
 			</trans-unit>
-			<trans-unit id="modal.close" xml:space="preserve">
-				<source>Primary</source>
+			<trans-unit id="button.clear" xml:space="preserve">
+				<source>Clear</source>
 			</trans-unit>
 		</body>
 	</file>

@@ -6,7 +6,6 @@ use KayStrobach\VisualSearch\Demands\AbstractDemand;
 
 class DateDemand extends AbstractDemand
 {
-
     /**
      * @inheritDoc
      *

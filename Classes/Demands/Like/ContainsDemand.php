@@ -4,8 +4,9 @@ namespace KayStrobach\VisualSearch\Demands\Like;
 
 use KayStrobach\VisualSearch\Demands\LikeDemand;
 
-class ContainsDemand extends LikeDemand
+/**
+ * @deprecated
+ */
+class ContainsDemand extends StringContainsDemand
 {
-    protected $prefix = '%';
-    protected $postfix = '%';
 }

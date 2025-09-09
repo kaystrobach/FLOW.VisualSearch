@@ -1,0 +1,36 @@
+:root {
+  --visual-search-background-color: black;
+  --visual-search-color: white;
+
+  --visual-search-background-color-focus: #333333;
+  --visual-search-color-focus: white;
+
+  --visual-search-facet-background-color: #333333;
+  --visual-search-facet-color: white;
+}
+
+body {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+  max-width: 800px;
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+}

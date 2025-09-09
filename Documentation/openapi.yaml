@@ -1,0 +1,165 @@
+openapi: 3.1.0
+info:
+  title: VisualSearch
+  version: 0.1.0
+servers:
+  - url: https://visualsearch.ddev.site/kaystrobach.visualsearch
+
+paths:
+  /searchrest/facets:
+    get:
+      summary: Fetch facets for autocomplete
+      parameters:
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/Query'
+        - $ref: '#/components/parameters/Term'
+      responses:
+        '200':
+          description: A list of facets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Facet'
+
+  /searchrest/values:
+    get:
+      summary: Fetch values for a specific facet
+      parameters:
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/Facet'
+        - $ref: '#/components/parameters/Query'
+        - $ref: '#/components/parameters/Term'
+      responses:
+        '200':
+          description: A list of values for the specified facet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Value'
+
+  /searchlegacy/query:
+    put:
+      summary: Store the current query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  $ref: '#/components/schemas/Query'
+              required: true
+      responses:
+        '200':
+          description: Query stored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FacetValue'
+
+components:
+  parameters:
+    Search:
+      name: search
+      in: query
+      required: true
+      schema:
+        type: string
+      description: The search identifier
+    Facet:
+      name: facet
+      in: query
+      required: true
+      schema:
+        type: string
+      description: The facet key
+    Query:
+      name: query
+      in: query
+      required: true
+      schema:
+        type: string
+      allowEmptyValue: true
+      description: The base64 and percent encoded facets
+    Term:
+      name: term
+      in: query
+      required: true
+      schema:
+        type: string
+      allowEmptyValue: true
+      description: The term to autocomplete
+  schemas:
+    Facet:
+      type: object
+      properties:
+        label:
+          type: string
+          description: The facet label
+        value:
+          type: string
+          description: The facet key
+        inputType:
+          type: string
+          description: The input type
+      required:
+        - label
+        - value
+    Value:
+      type: object
+      properties:
+         label:
+           type: string
+           description: The value label
+         value:
+           type: string
+           description: The value key
+      required:
+        - label
+        - value
+    FacetValue:
+      type: object
+      properties:
+        facetLabel:
+          type: string
+          description: The facet label
+        facet:
+          type: string
+          description: The facet key
+        valueLabel:
+          type: string
+          description: The value label
+        value:
+          type: string
+          description: The value key
+      required:
+        - facetLabel
+        - facet
+        - valueLabel
+        - value
+    Query:
+      type: object
+      properties:
+        identifier:
+          type: string
+          description: The search identifier
+        sorting:
+          type: string
+          description: The sorting key
+        facets:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacetValue'
+      required:
+        - identifier
+        - facets

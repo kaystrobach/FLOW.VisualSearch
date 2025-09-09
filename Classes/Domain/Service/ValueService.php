@@ -58,42 +58,56 @@ class ValueService
         $facetConfiguration = $this->facetRepository->findBySearchNameAndFacetName($searchName, $facet);
         $values = [];
 
-        if (isset($facetConfiguration)) {
-            $stringLength = isset($facetConfiguration['display']['maxLength']) ? $facetConfiguration['display']['maxLength'] : 30;
+        if (!isset($facetConfiguration)) {
+            return [];
+        }
 
-            if (isset($facetConfiguration['selector']['values'])) {
-                return $this->convertArrayForSearch($facetConfiguration['selector']['values']);
-            }
-            if (isset($facetConfiguration['selector']['repository'])) {
-                /** @var \Neos\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
-                $repository = $this->objectManager->get($facetConfiguration['selector']['repository']);
-                if ($repository instanceof SearchableRepositoryInterface) {
-                    // find by search term, labelProperty, etc
-                    // @todo think about replacing the labelProperty with the whole config array
-                    $result = $repository->findBySearchTerm(
-                        $query,
-                        $term,
-                        $facetConfiguration['selector'],
-                        $this->searchRepository->findByName($searchName)['autocomplete']
-                    );
-                    if (method_exists($result, 'getQuery')) {
-                        $limit = $facetConfiguration['selector']['limit'] ?? 10;
-                        $entities = $result->getQuery()->setLimit($limit)->execute(true);
-                    } else {
-                        $entities = $result;
-                    }
-                    return $this->convertEntitiesForSearch($entities, $facetConfiguration, $stringLength);
-                }
-                if (isset($facetConfiguration['selector']['orderBy'])) {
-                    $entities = $repository->findAll()->getQuery()->setOrderings(
-                        [$facetConfiguration['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING]
-                    );
-                } else {
-                    $entities = $repository->findAll();
-                }
+        $stringLength = isset($facetConfiguration['display']['maxLength']) ? $facetConfiguration['display']['maxLength'] : 30;
+        if (isset($facetConfiguration['selector']['values'])) {
+            $values = $this->convertArrayForSearch($facetConfiguration['selector']['values']);
 
+            return array_values(array_filter($values, function ($value) use ($term) {
+                return (stripos($value['label'], $term) !== false || stripos($value['value'], $term) !== false);
+            }));
+        }
+
+        if (isset($facetConfiguration['selector']['repository'])) {
+            /** @var \Neos\Flow\Persistence\RepositoryInterface|SearchableRepositoryInterface $repository */
+            $repository = $this->objectManager->get($facetConfiguration['selector']['repository']);
+            if ($repository instanceof SearchableRepositoryInterface) {
+                // find by search term, labelProperty, etc
+                // @todo think about replacing the labelProperty with the whole config array
+                $result = $repository->findBySearchTerm(
+                    $query,
+                    $term,
+                    $facetConfiguration['selector'],
+                    $this->searchRepository->findByName($searchName)['autocomplete']
+                );
+                $entities = $result;
+                if (is_array($result)) {
+                    return $this->convertEntitiesForSearch($result, $facetConfiguration, $stringLength);
+                }
+                if (method_exists($result, 'getQuery')) {
+                    $limit = $facetConfiguration['selector']['limit'] ?? 10;
+                    $entities = $result->getQuery()->setLimit($limit)->execute(true);
+                }
                 return $this->convertEntitiesForSearch($entities, $facetConfiguration, $stringLength);
             }
+            if (isset($facetConfiguration['selector']['orderBy'])) {
+                return $this->convertEntitiesForSearch(
+                    $repository->findAll()->getQuery()->setOrderings(
+                        [$facetConfiguration['selector']['orderBy']  => QueryInterface::ORDER_ASCENDING]
+                    )->execute(),
+                    $facetConfiguration,
+                    $stringLength
+                );
+            }
+
+            return $this->convertEntitiesForSearch(
+                $repository->findAll(),
+                $facetConfiguration,
+                $stringLength
+            );
         }
 
         return $values;
@@ -170,6 +184,6 @@ class ValueService
         if (strlen($string) <= $length) {
             return $string;
         }
-        return substr($string, 0, $length).$append;
+        return mb_substr($string, 0, $length).$append;
     }
 }

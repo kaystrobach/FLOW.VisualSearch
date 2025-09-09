@@ -1,0 +1,76 @@
+{namespace search=KayStrobach\VisualSearch\ViewHelpers}
+
+<f:layout name="Default" />
+
+<f:section name="Title">Pokesearch</f:section>
+
+<f:section name="Content">
+  <main>
+    <f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', pokemon:pokemon}" contentAs="value">
+      <f:if condition="{pokemon}">
+        <f:then>
+          <p class="text-right">
+            {pokemon -> f:count()} pokemon gefunden
+          </p>
+          <f:widget.paginate objects="{pokemon}" as="paginatedPokemon"
+                             configuration="{itemsPerPage:20, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 15}">
+            <table class="table">
+              <thead>
+              <th>
+                sprite
+              </th>
+              <th>
+                id
+              </th>
+              <th>
+                identifier
+              </th>
+              <th>
+                height
+              </th>
+              <th>
+                weight
+              </th>
+              <th>
+                cry
+              </th>
+              </thead>
+              <f:for each="{paginatedPokemon}" as="mon">
+                <tr>
+                  <td>
+                    <img src="{mon.sprite}">
+                  </td>
+                  <td>
+                    {mon.id}
+                  </td>
+                  <td>
+                    {mon.identifier}
+                  </td>
+                  <td>
+                    {mon.height}
+                  </td>
+                  <td>
+                    {mon.weight}
+                  </td>
+                  <td>
+                    <audio controls>
+                      <source src="{mon.cry}" type="audio/ogg">
+                      Your browser does not support the audio element.
+                    </audio>
+                  </td>
+                </tr>
+              </f:for>
+            </table>
+          </f:widget.paginate>
+        </f:then>
+        <f:else>
+          <p>
+            Es wurden keine Treffer gefunden, bitte prüfen Sie Ihre Suchkriterien.
+          </p>
+        </f:else>
+      </f:if>
+    </f:render>
+  </main>
+</f:section>
+
+<script src="{f:uri.resource(path: 'JavaScript/bundles/navbar.bundle.js', package:'SBS.SchulloginLayout')}" type="text/javascript"></script>

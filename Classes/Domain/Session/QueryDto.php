@@ -2,8 +2,6 @@
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Annotations as Flow;
 
@@ -15,7 +13,7 @@ class QueryDto implements \JsonSerializable
     protected $identifier;
 
     /**
-     * @var Collection<Facet>
+     * @var Facet[]
      */
     protected $facets;
 
@@ -24,16 +22,10 @@ class QueryDto implements \JsonSerializable
      */
     protected $sorting;
 
-    /**
-     * @var ConfigurationManager
-     * @Flow\Inject
-     */
-    protected $configurationManager;
-
     public function __construct()
     {
         $this->identifier = '';
-        $this->facets = new ArrayCollection();
+        $this->facets = [];
         $this->sorting = '';
     }
 
@@ -48,16 +40,24 @@ class QueryDto implements \JsonSerializable
     }
 
     /**
-     * @param Collection<Facet> $facets
+     * @param Facet[] $facets
      */
-    public function setFacets(Collection $facets)
+    public function setFacets(array $facets)
     {
         $this->facets = $facets;
     }
 
-    public function getFacets(): Collection
+    /**
+     * @return Facet[]
+     */
+    public function getFacets(): array
     {
         return $this->facets;
+    }
+
+    public function addFacet(Facet $facet)
+    {
+        $this->facets[] = $facet;
     }
 
     /**
@@ -73,21 +73,6 @@ class QueryDto implements \JsonSerializable
         return $this->sorting;
     }
 
-    public function getSortingForDoctrine(): ?array
-    {
-        if ($this->getSorting() === '') {
-            return null;
-        }
-        $sortingConfig = $this->configurationManager->getConfiguration(
-            'VisualSearch',
-            'Searches.' . $this->getIdentifier() . '.sorting.' . $this->getSorting() . '.fields'
-        );
-        if ($sortingConfig === null) {
-            return null;
-        }
-        return $sortingConfig;
-    }
-
     public static function fromArray(array $array): self
     {
         $o = new static();
@@ -100,14 +85,25 @@ class QueryDto implements \JsonSerializable
                 $facetObject->setFacetLabel($facet['facetLabel']);
                 $facetObject->setValue($facet['value']);
                 $facetObject->setValueLabel($facet['valueLabel']);
-                $o->getFacets()->add($facetObject);
+                $o->addFacet($facetObject);
             }
         }
         return $o;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return $this->facets->toArray();
+        return $this->getFacets();
+    }
+
+    public function jsonSerialize2(): array
+    {
+        // guess what broke backwards compatibility lol
+
+        return [
+            'identifier' => $this->getIdentifier(),
+            'sorting' => $this->getSorting(),
+            'facets' => $this->getFacets(),
+        ];
     }
 }

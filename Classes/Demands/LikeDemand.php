@@ -20,7 +20,7 @@ abstract class LikeDemand extends AbstractDemand
         foreach ($this->fields as $matchField) {
             $subDemands[] = $this->query->like(
                 $matchField,
-                $this->prefix . $value . $this->postfix
+                $this->prefix . trim($value) . $this->postfix
             );
         }
         return $this->query->logicalOr($subDemands);
