@@ -9,6 +9,9 @@ use KayStrobach\VisualSearch\Domain\Repository\FacetRepository;
 use KayStrobach\VisualSearch\Domain\Service\ValueService;
 use Neos\Flow\Mvc\View\JsonView;
 
+/**
+ * @Flow\Scope("session")
+ */
 class SearchRestController extends RestController
 {
     /**
@@ -46,6 +49,13 @@ class SearchRestController extends RestController
      */
     protected $supportedMediaTypes = ['application/json'];
 
+    /**
+     * @Flow\Session(autoStart = true)
+     *
+     * @param string $search
+     * @param string $query
+     * @param string $term
+     */
     public function facetsAction(string $search, string $query, string $term)
     {
         if (!empty($query)) {
@@ -59,6 +69,14 @@ class SearchRestController extends RestController
         $this->view->assign('value', $facets);
     }
 
+    /**
+     * @Flow\Session(autoStart = true)
+     *
+     * @param string $search
+     * @param string $facet
+     * @param string $query
+     * @param string $term
+     */
     public function valuesAction(string $search, string $facet, string $query, string $term)
     {
         if (!empty($query)) {

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kay
- * Date: 24.04.15
- * Time: 13:11.
- */
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 
@@ -30,7 +24,7 @@ class QueryStorage
 
     /**
      * @Flow\Inject
-     *
+     * @Flow\Transient()
      * @var PersistenceManagerInterface
      */
     protected $persistenceManager;
@@ -40,7 +34,7 @@ class QueryStorage
      *
      * @return array
      */
-    public function getQuery($name)
+    public function getQuery($name): QueryDto
     {
         if (!isset($this->queries[$name])) {
             $this->queries[$name] = new QueryDto();
@@ -56,7 +50,7 @@ class QueryStorage
      *
      * @return bool
      */
-    public function isFacetInQuery($name, $facet)
+    public function isFacetInQuery($name, $facet): bool
     {
         return $this->getOneFacetInQuery($name, $facet) !== null;
     }
@@ -83,7 +77,7 @@ class QueryStorage
      *
      * @return void
      */
-    public function setQuery(QueryDto $query)
+    public function setQuery(QueryDto $query): void
     {
         $this->queries[$query->getIdentifier()] = $query;
     }
@@ -128,7 +122,7 @@ class QueryStorage
      *
      * @return int
      */
-    public function getNumberOfConstraints($name)
+    public function getNumberOfConstraints($name): int
     {
         if (isset($this->queries[$name])) {
             return count($this->queries[$name]);
