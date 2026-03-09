@@ -18,7 +18,7 @@ class QueryStorage
     /**
      * contains all the stored queries as key => valueLabel relation.
      *
-     * @var array
+     * @var array<string, QueryDto>
      */
     protected $queries = [];
 
@@ -95,26 +95,28 @@ class QueryStorage
      * @param string $facet
      * @param mixed  $valueLabel
      */
-    public function addQueryConstraint($name, $facetLabel, $facet, $valueLabel, $value)
+    public function addQueryConstraint(string $name, string $facetLabel, $facet, $valueLabel, $value): void
     {
-        $id = '';
+        $query = $this->getQuery($name);
+
+        $id = null;
         if (is_string($facet)) {
             $id = $facet;
+        } elseif (is_object($facet)) {
+            $id = $this->persistenceManager->getIdentifierByObject($facet);
         }
-        if (is_object($facet)) {
-            $id = $this->persistenceManager->getIdentifierByObject($valueLabel);
+
+        if ($id === null) {
+            return;
         }
-        if ($id !== null) {
-            if (!isset($this->queries[$name])) {
-                $this->queries[$name] = [];
-            }
-            $this->queries[$name][] = [
-                'facetLabel' => $facetLabel,
-                'facet'      => $id,
-                'valueLabel' => $valueLabel,
-                'value'      => $value,
-            ];
-        }
+
+        $facetObject = new Facet();
+        $facetObject->setFacetLabel($facetLabel);
+        $facetObject->setFacet((string)$id);
+        $facetObject->setValue((string)$value);
+        $facetObject->setValueLabel((string)$valueLabel);
+
+        $query->addFacet($facetObject);
     }
 
     /**
