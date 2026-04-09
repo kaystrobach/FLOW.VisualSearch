@@ -2,9 +2,8 @@
 
 namespace KayStrobach\VisualSearch\Domain\Session;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use KayStrobach\VisualSearch\Utility\ArrayUtility;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
 
 /**
@@ -21,13 +20,6 @@ class QueryStorage
      * @var array<string, QueryDto>
      */
     protected $queries = [];
-
-    /**
-     * @Flow\Inject
-     * @Flow\Transient()
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
 
     /**
      * @param string $name
@@ -103,7 +95,7 @@ class QueryStorage
         if (is_string($facet)) {
             $id = $facet;
         } elseif (is_object($facet)) {
-            $id = $this->persistenceManager->getIdentifierByObject($facet);
+            $id = Bootstrap::$staticObjectManager->get(PersistenceManagerInterface::class)->getIdentifierByObject($facet);
         }
 
         if ($id === null) {
