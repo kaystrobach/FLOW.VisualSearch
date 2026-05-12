@@ -5,13 +5,31 @@ Searches:
 
     sorting:
       1000:
-        label: "Identifier"
+        label: "Identifier ▲"
         fields:
           'identifier': ASC
+      1010:
+        label: "Identifier ▼"
+        fields:
+          'identifier': DESC
+
       2000:
-        label: "Weight"
+        label: "Weight ▲"
         fields:
           'weight': ASC
+      2010:
+        label: "Weight ▼"
+        fields:
+          'weight': DESC
+
+      3000:
+        label: "Height ▲"
+        fields:
+          'height': ASC
+      3010:
+        label: "Height ▼"
+        fields:
+          'height': DESC
 
     autocomplete:
       identifier:

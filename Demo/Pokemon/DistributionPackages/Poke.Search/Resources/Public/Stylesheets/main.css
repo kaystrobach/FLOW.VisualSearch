@@ -21,8 +21,8 @@ body {
 main {
   display: flex;
   flex-direction: column;
-  width: min-content;
-  max-width: 800px;
+  width: 100%;
+  max-width: 1200px;
   padding: 16px;
 }
 
@@ -37,7 +37,7 @@ table, th, td {
 
 .basic-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 70% 30%;
   grid-template-rows: repeat(2, auto);
   grid-column-gap: 10px;
   grid-row-gap: 10px;

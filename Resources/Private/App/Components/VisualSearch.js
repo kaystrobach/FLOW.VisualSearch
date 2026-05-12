@@ -261,6 +261,20 @@ export class VisualSearch extends LitElement {
     }
   `;
 
+  setSorting(value) {
+    if (this._sort()) {
+      this._sort().value = value;
+      this._sort().dispatchEvent(new Event('change'));
+    } else {
+      // If the sort select is not rendered yet, update the query directly
+      this.query.sorting = value;
+      this.handleSortingChange({
+        preventDefault: () => {
+        }
+      });
+    }
+  }
+
   handleSortingChange(event) {
     const query = this.collectQuery();
     if (!this._dispatchEvent('sorting', query)) {

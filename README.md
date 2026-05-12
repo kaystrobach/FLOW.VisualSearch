@@ -75,6 +75,24 @@ You can use the `visual-search-listener` component to react to search events.
 </visual-search-listener>
 ```
 
+### External Sorting
+
+You can use the `visual-search-sort` component to trigger sorting from outside the main search component.
+
+```html
+<visual-search-sort asc="1" desc="2" selector="#my-search">
+    <span slot="neutral">↕</span>
+    <span slot="asc">▲</span>
+    <span slot="desc">▼</span>
+</visual-search-sort>
+```
+
+The component supports the following attributes:
+- `asc`: The value to set for ascending sort.
+- `desc`: (Optional) The value to set for descending sort.
+- `selector`: (Optional) A CSS selector to find the `visual-search` component (defaults to `visual-search`).
+- `template`: (Optional) ID of a `<template>` tag to use for rendering. If used, the wrapper `div` will have a class `state-neutral`, `state-asc`, or `state-desc` which you can use for styling.
+
 ## Configuration
 
 Search configurations are defined in the `Configuration/VisualSearch.yaml` file. Please see the demo package for an
