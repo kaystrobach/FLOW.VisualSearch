@@ -9,11 +9,11 @@
 /.homeadditions
 /.importdb*
 /.sshimageBuild
-/.venv
 /.webimageBuild
 /apache/apache-site.conf
 /commands/.gitattributes
 /config.local.y*ml
+/config.*.local.y*ml
 /db_snapshots
 /mutagen/mutagen.yml
 /mutagen/.start-synced
@@ -24,8 +24,8 @@
 /providers/pantheon.yaml
 /providers/platform.yaml
 /providers/upsun.yaml
-/sequelpro.spf
-/settings/settings.ddev.py
+/share-providers/cloudflared.sh
+/share-providers/ngrok.sh
 /traefik/config/visualsearch.yaml
 /traefik/certs/visualsearch.crt
 /traefik/certs/visualsearch.key
