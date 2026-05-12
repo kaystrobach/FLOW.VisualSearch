@@ -7,6 +7,7 @@ namespace Poke\Search\Controller;
 
 use KayStrobach\VisualSearch\Domain\Session\QueryDto;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Http\Cookie;
 use Neos\Flow\Mvc\Controller\ActionController;
 
 class StandardController extends ActionController
@@ -68,5 +69,17 @@ class StandardController extends ActionController
                 $this->pokemonRepository->findByDefaultQuery()
             );
         }
+
+        $this->view->assign('searchDebug', $this->request->getHttpRequest()->getCookieParams()['searchDebug'] ?? false);
+    }
+
+    public function toggleDebugAction()
+    {
+        $debug = (bool)($this->request->getHttpRequest()->getCookieParams()['searchDebug'] ?? 0);
+
+        $cookie = new Cookie('searchDebug', (int)(!$debug));
+        $this->response->setCookie($cookie);
+
+        $this->redirect('index');
     }
 }

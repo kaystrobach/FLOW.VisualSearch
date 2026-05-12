@@ -6,7 +6,20 @@
 
 <f:section name="Content">
   <main>
-    <f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', pokemon:pokemon}" contentAs="value">
+		<f:if condition="{searchDebug}">
+			<f:then>
+				<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
+					disable debug
+				</a>
+			</f:then>
+			<f:else>
+				<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
+					enable debug
+				</a>
+			</f:else>
+		</f:if>
+
+    <f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', searchDebug:searchDebug, pokemon:pokemon}" contentAs="value">
       <f:if condition="{pokemon}">
         <f:then>
           <p class="text-right">
