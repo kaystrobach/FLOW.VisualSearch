@@ -6,82 +6,95 @@
 
 <f:section name="Content">
   <main>
-		<f:if condition="{searchDebug}">
-			<f:then>
-				<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
-					disable debug
-				</a>
-			</f:then>
-			<f:else>
-				<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
-					enable debug
-				</a>
-			</f:else>
-		</f:if>
+		<div class="basic-grid">
+			<div class="nav">
+				<f:if condition="{searchDebug}">
+					<f:then>
+						<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
+							disable debug
+						</a>
+					</f:then>
+					<f:else>
+						<a href="{f:uri.action(action: 'toggleDebug', controller: 'Standard', package: 'Poke.Search')}">
+							enable debug
+						</a>
+					</f:else>
+				</f:if>
+			</div>
+			<div class="search">
+				<f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', searchDebug:searchDebug, pokemon:pokemon}" contentAs="value">
+					<f:if condition="{pokemon}">
+						<f:then>
+							<p class="text-right">
+								{pokemon -> f:count()} pokemon gefunden
+							</p>
+							<f:widget.paginate objects="{pokemon}" as="paginatedPokemon"
+							                   configuration="{itemsPerPage:20, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 15}">
+								<table class="table">
+									<thead>
+									<th>
+										sprite
+									</th>
+									<th>
+										id
+									</th>
+									<th>
+										identifier
+									</th>
+									<th>
+										height
+									</th>
+									<th>
+										weight
+									</th>
+									<th>
+										cry
+									</th>
+									</thead>
+									<f:for each="{paginatedPokemon}" as="mon">
+										<tr>
+											<td>
+												<img src="{mon.sprite}">
+											</td>
+											<td>
+												{mon.id}
+											</td>
+											<td>
+												{mon.identifier}
+											</td>
+											<td>
+												{mon.height}
+											</td>
+											<td>
+												{mon.weight}
+											</td>
+											<td>
+												<audio controls>
+													<source src="{mon.cry}" type="audio/ogg">
+													Your browser does not support the audio element.
+												</audio>
+											</td>
+										</tr>
+									</f:for>
+								</table>
+							</f:widget.paginate>
+						</f:then>
+						<f:else>
+							<p>
+								Es wurden keine Treffer gefunden, bitte prüfen Sie Ihre Suchkriterien.
+							</p>
+						</f:else>
+					</f:if>
+				</f:render>
+			</div>
+			<div class="addon">
+				Column
+				<visual-search-listener event="VisualSearchRequestUpdateChanged">
+					<template>
+						A change has happened, so the search results are not accurate anymore. Hit enter to trigger an update.
+					</template>
+				</visual-search-listener>
+			</div>
 
-    <f:render partial="Visualsearch/Search" arguments="{searchName:'pokemon', searchDebug:searchDebug, pokemon:pokemon}" contentAs="value">
-      <f:if condition="{pokemon}">
-        <f:then>
-          <p class="text-right">
-            {pokemon -> f:count()} pokemon gefunden
-          </p>
-          <f:widget.paginate objects="{pokemon}" as="paginatedPokemon"
-                             configuration="{itemsPerPage:20, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 15}">
-            <table class="table">
-              <thead>
-              <th>
-                sprite
-              </th>
-              <th>
-                id
-              </th>
-              <th>
-                identifier
-              </th>
-              <th>
-                height
-              </th>
-              <th>
-                weight
-              </th>
-              <th>
-                cry
-              </th>
-              </thead>
-              <f:for each="{paginatedPokemon}" as="mon">
-                <tr>
-                  <td>
-                    <img src="{mon.sprite}">
-                  </td>
-                  <td>
-                    {mon.id}
-                  </td>
-                  <td>
-                    {mon.identifier}
-                  </td>
-                  <td>
-                    {mon.height}
-                  </td>
-                  <td>
-                    {mon.weight}
-                  </td>
-                  <td>
-                    <audio controls>
-                      <source src="{mon.cry}" type="audio/ogg">
-                      Your browser does not support the audio element.
-                    </audio>
-                  </td>
-                </tr>
-              </f:for>
-            </table>
-          </f:widget.paginate>
-        </f:then>
-        <f:else>
-          <p>
-            Es wurden keine Treffer gefunden, bitte prüfen Sie Ihre Suchkriterien.
-          </p>
-        </f:else>
-      </f:if>
-    </f:render>
   </main>
 </f:section>

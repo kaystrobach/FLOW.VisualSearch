@@ -63,6 +63,18 @@ To actually display the search component, include the search partial in your tem
 </f:render>
 ```
 
+### Listening to Events
+
+You can use the `visual-search-listener` component to react to search events.
+
+```html
+<visual-search-listener event="VisualSearchRequestUpdateChanged">
+    <template>
+        A change has happened, so the search results are not accurate anymore. Hit enter to trigger an update.
+    </template>
+</visual-search-listener>
+```
+
 ## Configuration
 
 Search configurations are defined in the `Configuration/VisualSearch.yaml` file. Please see the demo package for an

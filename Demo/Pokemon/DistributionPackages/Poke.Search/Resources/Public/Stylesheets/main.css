@@ -34,3 +34,23 @@ table, th, td {
   border: 1px solid white;
   border-collapse: collapse;
 }
+
+.basic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}
+
+.nav { grid-area: 1 / 1 / 2 / 3; height: 2rem}
+.search { grid-area: 2 / 1 / 3 / 2; }
+.addon { grid-area: 2 / 2 / 3 / 3; }
+
+.neos-fluid-widget-paginator {
+  display: flex;
+}
+.neos-fluid-widget-paginator li {
+  list-style: none;
+  flex-grow: 1;
+}
