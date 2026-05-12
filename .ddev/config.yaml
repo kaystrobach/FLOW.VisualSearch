@@ -1,6 +1,7 @@
 name: visualsearch
 type: php
 docroot: Demo/Pokemon/Web
+composer_root: Demo/Pokemon
 php_version: "8.2"
 webserver_type: apache-fpm
 xdebug_enabled: false
@@ -11,7 +12,16 @@ database:
     version: "10.4"
 use_dns_when_possible: true
 composer_version: "2"
-web_environment: []
+web_environment:
+  - FLOW_CONTEXT=Development/Ddev
+
+hooks:
+  post-start:
+    - exec: cd Resources/Private/App; npm install
+    - exec: cd Demo/Pokemon; composer install
+    - exec: cd Demo/Pokemon; ./flow doctrine:migrate
+    - exec: cd Demo/Pokemon; wget https://gist.githubusercontent.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6/raw/92200bc0a673d5ce2110aaad4544ed6c4010f687/pokemon.csv
+    - exec: cd Demo/Pokemon; ./flow pokemonimport:import pokemon.csv
 
 # Key features of DDEV's config.yaml:
 
