@@ -97,6 +97,9 @@ export class VisualSearch extends LitElement {
   }
 
   requestUpdate(name, oldValue, options) {
+
+    this._dispatchEvent('VisualSearchRequestUpdate' + this.capitalizeFirst(name), {})
+
     if (name === 'selectedFacets') {
       this.changed = this.changed !== null;
 
@@ -106,6 +109,11 @@ export class VisualSearch extends LitElement {
     }
 
     super.requestUpdate(name, oldValue, options);
+  }
+
+  capitalizeFirst(str) {
+    if (typeof str !== 'string') return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   static styles = css`
@@ -161,7 +169,7 @@ export class VisualSearch extends LitElement {
       background-color: var(--visual-search-background-color, white);
       border: 1px solid var(--visual-search-color, black);
     }
-    
+
     .vs-search__dropdown--visible {
       visibility: visible;
     }
@@ -253,6 +261,17 @@ export class VisualSearch extends LitElement {
     }
   `;
 
+  handleSortingChange(event) {
+    const query = this.collectQuery();
+    if (!this._dispatchEvent('sorting', query)) {
+      event.preventDefault();
+      // Reset sorting if cancelled - this might be tricky without knowing previous value
+      // but at least we stop the search
+      return;
+    }
+    this.submit();
+  }
+
   render() {
     return html`
       ${this.showDebugLog ? html`<debug-log></debug-log>` : ''}
@@ -298,7 +317,7 @@ export class VisualSearch extends LitElement {
           ${this.sorting ? html`
             <div class="select-button-wrapper">
               <button><slot name="sort-label">Sort</slot></button>
-              <select id="sorting" class="select-native" @change="${this.submit}">
+              <select id="sorting" class="select-native" @change="${this.handleSortingChange}">
                 <option value="" ?selected="${!(this.query.sorting in this.sorting)}"></option>
                 ${Object.keys(this.sorting).map((key) => html`
                   <option value="${key}" ?selected="${key === this.query.sorting}">${this.sorting[key].label}</option>
@@ -328,12 +347,36 @@ export class VisualSearch extends LitElement {
   _log(message) {
     const event = new CustomEvent('debug', {
       detail: {
-        message: message,
+        message: message
       },
+      bubbles: true,
+      composed: true,
     });
 
-    this.renderRoot.dispatchEvent(event);
+    if (this.renderRoot) {
+      this.renderRoot.dispatchEvent(event);
+    }
   };
+
+  _dispatchEvent(name, detail) {
+    let eventData = {
+      detail: {
+        message: JSON.stringify(name),
+      },
+      eventDetails: detail,
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+    };
+
+    const event = new CustomEvent(name, eventData);
+
+    this._log(
+      JSON.stringify(eventData)
+    );
+
+    return this.dispatchEvent(event);
+  }
 
   complete(item) {
     this._log("complete: " + item.label)
@@ -474,6 +517,11 @@ export class VisualSearch extends LitElement {
   }
 
   handleInput(event) {
+    const query = this.collectQuery();
+    if (!this._dispatchEvent('change', query)) {
+      event.preventDefault();
+      return;
+    }
     this.completeTerm(event.target.value);
   }
 
@@ -625,7 +673,12 @@ export class VisualSearch extends LitElement {
       this.popFacet();
     }
 
-    this.storeQuery(this.collectQuery()).then(() => {
+    const query = this.collectQuery();
+    if (!this._dispatchEvent('search', query)) {
+      return;
+    }
+
+    this.storeQuery(query).then(() => {
       window.location.reload();
     });
   }
