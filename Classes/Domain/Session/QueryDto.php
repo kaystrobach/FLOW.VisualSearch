@@ -85,6 +85,9 @@ class QueryDto implements \JsonSerializable
                 $facetObject->setFacetLabel($facet['facetLabel']);
                 $facetObject->setValue($facet['value']);
                 $facetObject->setValueLabel($facet['valueLabel']);
+                if (isset($facet['inputType'])) {
+                    $facetObject->setInputType($facet['inputType']);
+                }
                 $o->addFacet($facetObject);
             }
         }

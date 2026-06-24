@@ -11,6 +11,7 @@
     "eslint-plugin-lit": "^1.15.0",
     "eslint-plugin-wc": "^2.1.1",
     "globals": "^15.10.0",
+    "lit": "^3.3.3",
     "postcss-lit": "^1.1.1",
     "stylelint": "^16.9.0",
     "stylelint-config-recess-order": "^5.1.1",

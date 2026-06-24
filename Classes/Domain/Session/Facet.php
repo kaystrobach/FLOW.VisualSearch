@@ -25,6 +25,11 @@ class Facet implements \JsonSerializable
     protected $valueLabel;
 
     /**
+     * @var string
+     */
+    protected $inputType = 'text';
+
+    /**
      * @return string
      */
     public function getFacetLabel(): string
@@ -88,6 +93,22 @@ class Facet implements \JsonSerializable
         $this->valueLabel = $valueLabel;
     }
 
+    /**
+     * @return string
+     */
+    public function getInputType(): string
+    {
+        return $this->inputType;
+    }
+
+    /**
+     * @param string $inputType
+     */
+    public function setInputType(string $inputType): void
+    {
+        $this->inputType = $inputType;
+    }
+
     public function __toArray()
     {
         return [
@@ -95,6 +116,7 @@ class Facet implements \JsonSerializable
             'facetLabel' => $this->getFacetLabel(),
             'value' => $this->getValue(),
             'valueLabel' => $this->getValueLabel(),
+            'inputType' => $this->getInputType(),
         ];
     }
 
@@ -105,6 +127,7 @@ class Facet implements \JsonSerializable
             'facetLabel' => $this->getFacetLabel(),
             'value' => $this->getValue(),
             'valueLabel' => $this->getValueLabel(),
+            'inputType' => $this->getInputType(),
         ];
     }
 }

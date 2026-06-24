@@ -142,11 +142,15 @@ components:
         value:
           type: string
           description: The value key
+        inputType:
+          type: string
+          description: The input type
       required:
         - facetLabel
         - facet
         - valueLabel
         - value
+        - inputType
     Query:
       type: object
       properties:

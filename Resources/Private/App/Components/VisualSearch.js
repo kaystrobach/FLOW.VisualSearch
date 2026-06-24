@@ -94,6 +94,13 @@ export class VisualSearch extends LitElement {
     super.connectedCallback()
 
     this.loadStateFromQuery();
+    this.fetchFacets("", "");
+  }
+
+  willUpdate(changedProperties) {
+    if (changedProperties.has('query')) {
+      this.loadStateFromQuery();
+    }
   }
 
   requestUpdate(name, oldValue, options) {
@@ -299,6 +306,7 @@ export class VisualSearch extends LitElement {
                   facet="${item.facet.value}"
                   value-label="${item.value ? item.value.label : ''}"
                   value="${item.value ? item.value.value : ''}"
+                  input-type="${item.facet.inputType || 'text'}"
                   ?disabled="${this.nestedFacets && (index < this.selectedFacets.length - 1)}"
                   @facet-delete="${() => this.deleteFacet(index)}">
                 </search-facet>
@@ -558,9 +566,12 @@ export class VisualSearch extends LitElement {
   }
 
   loadStateFromQuery() {
+    if (!this.query || !this.query.facets) {
+      return;
+    }
     this.selectedFacets = this.query.facets.map(facet => {
       return {
-        facet: new Facet(facet.facet, facet.facetLabel),
+        facet: new Facet(facet.facet, facet.facetLabel, facet.inputType),
         value: new Value(facet.value, facet.valueLabel),
       };
     });
@@ -758,6 +769,7 @@ export class VisualSearch extends LitElement {
     });
   }
 
+
   async fetchValues(facet, query, term) {
     let action = new URL(this.valueAction, window.location.origin);
 
@@ -840,7 +852,8 @@ export class VisualSearch extends LitElement {
         facetLabel: item.facet.label,
         facet: item.facet.value,
         valueLabel: item.value.label,
-        value: item.value.value
+        value: item.value.value,
+        inputType: item.facet.inputType
       });
 
       return acc;

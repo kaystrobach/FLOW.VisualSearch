@@ -97,6 +97,15 @@ export class SearchFacet extends LitElement {
     .close::after {
       transform: rotate(-45deg);
     }
+    input {
+      width: auto;
+      min-width: 4ch;
+      max-width: 100%;
+      color: inherit;
+      field-sizing: content;
+      background: none;
+      border: none;
+    }
   `;
 
   static get properties() {
@@ -105,6 +114,7 @@ export class SearchFacet extends LitElement {
       facet: {type: String, attribute: true},
       valueLabel: {type: String, attribute: 'value-label'},
       value: {type: String, attribute: true},
+      inputType: {type: String, attribute: 'input-type'},
       disabled: {type: Boolean, attribute: true},
     }
   }
@@ -112,6 +122,7 @@ export class SearchFacet extends LitElement {
   constructor() {
     super();
 
+    this.inputType = 'text';
     this.disabled = false;
   }
 
@@ -121,7 +132,8 @@ export class SearchFacet extends LitElement {
 
   render() {
     return html`
-      ${this.facetLabel ? this.facetLabel + ':' : ''} ${this.valueLabel}
+      ${this.facetLabel ? this.facetLabel + ':' : ''}
+      ${this.value ? html`<input type="${this.inputType}" .value="${this.valueLabel}" readonly>` : ''}
       ${this.value ? html`
         <button @click="${this._handleClick}" @pointerdown=${(event) => event.preventDefault()} ?disabled="${this.disabled}">
           <div class="${this.disabled ? 'lock' : 'close'}"></div>
