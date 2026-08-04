@@ -7,11 +7,11 @@ class QueryConfiguration implements \ArrayAccess
     /**
      * @var string
      */
-    protected $queryName;
+    protected string $queryName;
     /**
      * @var  array
      */
-    protected $queryConfiguration;
+    protected array $queryConfiguration;
 
     public function __construct(string $queryName, array $queryConfiguration)
     {
@@ -19,17 +19,17 @@ class QueryConfiguration implements \ArrayAccess
         $this->queryConfiguration = $queryConfiguration;
     }
 
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->queryConfiguration[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->queryConfiguration[$offset] ?? null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
             $this->queryConfiguration[] = $value;
@@ -38,7 +38,7 @@ class QueryConfiguration implements \ArrayAccess
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->queryConfiguration[$offset]);
     }

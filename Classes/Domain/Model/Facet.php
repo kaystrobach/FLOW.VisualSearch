@@ -55,7 +55,7 @@ class Facet implements \JsonSerializable
      *
      * @return array
      */
-    public function __toArray()
+    public function __toArray(): array
     {
         return [
             'value'         => $this->value,
@@ -68,9 +68,9 @@ class Facet implements \JsonSerializable
     /**
      * created via \JsonSerializable is important to deliver the right values to the frontend.
      *
-     * @return array
+     * @return mixed
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $facet = [
             'value'         => $this->value,

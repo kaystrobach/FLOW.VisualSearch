@@ -120,7 +120,7 @@ class Facet implements \JsonSerializable
         ];
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'facet' => $this->getFacet(),
