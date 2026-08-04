@@ -68,7 +68,7 @@ class Facet implements \JsonSerializable
     /**
      * created via \JsonSerializable is important to deliver the right values to the frontend.
      *
-     * @return mixed
+     * @return array
      */
     public function jsonSerialize(): array
     {
