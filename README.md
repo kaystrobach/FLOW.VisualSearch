@@ -117,7 +117,7 @@ clicked. It bubbles out of the component as well, but carries no information abo
 ### Handled Events
 
 The `visual-search` component does not listen for any events from outside, it can only be controlled via its
-attributes (e.g. `query`) and the `setSorting(value)` method. Internally it handles the following events:
+attributes (e.g. `query`) and the `setSorting(value)` and `applyQuery(query)` methods. Internally it handles the following events:
 
 | Element                  | Event          | Action                                                                                                   |
 |--------------------------|----------------|----------------------------------------------------------------------------------------------------------|
@@ -137,6 +137,8 @@ The companion components listen for these events:
 |--------------------------|--------------------------|----------------------------------------------------|--------------------------------------------------------------|
 | `visual-search-listener` | value of `event`         | The elements matching `selector`, or else `window` | Shows the content of its `<template>`.                       |
 | `visual-search-sort`     | `search`, `sorting`      | `window`                                           | Updates its state from the `query` of the search component.  |
+| `visual-search-preset`   | `click`                  | Itself                                             | Applies its query to the search component and submits it.    |
+| `visual-search-preset`   | `VisualSearchRequestUpdateSelectedFacets`, `VisualSearchRequestUpdateQuery`, `sorting` | The search component | Updates its `data-active` attribute and the class of the wrapped elements. |
 | `debug-log`              | `debug`                  | Its parent node                                    | Appends the message to the log.                              |
 
 ### External Sorting
@@ -156,6 +158,64 @@ The component supports the following attributes:
 - `desc`: (Optional) The value to set for descending sort.
 - `selector`: (Optional) A CSS selector to find the `visual-search` component (defaults to `visual-search`).
 - `template`: (Optional) ID of a `<template>` tag to use for rendering. If used, the wrapper `div` will have a class `state-neutral`, `state-asc`, or `state-desc` which you can use for styling.
+
+### Search Presets
+
+You can use the `visual-search-preset` component to apply a predefined query to the search component. Wrap it around
+any clickable element, e.g. a button or a link.
+
+```html
+<visual-search-preset selector="#my-search" query='{"facets": [{"facet": "status", "facetLabel": "Status", "value": "open", "valueLabel": "Open"}], "sorting": "1"}'>
+    <button type="button">Open orders</button>
+</visual-search-preset>
+```
+
+In Fluid templates, use `f:format.json` to build the query, as inline JSON clashes with the Fluid syntax. See the
+[demo template](Demo/Pokemon/DistributionPackages/Poke.Search/Resources/Private/Templates/Standard/Index.html) for
+more examples.
+
+```html
+<visual-search-preset query="{f:format.json(value: {facets: {0: {facet: 'weight', value: '100'}}, sorting: '3010'})}">
+    <button type="button">Weight 100, tallest first</button>
+</visual-search-preset>
+```
+
+On click, the selected facets (and the sorting, if given) of the search component are replaced by the query and the
+search is submitted.
+
+As long as the facets of the search component match the facets of the query, the wrapped elements get the class
+`active` and the preset itself gets a `data-active` attribute, which you can use for styling. The order of the facets
+does not matter. The sorting is only compared if the query contains a `sorting` key.
+
+```css
+button.active {
+    font-weight: bold;
+}
+```
+
+The preset stays part of the DOM, so selectors like `.btn-group > .btn` no longer match the wrapped elements. With
+Bootstrap button groups, add the class `btn-group` to the presets, Bootstrap then handles them as nested button groups.
+
+```html
+<div class="btn-group" role="group">
+    <visual-search-preset class="btn-group" query="...">
+        <button type="button" class="btn btn-outline-primary">Rechnungen</button>
+    </visual-search-preset>
+    <visual-search-preset class="btn-group" query="...">
+        <button type="button" class="btn btn-outline-primary">Dauerrechnungen</button>
+    </visual-search-preset>
+</div>
+```
+
+The component supports the following attributes:
+- `query`: The query as JSON, in the same format as the `query` of the search component. `facetLabel` and `valueLabel`
+  are optional and default to `facet` and `value`. `sorting` has to be a key of the `sorting` configuration of the
+  search, otherwise it is ignored (with a warning in the console) and the preset never becomes active.
+- `selector`: (Optional) A CSS selector to find the `visual-search` component (defaults to `visual-search`).
+- `active-class`: (Optional) The class added to the wrapped elements while the query matches (defaults to `active`).
+- `match`: (Optional) `exact` (default) requires the search to have exactly the facets of the query. `partial` only
+  requires the search to contain all facets of the query, additional facets in the search are allowed. A click always
+  replaces the facets of the search with the facets of the query.
 
 ## Configuration
 

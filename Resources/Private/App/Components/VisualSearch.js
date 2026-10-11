@@ -569,12 +569,35 @@ export class VisualSearch extends LitElement {
     if (!this.query || !this.query.facets) {
       return;
     }
-    this.selectedFacets = this.query.facets.map(facet => {
+    this.selectedFacets = this._facetsFromQuery(this.query);
+  }
+
+  _facetsFromQuery(query) {
+    return (query.facets || []).map(facet => {
       return {
-        facet: new Facet(facet.facet, facet.facetLabel, facet.inputType),
-        value: new Value(facet.value, facet.valueLabel),
+        facet: new Facet(facet.facet, facet.facetLabel ?? facet.facet, facet.inputType),
+        value: new Value(facet.value, facet.valueLabel ?? facet.value),
       };
     });
+  }
+
+  applyQuery(query) {
+    this._input().value = '';
+    this._input().type = 'text';
+
+    this.selectedFacets = this._facetsFromQuery(query);
+    this.autocomplete = [];
+
+    if (Object.hasOwn(query, 'sorting')) {
+      if (this._sort() && (query.sorting === '' || Object.hasOwn(this.sorting, query.sorting))) {
+        this._sort().value = query.sorting;
+      } else {
+        this._log('unknown sorting: ' + query.sorting);
+        console.warn('visual-search: unknown sorting "' + query.sorting + '" for search "' + this.search + '"');
+      }
+    }
+
+    this.submit();
   }
 
   updateAutocomplete() {

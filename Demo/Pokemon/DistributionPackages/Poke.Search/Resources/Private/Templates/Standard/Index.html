@@ -102,6 +102,29 @@
 			</div>
 			<div class="addon">
 				Column
+				<ul class="presets">
+					<li>
+						<visual-search-preset query="{f:format.json(value: {facets: {}})}">
+							<button type="button">All pokemon</button>
+						</visual-search-preset>
+					</li>
+					<li>
+						<visual-search-preset query="{f:format.json(value: {facets: {0: {facet: 'identifier', facetLabel: 'Identifier', value: 'pikachu', valueLabel: 'pikachu'}}})}">
+							<button type="button">Pikachu</button>
+						</visual-search-preset>
+					</li>
+					<li>
+						<visual-search-preset query="{f:format.json(value: {facets: {0: {facet: 'weight', facetLabel: 'Weight', value: '100', valueLabel: '100', inputType: 'number'}}, sorting: '3010'})}">
+							<button type="button">Weight 100, tallest first</button>
+						</visual-search-preset>
+					</li>
+					<li>
+						<!-- stays active if further facets are added -->
+						<visual-search-preset match="partial" query="{f:format.json(value: {facets: {0: {facet: 'weight', facetLabel: 'Weight', value: '50', valueLabel: '50', inputType: 'number'}}})}">
+							<button type="button">Weight 50 (partial match)</button>
+						</visual-search-preset>
+					</li>
+				</ul>
 				<visual-search-listener event="VisualSearchRequestUpdateChanged">
 					<template>
 						A change has happened, so the search results are not accurate anymore. Hit enter to trigger an update.
