@@ -75,6 +75,70 @@ You can use the `visual-search-listener` component to react to search events.
 </visual-search-listener>
 ```
 
+### Events
+
+The `visual-search` component fires the following events. All of them are `CustomEvent`s that bubble and are
+`composed`, so they can be caught on the component itself, on any ancestor, or on `window`.
+
+| Event                                    | Cancelable | Fired when                                                                                                     | Effect of `preventDefault()`                                  |
+|------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| `change`                                 | yes        | The user types into the search input.                                                                          | Autocomplete is not updated for this input.                   |
+| `search`                                 | yes        | The search is submitted using the search button.                                                               | The query is neither stored nor is the page reloaded.         |
+| `sorting`                                | yes        | The sort selection changes, either via the sort dropdown or via `setSorting()` (e.g. from `visual-search-sort`). | The query is neither stored nor is the page reloaded.         |
+| `VisualSearchRequestUpdate<Property>`    | yes        | A reactive property of the component changes. `<Property>` is the property name with the first letter capitalized. | None, the update is applied anyway.                           |
+| `debug`                                  | no         | Internal log messages are written (also every time one of the events above is fired).                          | -                                                             |
+
+The most useful `VisualSearchRequestUpdate<Property>` events are:
+
+- `VisualSearchRequestUpdateSelectedFacets`: a facet or value has been added or removed.
+- `VisualSearchRequestUpdateChanged`: the selected facets differ from the ones the current results are based on.
+- `VisualSearchRequestUpdateAutocomplete`: the autocomplete suggestions have been updated.
+
+Events are also fired for the other properties (`Facets`, `Values`, `Query`, `Sorting`, `Search`, `ShowDebugLog`,
+`NestedFacets`, `FacetsAction`, `ValueAction`, `QueryAction`).
+
+`event.detail.message` contains the JSON encoded event name. `debug` events carry the log message in
+`event.detail.message` instead.
+
+```js
+document.querySelector('visual-search').addEventListener('search', (event) => {
+    if (!confirm('Really search?')) {
+        event.preventDefault();
+    }
+});
+```
+
+Note that pressing enter in the input as well as the clear button store the query and reload the page without firing
+the `search` event.
+
+Additionally, the internal `search-facet` elements fire a `facet-delete` event when the remove button of a facet is
+clicked. It bubbles out of the component as well, but carries no information about the removed facet.
+
+### Handled Events
+
+The `visual-search` component does not listen for any events from outside, it can only be controlled via its
+attributes (e.g. `query`) and the `setSorting(value)` method. Internally it handles the following events:
+
+| Element                  | Event          | Action                                                                                                   |
+|--------------------------|----------------|----------------------------------------------------------------------------------------------------------|
+| Search input             | `focus`        | Shows the autocomplete suggestions if the input is empty.                                                |
+| Search input             | `input`        | Fires `change` and updates the autocomplete suggestions.                                                 |
+| Search input             | `keydown`      | `Enter` completes the first suggestion or stores the query and reloads, `Backspace` on an empty input removes the last facet, `Tab`/`ArrowDown`/`ArrowUp` move the focus into the suggestions, `Escape` blurs the input. |
+| Autocomplete suggestion  | `click`        | Adds the suggested facet or value.                                                                       |
+| Autocomplete suggestion  | `keydown`      | `ArrowDown`/`ArrowUp`/`Tab` move between suggestions, `Escape` returns the focus to the input.           |
+| Search button            | `click`        | Submits the search (fires `search`).                                                                     |
+| Sort select              | `change`       | Fires `sorting` and submits the search.                                                                  |
+| Clear button             | `click`        | Removes all facets and the sorting, stores the query and reloads.                                        |
+| `search-facet`           | `facet-delete` | Removes the facet.                                                                                       |
+
+The companion components listen for these events:
+
+| Component                | Event                    | Listens on                                         | Action                                                       |
+|--------------------------|--------------------------|----------------------------------------------------|--------------------------------------------------------------|
+| `visual-search-listener` | value of `event`         | The elements matching `selector`, or else `window` | Shows the content of its `<template>`.                       |
+| `visual-search-sort`     | `search`, `sorting`      | `window`                                           | Updates its state from the `query` of the search component.  |
+| `debug-log`              | `debug`                  | Its parent node                                    | Appends the message to the log.                              |
+
 ### External Sorting
 
 You can use the `visual-search-sort` component to trigger sorting from outside the main search component.
