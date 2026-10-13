@@ -235,6 +235,66 @@ The search component can be styled using the following CSS properties:
 | --visual-search-facet-background-color | lightgray |
 | --visual-search-facet-color            | black     |
 
+## Testing with Playwright
+
+`Tests/Playwright/visual-search.ts` provides `VisualSearch`, a [Playwright] component object for the `<visual-search>`
+component. Suggestions are loaded asynchronously and an older request may overwrite the suggestions for the typed term,
+the query is stored in the session and survives page loads. The helper waits for the events of the component
+(`VisualSearchRequestUpdateAutocomplete`, `VisualSearchRequestUpdateSelectedFacets`) and for the reload on submit,
+so tests do not need timeouts.
+
+The helper imports `@playwright/test`, which has to be installed in the project running the tests. Map the directory
+in the `tsconfig.json` of that project, the path depends on where the package is installed:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@kaystrobach/visualsearch/*": ["Packages/Application/KayStrobach.VisualSearch/Tests/Playwright/*"]
+    }
+  }
+}
+```
+
+Create it with `new VisualSearch(page)`, or pass the locator of the component as second argument if a page contains
+more than one search.
+
+```ts
+import { expect, test } from "@playwright/test";
+import { VisualSearch } from "@kaystrobach/visualsearch/visual-search";
+
+test("search", async ({ page }) => {
+  const visualSearch = new VisualSearch(page);
+
+  // free text search: removes the stored query, adds 'Text "pikachu"' and submits
+  await visualSearch.search("pikachu");
+
+  // facet search
+  await visualSearch.clear();
+  await visualSearch.addFacet("Identifier", "pikachu");
+  await expect(visualSearch.facet("Identifier")).toHaveAttribute("value-label", "pikachu");
+  await visualSearch.submit();
+});
+```
+
+| Method                            | Purpose                                                                |
+|-----------------------------------|------------------------------------------------------------------------|
+| `focus()`                         | focus the input and wait for the initial suggestions                   |
+| `clear()`                         | remove all facets of the stored query                                  |
+| `type(term, expectedSuggestion?)` | type until the expected suggestion (default: `term`) is shown          |
+| `chooseSuggestion(label)`         | click a suggestion (facet or value)                                    |
+| `addText(term)`                   | add a free text facet                                                  |
+| `addFacet(facet, value)`          | add a facet with a value, without suggestions the typed value is used  |
+| `submit()`                        | store the query and wait for the reloaded page                         |
+| `search(term)`                    | `clear()`, `addText(term)` and `submit()`                              |
+| `withEvent(name, action)`         | run an action and wait for an event of the component                   |
+
+Locators: `input`, `dropdown`, `suggestions`, `suggestion(label)`, `facets`, `facet(label)`.
+A facet keeps its label and value in the attributes `facet-label` and `value-label` of `<search-facet>`.
+
+[Playwright]: https://playwright.dev
+
 ## Development
 
 Install front-end dependencies via npm.
